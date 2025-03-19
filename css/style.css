@@ -133,6 +133,7 @@ h3.title {
 }
 #timerType {
   margin-bottom: 10px;
+  padding: 5px;
 }
 #fixedTimeInput,
 #endTimeInputSection {
@@ -250,19 +251,24 @@ h3.title {
 .popup-trigger-container .wrapper {
   padding: 10px 0;
 }
-.popup-trigger-container .wrapper span:first-child {
-  margin-left: 0;
-}
-.popup-trigger-container .wrapper span:last-child {
-  margin-right: 0;
-}
+
 .popup-trigger-container .wrapper span {
   font-family: "Anek Bangla", sans-serif;
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
   color: #000;
-  margin: 0 10px;
+}
+.popup-trigger-container .wrapper span::after {
+  content: "|";
+  padding: 0 10px;
+  color: rgb(184, 184, 184);
+  font-size: 24px;
+  font-weight: 300;
+}
+.popup-trigger-container .wrapper span:last-of-type::after {
+  content: "" !important;
+  padding: 0;
 }
 /* Quaran part end */
 /* Popup style start */

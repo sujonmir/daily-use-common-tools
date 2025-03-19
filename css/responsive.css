@@ -1,6 +1,6 @@
 @media screen and (max-width: 768px) {
   body {
-    margin: 50px 10px;
+    margin: 10px;
   }
   .clock {
     font-size: 72px;
@@ -26,17 +26,95 @@
   ._watch.fullscreen-mode #stopwatch_container {
     font-size: 98px;
   }
-  .zikir-wrapper{
+  .zikir-wrapper {
     flex-direction: column;
     height: auto;
   }
-  .total-container{
+  .total-container {
     padding: 30px 0;
   }
-  .zikir-title{
+  .zikir-title {
     font-size: 72px;
     margin-top: 20px;
     line-height: 1.2;
   }
-
+  .popup-trigger-container .wrapper span {
+    font-size: 16px;
+  }
+  .date-group {
+    margin-top: 50px;
+    font-size: 18px;
+    font-family: "Anek Bangla", sans-serif;
+    margin-bottom: 50px;
+  }
+  .popup-trigger-container .wrapper span::after {
+    content: "";
+    padding: 0;
+  }
+  .popup-trigger-container .wrapper span {
+    display: block;
+    border-bottom: 1px solid #dadada;
+  }
+  .popup-trigger-container .wrapper span:last-of-type {
+    border-bottom: none;
+  }
+  #stopwatch_container {
+    margin: 0 10px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  .milliseconds_stopwatch {
+    min-width: 50px;
+    text-align: right;
+  }
+  .clock {
+    height: 180px;
+  }
+  .timerhandler {
+    flex-direction: column;
+    margin: 0 20px;
+    gap: 10px;
+  }
+  #fixedTimeInput,
+  #endTimeInputSection {
+    margin-right: 0;
+  }
+  input#endTimeInput {
+    margin-bottom: 0;
+    font-size: 18px;
+    padding: 5px;
+  }
+  .timerSection input {
+    font-size: 18px;
+    padding: 5px;
+  }
+  .timerSection button {
+    font-size: 20px;
+    padding: 8px 30px;
+    width: fit-content;
+    margin: auto;
+  }
+  h3.title {
+    font-size: 32px;
+    letter-spacing: 0;
+  }
+  ._watch.fullscreen-mode #stopwatch_container {
+    font-size: 28px;
+  }
+  ._watch.fullscreen-mode #stopwatch_container .milliseconds_stopwatch {
+    min-width: 50px;
+  }
+}
+@media screen and (max-width: 375px) {
+  .milliseconds_stopwatch {
+    min-width: 30px;
+    text-align: right;
+  }
+  ._watch.fullscreen-mode #stopwatch_container {
+    font-size: 20px;
+  }
+  ._watch.fullscreen-mode #stopwatch_container .milliseconds_stopwatch {
+    min-width: 40px;
+  }
 }
