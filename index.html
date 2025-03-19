@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="img/clock.png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <link rel="stylesheet" href="css/fonts.css" />
+    <title>Live Clock - Bangladesh Time</title>
+  </head>
+  <body>
+    <!-- global floating elements start-->
+    <!-- <div class="password" id="password">PW & QR Generator</div> -->
+    <!-- global floating elements end-->
+    <div class="clock-wrapper">
+      <div class="clock" id="clock" onclick="toggleFullscreen()"></div>
+    </div>
+    <div class="date-group">
+      <div>
+        <span class="date-title">তারিখঃ </span
+        ><span class="date" id="date"></span>
+      </div>
+      <div class="date" id="banglaDate">
+        <span class="date-title">বাংলা তারিখঃ </span>
+        <span id="date_today"></span> বঙ্গাব্দ
+      </div>
+      <div>
+        <span class="date-title">আরবি তারিখঃ </span
+        ><span class="date" id="arabicDateBangla"></span>
+      </div>
+    </div>
+    <!-- quaran part start -->
+    <div class="popup-trigger-container">
+      <hr />
+      <div class="wrapper">
+        <!-- The clickable span element -->
+        <span class="" id="fiveAyat">দৈনিক ৫টি কোরআনের আয়াত পড়ুন</span> |
+        <span class="" id="zikir">জিকির করুন</span> |
+        <span class="" id="password">পাসওয়ার্ড এবং QR কোড জেনারেটর</span>
+
+        <!-- The popup structure -->
+        <div id="popup" class="popup">
+          <div class="popup-content">
+            <button id="closePopup" class="close-btn">X</button>
+            <iframe
+              src=""
+              width="100%"
+              height="100%"
+              frameborder="0"
+              id="webPageFrame"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+      <hr />
+    </div>
+    <!-- quaran part end -->
+    <!-- timer & stopwatch start -->
+    <div class="timer_stopwatch_container">
+      <!-- HTML timer start  -->
+
+      <div class="timerSection">
+        <h3 class="title">TIMER</h3>
+
+        <!-- Dropdown to select timer type -->
+        <select id="timerType" onchange="handleTimerTypeChange()">
+          <option value="" disabled selected>Choose Timer method</option>
+          <option value="fixedTime">Fixed Time</option>
+          <option value="endTime">End Time</option>
+        </select>
+        <br />
+
+        <div class="timerhandler">
+          <!-- Input for Fixed Time (hidden by default) -->
+          <div id="fixedTimeInput" style="display: none">
+            <input
+              type="number"
+              id="minutesInput"
+              min="1"
+              placeholder="Enter minutes"
+            />
+          </div>
+
+          <!-- Input for End Time (hidden by default) -->
+          <div id="endTimeInputSection" style="display: none">
+            <input type="datetime-local" id="endTimeInput" />
+          </div>
+
+          <!-- Start/Reset Timer Button -->
+          <button onclick="toggleTimer()" id="timerController">
+            Start Timer
+          </button>
+        </div>
+
+        <!-- Timer Display -->
+        <div class="timer" id="timer" onclick="toggleTimerFullscreen()">
+          00:00:00
+        </div>
+      </div>
+      <!-- HTML timer end -->
+
+      <!-- stopwatch start -->
+      <div class="stopwatch_section" id="stopwatch_section">
+        <h3 class="title">Stop Watch</h3>
+        <div id="">
+          <div id="stopwatch_container">
+            <span class="time-part" id="hours_stopwatch">00</span> :
+            <span class="time-part" id="minutes_stopwatch">00</span> :
+            <span class="time-part" id="seconds_stopwatch">00</span> :
+            <span
+              class="time-part milliseconds_stopwatch"
+              id="milliseconds_stopwatch"
+              >000</span
+            >
+          </div>
+        </div>
+
+        <div class="btn_container">
+          <button id="start_stopwatch">Start</button>
+          <button id="stop_stopwatch">Stop</button>
+          <button id="reset_stopwatch">Reset</button>
+        </div>
+      </div>
+      <!-- stopwatch end -->
+    </div>
+    <!-- timer & stopwatch end -->
+
+    <script src="https://bangla.plus/scripts/bangladatetoday.min.js"></script>
+    <script src="js/popup.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>

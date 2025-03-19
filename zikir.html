@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/zikir.css" />
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <link rel="stylesheet" href="css/ripple.css" />
+    <title>জিকির কাউন্টার</title>
+  </head>
+  <body>
+    <h1 class="zikir-title">জিকির কাউন্টার</h1>
+    <div class="zikir-wrapper">
+      <div class="zikr-container">
+        <label class="zikr"
+          ><input type="radio" name="zikr" value="subhanallah" />
+          <span id="z1">সুবাহান আল্লাহ</span>
+          <span id="subhanallah">0</span></label
+        >
+        <label class="zikr"
+          ><input type="radio" name="zikr" value="alhamdulillah" />
+          <span id="z2">আলহামদুলিল্লাহ</span>
+          <span id="alhamdulillah">0</span></label
+        >
+        <label class="zikr"
+          ><input type="radio" name="zikr" value="la_ilaha_illallah" />
+          <span id="z3">লা ইলাহা ইল্লাল্লাহ </span
+          ><span id="la_ilaha_illallah">0</span></label
+        >
+        <label class="zikr"
+          ><input type="radio" name="zikr" value="astaghfirullah" />
+          <span id="z4">আস্তাগফিরুল্লাহ </span
+          ><span id="astaghfirullah">0</span></label
+        >
+        <label class="zikr"
+          ><input type="radio" name="zikr" value="allahu" />
+          <span id="z5">আল্লাহু</span> <span id="allahu">0</span></label
+        >
+      </div>
+      <div class="total-container">
+        <div class="total">
+          মোট জিকিরঃ <span id="totalCount" class="ripple-container" tabindex="0">0</span>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div id="errorMsg">
+      <span
+        >কীবোর্ডের স্পেস বাটন প্রেস করে কিংবা কালো বৃত্তটিতে ক্লিক করে করে জিকির
+        করুন।</span
+      >
+    </div>
+    <hr />
+
+    <script src="js/zikir.js"></script>
+  </body>
+</html>

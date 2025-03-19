@@ -1,0 +1,309 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f4f4f4;
+  position: relative;
+}
+/* global floating elements start */
+/* .password {
+  position: absolute;
+} */
+/* global floating elements end */
+.clock-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+}
+.clock {
+  font-size: 100px;
+  font-weight: bold;
+  background: #000;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  width: 480px;
+  height: 240px;
+}
+
+.small-am-pm {
+  font-size: 40%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 5px;
+}
+.date-group {
+  margin-top: 50px;
+  font-size: 24px;
+  font-family: "Anek Bangla", sans-serif;
+  /* margin-bottom: 50px; */
+}
+.date-group .date-title {
+  font-weight: 600;
+}
+.date {
+  margin-top: 20px;
+  margin: -10px 0;
+}
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15vw; /* Increased font size for large screens */
+  z-index: 9999;
+}
+/* timer style start */
+#timerClock {
+  margin-top: 20px;
+  font-size: 80px;
+  font-weight: bold;
+  background: #000;
+  color: #fff;
+  display: inline-block;
+  padding: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: none; /* শুরুতে লুকিয়ে রাখার জন্য */
+}
+
+.timer.timer-fullscreen {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15vw;
+  z-index: 9999;
+}
+.timerSection {
+  /* margin-top: 30px; */
+  padding-bottom: 20px;
+}
+h3.title {
+  font-size: 48px;
+  font-family: "Baumans", system-ui;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 30px 0;
+}
+.timer {
+  font-weight: bold;
+  padding: 10px 30px;
+  margin: 20px 0;
+  display: inline-block;
+  font-size: 48px;
+  cursor: pointer;
+  border-radius: 5px;
+  background: #000;
+  color: #fff;
+  min-width: 200px;
+}
+.timerSection input,
+.timerSection button {
+  font-size: 24px;
+  cursor: pointer;
+  font-family: "Baumans", system-ui;
+}
+.timerSection button {
+  font-weight: bold;
+  padding: 1px 20px;
+  letter-spacing: 2px;
+}
+#timerType {
+  margin-bottom: 10px;
+}
+#fixedTimeInput,
+#endTimeInputSection {
+  margin-right: 10px;
+}
+.timerhandler {
+  display: flex;
+  justify-content: center;
+}
+
+/* timer style end */
+/* stop watch start */
+#stopwatch_container {
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  display: inline-block;
+  background: #e5e5e5;
+  color: #000;
+  padding: 10px 30px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+.time-part {
+  display: inline-block;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.milliseconds_stopwatch {
+  min-width: 60px;
+  text-align: left; /* Align value to the left */
+  display: inline-block;
+}
+.btn_container {
+  text-align: center;
+}
+.stopwatch_section button {
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  background: #000;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  font-family: "baumans", system-ui;
+  letter-spacing: 2px;
+}
+/* stop watch full screen functionality */
+._watch.fullscreen-mode {
+  background-color: #000 !important; /* White background */
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex-direction: column;
+  z-index: 9999;
+  color: #fff !important;
+}
+._watch.fullscreen-mode #stopwatch_container {
+  background: #000;
+  color: #fff;
+  font-size: 128px;
+}
+._watch.fullscreen-mode #stopwatch_container .milliseconds_stopwatch {
+  min-width: 220px;
+}
+._watch.fullscreen-mode button {
+  background: #fff;
+  color: #000;
+}
+
+#closeFullscreenBtn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: red;
+  color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 5px;
+}
+
+/* stop watch end */
+/* timer and stopwatch combine start */
+/* For large devices */
+.timer_stopwatch_container {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.timer_stopwatch_container .timerSection,
+.timer_stopwatch_container .stopwatch_section {
+  width: 48%; /* 50% with a small gap in between */
+  padding-top: 0 !important;
+  border: 1px solid #000;
+}
+
+/* timer and stopwatch combine stop */
+/* Quaran part start */
+.popup-trigger-container {
+  font-size: 24px;
+  color: #e5e5e5;
+  font-weight: bold;
+  margin-top: 20px;
+}
+.popup-trigger-container .wrapper {
+  padding: 10px 0;
+}
+.popup-trigger-container .wrapper span:first-child {
+  margin-left: 0;
+}
+.popup-trigger-container .wrapper span:last-child {
+  margin-right: 0;
+}
+.popup-trigger-container .wrapper span {
+  font-family: "Anek Bangla", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #000;
+  margin: 0 10px;
+}
+/* Quaran part end */
+/* Popup style start */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  position: relative;
+  background: white;
+  width: 850px;
+  height: 85%;
+  padding: 20px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: red;
+  color: white;
+  border: none;
+  /* padding: 10px; */
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5px;
+}
+
+/* popup style end */

@@ -1,0 +1,42 @@
+@media screen and (max-width: 768px) {
+  body {
+    margin: 50px 10px;
+  }
+  .clock {
+    font-size: 72px;
+  }
+  .timer_stopwatch_container {
+    flex-direction: column; /* Stack the items vertically */
+  }
+  .timer_stopwatch_container .timerSection,
+  .timer_stopwatch_container .stopwatch_section {
+    width: 100%;
+    margin-bottom: 10px;
+    padding-bottom: 40px;
+  }
+  input#endTimeInput {
+    margin-bottom: 10px;
+  }
+  #stopwatch_container {
+    font-size: 1.5rem;
+  }
+  ._watch.fullscreen-mode #stopwatch_container .milliseconds_stopwatch {
+    min-width: 60px;
+  }
+  ._watch.fullscreen-mode #stopwatch_container {
+    font-size: 98px;
+  }
+  .zikir-wrapper{
+    flex-direction: column;
+    height: auto;
+  }
+  .total-container{
+    padding: 30px 0;
+  }
+  .zikir-title{
+    font-size: 72px;
+    margin-top: 20px;
+    line-height: 1.2;
+  }
+
+}

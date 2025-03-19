@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/fonts.css" />
+    <title>দৈনিক কোরআনের আয়াত</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+      }
+      h1 {
+        color: #333;
+        font-family: "Anek Bangla", sans-serif;
+      }
+      #ayahs {
+        max-width: 750px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+      .ayah-box {
+        margin-bottom: 20px;
+        padding: 15px;
+        border-bottom: 2px solid #ddd;
+        text-align: left;
+      }
+      .ayah-box:last-child {
+        border-bottom: none;
+      }
+      .arabic {
+        font-size: 22px;
+        color: #222;
+        direction: rtl;
+        font-weight: bold;
+      }
+      .transliteration {
+        font-size: 16px;
+        color: #444;
+        font-style: italic;
+      }
+      .bangla {
+        font-size: 18px;
+        color: #000;
+        font-family: "Anek Bangla", sans-serif;
+        line-height: 1.3;
+      }
+      .ayah-info {
+        font-size: 14px;
+        color: #888;
+        font-family: "Anek Bangla", sans-serif;
+      }
+      .ayat_number {
+        margin-bottom: 30px;
+        margin-top: -30px;
+        font-weight: 700;
+        color: rgba(110, 110, 110, 1);
+        font-family: "Baumans", system-ui;
+        letter-spacing: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>আজকের ৫টি কোরআনের আয়াত</h1>
+    <div class="ayat_number">
+      (Verse: <span id="start_ayat"></span>&nbsp;-&nbsp;<span
+        id="end_ayat"
+      ></span
+      >)
+    </div>
+    <div id="ayahs"></div>
+
+    <script>
+      const totalAyahs = 6236; // কুরআনের মোট আয়াত সংখ্যা
+
+      function getDailyRandomAyah() {
+        const today = new Date();
+        const dateSeed =
+          today.getFullYear() * 1000 + today.getMonth() * 100 + today.getDate();
+        return ((dateSeed * 2654435761) % totalAyahs) + 1; // এলোমেলো আয়াত শুরু হবে
+      }
+
+      let currentDate = new Date().getDate(); // Store the current date
+      let startAyah = getDailyRandomAyah();
+      let endAyah = Math.min(startAyah + 4, totalAyahs); // পরবর্তী ৪টি আয়াত
+      document.getElementById("start_ayat").innerText = startAyah;
+      document.getElementById("end_ayat").innerText = endAyah;
+
+      async function fetchAyahs(start, end) {
+        const ayahsContainer = document.getElementById("ayahs");
+        ayahsContainer.innerHTML = "<p>লোড হচ্ছে...</p>";
+
+        let ayahsHTML = "";
+
+        for (let i = start; i <= end; i++) {
+          try {
+            const response = await fetch(
+              `https://api.alquran.cloud/v1/ayah/${i}/editions/quran-uthmani,bn.bengali,en.transliteration`
+            );
+            const data = await response.json();
+
+            if (data.status === "OK") {
+              const arabicText = data.data[0].text;
+              const banglaTranslation = data.data[1].text;
+              const transliteration = data.data[2].text;
+              const surahName = data.data[0].surah.englishName;
+              const surahNumber = data.data[0].surah.number;
+              const ayahNumber = data.data[0].numberInSurah;
+              ayahsHTML += `
+                            <div class="ayah-box">
+                                <p class="ayah-info">সূরা ${surahNumber}: ${surahName}, আয়াত ${ayahNumber} (Verse: ${startAyah++})</p>
+                                <p class="arabic">${arabicText}</p>
+                                <p class="transliteration">উচ্চারণ: ${transliteration}</p>
+                                <p class="bangla">অর্থ: ${banglaTranslation}</p>
+                            </div>
+                        `;
+            }
+          } catch (error) {
+            console.error("Error fetching ayah:", error);
+          }
+        }
+
+        ayahsContainer.innerHTML =
+          ayahsHTML || "<p>আয়াত লোড করা যায়নি। পরে আবার চেষ্টা করুন।</p>";
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        fetchAyahs(startAyah, endAyah);
+      });
+
+      // Check every minute if the date has changed
+      setInterval(() => {
+        let newDate = new Date().getDate();
+        if (newDate !== currentDate) {
+          currentDate = newDate;
+          startAyah = getDailyRandomAyah();
+          endAyah = Math.min(startAyah + 4, totalAyahs);
+          fetchAyahs(startAyah, endAyah);
+        }
+      }, 60000); // Check every 1 minute (60,000 ms)
+    </script>
+  </body>
+</html>
