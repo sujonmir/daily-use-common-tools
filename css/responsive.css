@@ -105,6 +105,10 @@
   ._watch.fullscreen-mode #stopwatch_container .milliseconds_stopwatch {
     min-width: 50px;
   }
+  .small-am-pm {
+    right: 15px;
+    bottom: 15px;
+  }
 }
 @media screen and (max-width: 375px) {
   .milliseconds_stopwatch {
