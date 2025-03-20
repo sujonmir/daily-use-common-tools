@@ -66,9 +66,6 @@
   input#endTimeInput {
     margin-bottom: 10px;
   }
-  #stopwatch_container {
-    font-size: 1.5rem;
-  }
   ._watch.fullscreen-mode #stopwatch_container .milliseconds_stopwatch {
     min-width: 60px;
   }
