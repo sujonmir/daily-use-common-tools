@@ -78,6 +78,12 @@ minutesInput.addEventListener("keydown", function (event) {
   }
 });
 
+minutesInput.addEventListener("input", function (event) {
+  if (event.inputType === "insertLineBreak") {
+    toggleTimer();
+  }
+});
+
 // function for fixed time end
 
 // Function to start the timer
