@@ -1,6 +1,12 @@
 * {
   -webkit-tap-highlight-color: transparent;
 }
+input#minutesInput {
+  padding: 5px;
+}
+input#endTimeInput {
+  padding: 5px;
+}
 @media screen and (max-width: 991px) {
   .timerhandler {
     flex-direction: column;
@@ -31,9 +37,14 @@
   #endTimeInputSection {
     margin-right: 0;
   }
+  input#minutesInput {
+    margin-bottom: 0;
+    font-size: 16px;
+    padding: 5px;
+  }
   input#endTimeInput {
     margin-bottom: 0;
-    font-size: 18px;
+    font-size: 16px;
     padding: 5px;
   }
   .timerSection input {

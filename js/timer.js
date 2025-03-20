@@ -1,7 +1,7 @@
 let timerInterval; // Global variable to store the interval ID
 let isTimerRunning = false; // Global variable to track timer state
 let timerType = ""; // Global variable to store the selected timer type
-
+let minutesInput = document.getElementById("minutesInput");
 // Function to handle timer type change
 function handleTimerTypeChange() {
   const timerTypeSelect = document.getElementById("timerType");
@@ -72,6 +72,11 @@ function toggleTimer() {
 }
 
 // function for fixed time start
+minutesInput.addEventListener("keydown", function (event) {
+  if (event.code === "Enter") {
+    toggleTimer();
+  }
+});
 
 // function for fixed time end
 
