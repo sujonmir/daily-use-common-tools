@@ -49,13 +49,25 @@ function updateDate() {
   bangladeshIslamicDate.setDate(bangladeshIslamicDate.getDate() - 1);
 
   let islamicDate = new Intl.DateTimeFormat("bn-TN-u-ca-islamic", {
-    weekday: "long",
     day: "numeric",
     month: "long",
     year: "numeric",
   }).format(bangladeshIslamicDate);
 
   islamicDate = islamicDate.replace("যুগ", "হিজরি");
+  islamicDate = islamicDate.replace("খ্রিস্টপূর্ব", "হিজরি");
+  islamicDate = islamicDate.replace("জানুয়ারি", "মুহাররম");
+  islamicDate = islamicDate.replace("ফেব্রুয়ারি", "সফর");
+  islamicDate = islamicDate.replace("মার্চ", "রবিউল আউয়াল");
+  islamicDate = islamicDate.replace("এপ্রিল", "রবিউস সানি");
+  islamicDate = islamicDate.replace("মে", "জমাদিউল আউয়াল");
+  islamicDate = islamicDate.replace("জুন", "জমাদিউস সানি");
+  islamicDate = islamicDate.replace("জুলাই", "রজব");
+  islamicDate = islamicDate.replace("অগাস্ট", "শাবান");
+  islamicDate = islamicDate.replace("সেপ্টেম্বর", "রমজান");
+  islamicDate = islamicDate.replace("অক্টোবর", "শাওয়াল");
+  islamicDate = islamicDate.replace("নভেম্বর", "জিলকদ");
+  islamicDate = islamicDate.replace("ডিসেম্বর", "জিলহজ");
 
   document.getElementById("arabicDateBangla").innerText = `${islamicDate}`;
 }
@@ -101,8 +113,6 @@ document.addEventListener("fullscreenchange", function () {
 
 setInterval(updateTime, 1000);
 updateTime();
-
-
 
 // stopwatch start
 (function () {
