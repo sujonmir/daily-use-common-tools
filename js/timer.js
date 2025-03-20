@@ -73,7 +73,7 @@ function toggleTimer() {
 
 // function for fixed time start
 minutesInput.addEventListener("keydown", function (event) {
-  if (event.code === "Enter") {
+  if (event.key === "Enter") {
     toggleTimer();
   }
 });
