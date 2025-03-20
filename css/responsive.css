@@ -66,12 +66,6 @@
   input#endTimeInput {
     margin-bottom: 10px;
   }
-  ._watch.fullscreen-mode #stopwatch_container .milliseconds_stopwatch {
-    min-width: 60px;
-  }
-  ._watch.fullscreen-mode #stopwatch_container {
-    font-size: 98px;
-  }
   .zikir-wrapper {
     flex-direction: column;
     height: auto;
