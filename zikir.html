@@ -8,6 +8,44 @@
     <link rel="stylesheet" href="css/responsive.css" />
     <link rel="stylesheet" href="css/ripple.css" />
     <title>জিকির কাউন্টার</title>
+    <style>
+      /* Optional: Basic styling for the new buttons */
+      .data-management {
+        margin-top: 20px;
+        padding-bottom: 20px; /* Add some space at the bottom */
+        text-align: center;
+      }
+      .managemennt-btn {
+        margin: 5px;
+        cursor: pointer;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.9em;
+        /* display: flex;
+        height: 50px;
+        align-items: center;
+        justify-content: center;
+        padding: 0 20px;
+        transition: all linear 0.3s;
+        width: auto; */
+        display: inline-block;
+        padding: 10px 20px;
+        line-height: 1;
+      }
+      .data-management button {
+        background-color: #007bff;
+        color: white;
+      }
+      .data-management label {
+        background-color: #28a745;
+        color: white;
+      }
+      .data-management p {
+        font-size: 0.8em;
+        color: #555;
+        margin-top: 8px;
+      }
+    </style>
   </head>
   <body>
     <h1 class="zikir-title">জিকির কাউন্টার</h1>
@@ -54,6 +92,19 @@
     </div>
     <hr />
 
+    <!-- Added Data Management Section -->
+    <div class="data-management">
+      <button id="exportButton" class="managemennt-btn">Export Counts</button>
+      <label for="importFile" class="managemennt-btn">Import Counts</label>
+      <input type="file" id="importFile" accept=".json" style="display: none" />
+      <p>
+        (Export counts to a .json file to save them. Import the file later to
+        restore.)
+      </p>
+    </div>
+    <!-- End Data Management Section -->
+
+    <!-- Ensure idb.js is included BEFORE zikir.js -->
     <script src="js/idb.js"></script>
     <script src="js/zikir.js"></script>
   </body>
