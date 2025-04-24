@@ -114,15 +114,56 @@ document.addEventListener("fullscreenchange", function () {
 setInterval(updateTime, 1000);
 updateTime();
 
+
 // stopwatch start
 (function () {
   let startTime = 0,
-    elapsedTime = 0,
+    elapsedTime = 0, // This will be initialized from localStorage
     timerInterval;
   let running = false;
 
+  // --- Initialization code START ---
+  function initializeStopwatchState() {
+    // Get values from localStorage, providing defaults if they don't exist
+    const savedHrsStr = localStorage.hours || "00";
+    const savedMinStr = localStorage.minutes || "00";
+    const savedSecStr = localStorage.seconds || "00";
+    const savedMsStr = localStorage.milliSeconds || "000";
+
+    // Convert saved strings to numbers
+    const savedHrs = parseInt(savedHrsStr, 10);
+    const savedMin = parseInt(savedMinStr, 10);
+    const savedSec = parseInt(savedSecStr, 10);
+    const savedMs = parseInt(savedMsStr, 10);
+
+    // Calculate the initial elapsedTime in milliseconds
+    // Check if parsed values are valid numbers, default to 0 if not
+    elapsedTime =
+      (isNaN(savedHrs) ? 0 : savedHrs * 3600000) +
+      (isNaN(savedMin) ? 0 : savedMin * 60000) +
+      (isNaN(savedSec) ? 0 : savedSec * 1000) +
+      (isNaN(savedMs) ? 0 : savedMs);
+
+    // Update the display immediately with the loaded values
+    const hoursDisplay = document.getElementById("hours_stopwatch");
+    const minutesDisplay = document.getElementById("minutes_stopwatch");
+    const secondsDisplay = document.getElementById("seconds_stopwatch");
+    const msDisplay = document.getElementById("milliseconds_stopwatch");
+
+    if (hoursDisplay) hoursDisplay.innerText = savedHrsStr.padStart(2, "0");
+    if (minutesDisplay) minutesDisplay.innerText = savedMinStr.padStart(2, "0");
+    if (secondsDisplay) secondsDisplay.innerText = savedSecStr.padStart(2, "0");
+    if (msDisplay) msDisplay.innerText = savedMsStr.padStart(3, "0");
+  }
+
+  // Run the initialization function when the script loads
+  initializeStopwatchState();
+  // --- Initialization code END ---
+
+  // Keep your existing updateTime function as is
   function updateTime() {
     if (!running) return;
+    // Recalculate based on startTime, elapsedTime updates internally
     elapsedTime = Date.now() - startTime;
 
     let ms = Math.floor(elapsedTime % 1000)
@@ -138,113 +179,169 @@ updateTime();
       .toString()
       .padStart(2, "0");
 
-    document.getElementById("hours_stopwatch").innerText = hrs;
-    document.getElementById("minutes_stopwatch").innerText = min;
-    document.getElementById("seconds_stopwatch").innerText = sec;
-    document.getElementById("milliseconds_stopwatch").innerText = ms;
+    // Save to localStorage (as per your original code)
+    localStorage.milliSeconds = ms;
+    localStorage.seconds = sec;
+    localStorage.minutes = min;
+    localStorage.hours = hrs;
+
+    // Update display from localStorage (as per your original code)
+    const hoursDisplay = document.getElementById("hours_stopwatch");
+    const minutesDisplay = document.getElementById("minutes_stopwatch");
+    const secondsDisplay = document.getElementById("seconds_stopwatch");
+    const msDisplay = document.getElementById("milliseconds_stopwatch");
+
+    // Add checks in case elements don't exist yet when updateTime runs
+    if (hoursDisplay) hoursDisplay.innerText = localStorage.hours;
+    if (minutesDisplay) minutesDisplay.innerText = localStorage.minutes;
+    if (secondsDisplay) secondsDisplay.innerText = localStorage.seconds;
+    if (msDisplay) msDisplay.innerText = localStorage.milliSeconds;
 
     timerInterval = requestAnimationFrame(updateTime);
   }
 
+  // Keep your existing start button listener - it already uses elapsedTime
   document
     .getElementById("start_stopwatch")
     .addEventListener("click", function () {
       if (!running) {
+        // This line correctly uses the elapsedTime loaded during initialization
         startTime = Date.now() - elapsedTime;
         running = true;
-        updateTime();
+
+        // Cancel any leftover frame requests before starting a new one
+        // (Good practice to add)
+        if (timerInterval) {
+          cancelAnimationFrame(timerInterval);
+        }
+        updateTime(); // Start the update loop
       }
     });
 
+  // Keep your existing stop button listener as is
   document
     .getElementById("stop_stopwatch")
     .addEventListener("click", function () {
-      running = false;
-      cancelAnimationFrame(timerInterval);
+      if (running) {
+        // Check if running before stopping
+        running = false;
+        if (timerInterval) {
+          // Check if timerInterval exists before cancelling
+          cancelAnimationFrame(timerInterval);
+          timerInterval = null; // Clear the interval ID
+        }
+        // Note: Your original stop handler didn't explicitly save to localStorage here.
+        // The last values saved would be from the last execution of `updateTime`.
+        // This might be slightly inaccurate if the stop button is clicked between frames.
+        // If precise saving on stop is needed, add localStorage.setItem calls here.
+      }
     });
 
+  // Keep your existing reset button listener as is
   document
     .getElementById("reset_stopwatch")
     .addEventListener("click", function () {
       running = false;
-      elapsedTime = 0;
-      cancelAnimationFrame(timerInterval);
-      document.getElementById("hours_stopwatch").innerText = "00";
-      document.getElementById("minutes_stopwatch").innerText = "00";
-      document.getElementById("seconds_stopwatch").innerText = "00";
-      document.getElementById("milliseconds_stopwatch").innerText = "000";
+      elapsedTime = 0; // Reset internal elapsed time
+      // Reset startTime reference point (optional but good practice)
+      startTime = Date.now();
+
+      if (timerInterval) {
+        // Check if timerInterval exists before cancelling
+        cancelAnimationFrame(timerInterval);
+        timerInterval = null; // Clear the interval ID
+      }
+
+      // Reset localStorage
+      localStorage.hours = "00";
+      localStorage.minutes = "00";
+      localStorage.seconds = "00";
+      localStorage.milliSeconds = "000";
+
+      // Update display from the reset localStorage values
+      const hoursDisplay = document.getElementById("hours_stopwatch");
+      const minutesDisplay = document.getElementById("minutes_stopwatch");
+      const secondsDisplay = document.getElementById("seconds_stopwatch");
+      const msDisplay = document.getElementById("milliseconds_stopwatch");
+
+      if (hoursDisplay) hoursDisplay.innerText = localStorage.hours;
+      if (minutesDisplay) minutesDisplay.innerText = localStorage.minutes;
+      if (secondsDisplay) secondsDisplay.innerText = localStorage.seconds;
+      if (msDisplay) msDisplay.innerText = localStorage.milliSeconds;
     });
-})();
-// stopwatch full screen funtionality
-(function () {
-  function toggleFullScreen() {
-    const element = document.getElementById("stopwatch_section");
+})(); // End Stopwatch IIFE
 
-    if (!document.fullscreenElement) {
-      // Enter full-screen mode
-      if (element.requestFullscreen) {
-        element.requestFullscreen();
-      } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen();
-      } else if (element.webkitRequestFullscreen) {
-        element.webkitRequestFullscreen();
-      } else if (element.msRequestFullscreen) {
-        element.msRequestFullscreen();
-      }
-
-      // Add full-screen mode classes
-      element.classList.add("fullscreen-mode", "_watch");
-      showCloseButton();
-    }
-  }
-
-  function exitFullScreen() {
-    if (document.fullscreenElement) {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
+// stopwatch full screen funtionality (Keep this as is)
+  // stopwatch full screen funtionality
+  (function () {
+    function toggleFullScreen() {
+      const element = document.getElementById("stopwatch_section");
+  
+      if (!document.fullscreenElement) {
+        // Enter full-screen mode
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+  
+        // Add full-screen mode classes
+        element.classList.add("fullscreen-mode", "_watch");
+        showCloseButton();
       }
     }
-    // Ensure UI resets after exiting full screen
-    resetUI();
-  }
-
-  function resetUI() {
-    const element = document.getElementById("stopwatch_section");
-    element.classList.remove("fullscreen-mode", "_watch"); // Remove classes
-    removeCloseButton(); // Remove close button
-  }
-
-  function showCloseButton() {
-    const closeButton = document.createElement("button");
-    closeButton.innerHTML = "✖";
-    closeButton.id = "closeFullscreenBtn";
-    closeButton.onclick = exitFullScreen;
-    document.getElementById("stopwatch_section").appendChild(closeButton);
-  }
-
-  function removeCloseButton() {
-    const closeButton = document.getElementById("closeFullscreenBtn");
-    if (closeButton) {
-      closeButton.remove();
-    }
-  }
-
-  // Detect fullscreen exit (handles ESC key & manual exit)
-  document.addEventListener("fullscreenchange", function () {
-    if (!document.fullscreenElement) {
+  
+    function exitFullScreen() {
+      if (document.fullscreenElement) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+      // Ensure UI resets after exiting full screen
       resetUI();
     }
-  });
-
-  // Attach event listener to trigger full-screen mode
-  document
-    .getElementById("stopwatch_container")
-    .addEventListener("click", toggleFullScreen);
-})();
+  
+    function resetUI() {
+      const element = document.getElementById("stopwatch_section");
+      element.classList.remove("fullscreen-mode", "_watch"); // Remove classes
+      removeCloseButton(); // Remove close button
+    }
+  
+    function showCloseButton() {
+      const closeButton = document.createElement("button");
+      closeButton.innerHTML = "✖";
+      closeButton.id = "closeFullscreenBtn";
+      closeButton.onclick = exitFullScreen;
+      document.getElementById("stopwatch_section").appendChild(closeButton);
+    }
+  
+    function removeCloseButton() {
+      const closeButton = document.getElementById("closeFullscreenBtn");
+      if (closeButton) {
+        closeButton.remove();
+      }
+    }
+  
+    // Detect fullscreen exit (handles ESC key & manual exit)
+    document.addEventListener("fullscreenchange", function () {
+      if (!document.fullscreenElement) {
+        resetUI();
+      }
+    });
+  
+    // Attach event listener to trigger full-screen mode
+    document
+      .getElementById("stopwatch_container")
+      .addEventListener("click", toggleFullScreen);
+  })();
 // stopwatch end
