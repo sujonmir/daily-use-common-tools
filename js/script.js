@@ -30,7 +30,6 @@ function updateDate() {
     year: "numeric",
     month: "long",
     day: "numeric",
-    weekday: "long",
   };
 
   let bangladeshTime = new Date().toLocaleString("en-US", {
@@ -42,6 +41,11 @@ function updateDate() {
     options
   );
   document.getElementById("date").innerText = `${bangladeshDate} খ্রিষ্টাব্দ`;
+  // Show weekday in long format (Bangla)
+  let bangladeshWeekday = new Date(bangladeshTime).toLocaleDateString("bn-BD", {
+    weekday: "long",
+  });
+  document.getElementById("WeekDate").innerText = `${bangladeshWeekday}`;
   dateToday("date_today", "bangla");
 
   // 🔹 আরবি তারিখ বাংলা ভাষায় দেখানো
