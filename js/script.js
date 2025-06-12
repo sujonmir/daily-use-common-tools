@@ -114,7 +114,6 @@ document.addEventListener("fullscreenchange", function () {
 setInterval(updateTime, 1000);
 updateTime();
 
-
 // stopwatch start
 (function () {
   let startTime = 0,
@@ -272,76 +271,76 @@ updateTime();
 })(); // End Stopwatch IIFE
 
 // stopwatch full screen funtionality (Keep this as is)
-  // stopwatch full screen funtionality
-  (function () {
-    function toggleFullScreen() {
-      const element = document.getElementById("stopwatch_section");
-  
-      if (!document.fullscreenElement) {
-        // Enter full-screen mode
-        if (element.requestFullscreen) {
-          element.requestFullscreen();
-        } else if (element.mozRequestFullScreen) {
-          element.mozRequestFullScreen();
-        } else if (element.webkitRequestFullscreen) {
-          element.webkitRequestFullscreen();
-        } else if (element.msRequestFullscreen) {
-          element.msRequestFullscreen();
-        }
-  
-        // Add full-screen mode classes
-        element.classList.add("fullscreen-mode", "_watch");
-        showCloseButton();
+// stopwatch full screen funtionality
+(function () {
+  function toggleFullScreen() {
+    const element = document.getElementById("stopwatch_section");
+
+    if (!document.fullscreenElement) {
+      // Enter full-screen mode
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+      } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+      } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+      }
+
+      // Add full-screen mode classes
+      element.classList.add("fullscreen-mode", "_watch");
+      showCloseButton();
+    }
+  }
+
+  function exitFullScreen() {
+    if (document.fullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
       }
     }
-  
-    function exitFullScreen() {
-      if (document.fullscreenElement) {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-      }
-      // Ensure UI resets after exiting full screen
+    // Ensure UI resets after exiting full screen
+    resetUI();
+  }
+
+  function resetUI() {
+    const element = document.getElementById("stopwatch_section");
+    element.classList.remove("fullscreen-mode", "_watch"); // Remove classes
+    removeCloseButton(); // Remove close button
+  }
+
+  function showCloseButton() {
+    const closeButton = document.createElement("button");
+    closeButton.innerHTML = "✖";
+    closeButton.id = "closeFullscreenBtn";
+    closeButton.onclick = exitFullScreen;
+    document.getElementById("stopwatch_section").appendChild(closeButton);
+  }
+
+  function removeCloseButton() {
+    const closeButton = document.getElementById("closeFullscreenBtn");
+    if (closeButton) {
+      closeButton.remove();
+    }
+  }
+
+  // Detect fullscreen exit (handles ESC key & manual exit)
+  document.addEventListener("fullscreenchange", function () {
+    if (!document.fullscreenElement) {
       resetUI();
     }
-  
-    function resetUI() {
-      const element = document.getElementById("stopwatch_section");
-      element.classList.remove("fullscreen-mode", "_watch"); // Remove classes
-      removeCloseButton(); // Remove close button
-    }
-  
-    function showCloseButton() {
-      const closeButton = document.createElement("button");
-      closeButton.innerHTML = "✖";
-      closeButton.id = "closeFullscreenBtn";
-      closeButton.onclick = exitFullScreen;
-      document.getElementById("stopwatch_section").appendChild(closeButton);
-    }
-  
-    function removeCloseButton() {
-      const closeButton = document.getElementById("closeFullscreenBtn");
-      if (closeButton) {
-        closeButton.remove();
-      }
-    }
-  
-    // Detect fullscreen exit (handles ESC key & manual exit)
-    document.addEventListener("fullscreenchange", function () {
-      if (!document.fullscreenElement) {
-        resetUI();
-      }
-    });
-  
-    // Attach event listener to trigger full-screen mode
-    document
-      .getElementById("stopwatch_container")
-      .addEventListener("click", toggleFullScreen);
-  })();
+  });
+
+  // Attach event listener to trigger full-screen mode
+  document
+    .getElementById("stopwatch_container")
+    .addEventListener("click", toggleFullScreen);
+})();
 // stopwatch end
