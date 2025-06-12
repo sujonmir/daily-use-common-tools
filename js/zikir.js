@@ -196,6 +196,8 @@ function updateDisplay() {
       console.warn("Total count text node not found, replacing content.");
     }
   }
+  // After updating the numbers, check and apply the highlight color.
+  checkAndApplyCountHighlight();
 }
 
 function keyText(key) {
@@ -637,3 +639,41 @@ async function initializeApp() {
 // --- Start the application ---
 // Use DOMContentLoaded to ensure the HTML is fully parsed
 document.addEventListener("DOMContentLoaded", initializeApp);
+
+/**
+ * Checks each zikr count and applies a special highlight color if the
+ * count is a multiple of 33. Reverts to a default color otherwise.
+ */
+function checkAndApplyCountHighlight() {
+  // Map of zikr keys to their corresponding count elements
+  const countElements = {
+    subhanallah: subhanallahEl,
+    alhamdulillah: alhamdulillahEl,
+    la_ilaha_illallah: la_ilaha_illallahEl,
+    astaghfirullah: astaghfirullahEl,
+    allahu: allahuEl,
+  };
+
+  // Iterate over each zikr defined in our map
+  for (const key in countElements) {
+    // Ensure we are iterating over own properties, not inherited ones
+    if (Object.prototype.hasOwnProperty.call(countElements, key)) {
+      const element = countElements[key];
+      const count = zikrCounts[key];
+
+      // Check if the element actually exists on the page
+      if (element) {
+        // THE CONDITION: Is the count a multiple of 33 and greater than 0?
+        if (count > 0 && count % 33 === 0) {
+          // If yes, set the color to lime green
+          element.style.color = "lime";
+        } else {
+          // Otherwise, set the color to white
+          // IMPORTANT: This assumes you have a dark background. If not, 'white' will be invisible.
+          // You could use '#000' for black or '' to revert to the default stylesheet color.
+          element.style.color = "white";
+        }
+      }
+    }
+  }
+}
