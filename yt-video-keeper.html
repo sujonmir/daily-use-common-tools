@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://i.pinimg.com/originals/2c/a6/47/2ca6474064c8d4f895a596ad55ba7226.png"
+    />
+    <title>YouTube Video Keeper</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f0f2f5;
+        color: #333;
+        padding-top: 30px;
+        margin: 0 20px;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .inputer {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+      }
+      input[type="text"] {
+        flex-grow: 1;
+        font-size: 18px;
+        padding: 12px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      button {
+        font-size: 16px;
+        padding: 12px 20px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: bold;
+        background: #c00;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s, box-shadow 0.2s;
+      }
+      button:hover {
+        background: #a00;
+      }
+      button:active {
+        background: #800;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      }
+      .shower {
+        margin-top: 20px;
+        text-align: center;
+        margin-bottom: 40px;
+        background: #000;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        min-height: 470px; /* NEW: Reserve space for the player */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .shower iframe {
+        display: block;
+        max-width: 100%;
+        border-radius: 5px;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid #ddd;
+        margin: 40px 0;
+      }
+      h2 {
+        border-bottom: 2px solid #c00;
+        padding-bottom: 10px;
+      }
+      .videoList {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 20px;
+      }
+      /* MODIFIED: Styling for the new thumbnail item */
+      .video-item {
+        position: relative;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        cursor: pointer; /* NEW: Show it's clickable */
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      /* NEW: Hover effect for better user feedback */
+      .video-item:hover {
+        transform: scale(1.03);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+      /* NEW: Styling for the thumbnail image */
+      .video-item img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border: none;
+      }
+      .video-item .remove {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 28px;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        opacity: 0.5;
+        transition: opacity 0.2s, background-color 0.2s;
+        z-index: 10; /* NEW: Make sure it's on top */
+      }
+      .video-item .remove:hover {
+        background-color: #c00;
+      }
+      .video-item:hover .remove {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="inputer">
+        <input
+          type="text"
+          placeholder="Paste a YouTube URL here..."
+          id="urlInput"
+          autocomplete="off"
+        />
+        <button id="submitBtn">Save</button>
+      </div>
+
+      <div id="mainPlayer" class="shower">
+        <p style="color: #777">Saved videos will be played here.</p>
+      </div>
+      <hr />
+      <h2>Saved Videos (<span id="videoCount">0</span>)</h2>
+      <div id="videoList" class="videoList">
+        <!-- The list of saved video thumbnails will go here -->
+      </div>
+    </div>
+
+    <script>
+      // --- DOM Elements ---
+      const urlInput = document.getElementById("urlInput");
+      const submitBtn = document.getElementById("submitBtn");
+      const mainPlayer = document.getElementById("mainPlayer");
+      const videoList = document.getElementById("videoList");
+      const videoCount = document.getElementById("videoCount");
+
+      // --- State ---
+      let videoKeeper = [];
+
+      // --- Functions ---
+
+      function getVideoId(url) {
+        const regExp =
+          /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = url.match(regExp);
+        return match && match[2].length === 11 ? match[2] : null;
+      }
+
+      function saveVideos() {
+        localStorage.setItem("videoKeeper", JSON.stringify(videoKeeper));
+      }
+
+      /**
+       * MODIFIED: Renders the saved videos as non-playable thumbnails.
+       */
+      function renderSavedVideos() {
+        videoList.innerHTML = "";
+        videoCount.textContent = videoKeeper.length;
+
+        videoKeeper.forEach((videoId) => {
+          const videoItem = document.createElement("div");
+          videoItem.className = "video-item";
+          // NEW: Add a data attribute to easily identify the video
+          videoItem.dataset.id = videoId;
+
+          // MODIFIED: Use an <img> for the thumbnail instead of an <iframe>
+          videoItem.innerHTML = `
+            <img src="https://img.youtube.com/vi/${videoId}/mqdefault.jpg" alt="Video thumbnail">
+            <button class="remove" data-id="${videoId}">X</button>
+          `;
+          videoList.appendChild(videoItem);
+        });
+      }
+
+      function updateMainPlayer(videoId) {
+        if (!videoId) {
+          mainPlayer.innerHTML =
+            '<p style="color: #777;">Saved videos will be played here.</p>';
+          localStorage.removeItem("lastVideoId");
+          return;
+        }
+        const embedHtml = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" width="700" height="450" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+        mainPlayer.innerHTML = embedHtml;
+        localStorage.setItem("lastVideoId", videoId);
+      }
+
+      function handleAddVideo() {
+        const url = urlInput.value.trim();
+        if (url === "") {
+          alert("Please enter a YouTube URL.");
+          return;
+        }
+        const videoId = getVideoId(url);
+        if (!videoId) {
+          alert("Invalid YouTube URL. Please check and try again.");
+          return;
+        }
+        if (videoKeeper.includes(videoId)) {
+          alert("This video is already in your list.");
+          updateMainPlayer(videoId);
+          urlInput.value = "";
+          return;
+        }
+        videoKeeper.unshift(videoId);
+        saveVideos();
+        updateMainPlayer(videoId);
+        renderSavedVideos();
+        urlInput.value = "";
+      }
+
+      function initialize() {
+        const savedVideos = localStorage.getItem("videoKeeper");
+        if (savedVideos) {
+          videoKeeper = JSON.parse(savedVideos);
+        }
+        const lastVideoId = localStorage.getItem("lastVideoId");
+        if (lastVideoId) {
+          updateMainPlayer(lastVideoId);
+        }
+        renderSavedVideos();
+      }
+
+      // --- Event Listeners ---
+      submitBtn.addEventListener("click", handleAddVideo);
+      urlInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") handleAddVideo();
+      });
+
+      /**
+       * MODIFIED: Event listener now handles clicks on both the remove button
+       * AND the video thumbnail itself.
+       */
+      videoList.addEventListener("click", function (e) {
+        // Find the remove button that was clicked, if any
+        const removeButton = e.target.closest(".remove");
+        // Find the video item that was clicked, if any
+        const videoItem = e.target.closest(".video-item");
+
+        if (removeButton) {
+          // --- Logic for REMOVING a video ---
+          const idToRemove = removeButton.dataset.id;
+          videoKeeper = videoKeeper.filter((id) => id !== idToRemove);
+          saveVideos();
+          renderSavedVideos();
+
+          const lastVideoId = localStorage.getItem("lastVideoId");
+          if (idToRemove === lastVideoId) {
+            updateMainPlayer(videoKeeper[0] || null);
+          }
+        } else if (videoItem) {
+          // --- NEW: Logic for PLAYING a video in the main player ---
+          const idToPlay = videoItem.dataset.id;
+          updateMainPlayer(idToPlay);
+          // Optional: scroll to the top to see the player
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      });
+
+      // --- Initial Load ---
+      initialize();
+    </script>
+  </body>
+</html>

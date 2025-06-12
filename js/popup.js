@@ -7,6 +7,7 @@ function handlePopup() {
   const webPageFrame = document.querySelector("#webPageFrame");
   const zikir = document.querySelector("#zikir");
   const password = document.querySelector("#password");
+  const yt = document.querySelector("#yt");
 
   // Function to toggle the popup
   function togglePopup() {
@@ -28,6 +29,10 @@ function handlePopup() {
   });
   password.addEventListener("click", function () {
     webPageFrame.src = "password.html";
+    togglePopup();
+  });
+  yt.addEventListener("click", function () {
+    webPageFrame.src = "yt-video-keeper.html";
     togglePopup();
   });
   // zikir.addEventListener("click", togglePopup("zikir.html"));
