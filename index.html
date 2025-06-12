@@ -23,7 +23,12 @@
       </div>
       <div class="date" id="banglaDate">
         <span class="date-title">বাংলা তারিখঃ </span>
-        <span id="date-today"></span> বঙ্গাব্দ
+        <!-- <span id="date-today"></span> বঙ্গাব্দ -->
+        <span id="fhs-bangla-day"></span>,
+        <span id="fhs-bangla-date"></span>
+        <span id="fhs-bangla-month"></span> ,
+        <span id="fhs-bangla-year"></span> বঙ্গাব্দ,
+        <span id="fhs-bangla-season"></span>
       </div>
       <div>
         <span class="date-title">আরবি তারিখঃ </span
@@ -129,13 +134,13 @@
       <!-- stopwatch end -->
     </div>
     <!-- timer & stopwatch end -->
-
+    <script src="js/popup.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/bangla-date.js"></script>
     <script src="https://bangla.plus/scripts/bangladatetoday.min.js"></script>
     <script>
       dateToday("date-today", "bangla");
     </script>
-    <script src="js/popup.js"></script>
-    <script src="js/timer.js"></script>
-    <script src="js/script.js"></script>
   </body>
 </html>
