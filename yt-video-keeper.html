@@ -227,7 +227,7 @@
           localStorage.removeItem("lastVideoId");
           return;
         }
-        const embedHtml = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" width="700" height="450" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="v-controller"></iframe>`;
+        const embedHtml = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=0" frameborder="0" width="700" height="450" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="v-controller"></iframe>`;
         mainPlayer.innerHTML = embedHtml;
         localStorage.setItem("lastVideoId", videoId);
       }
