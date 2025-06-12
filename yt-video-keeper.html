@@ -25,6 +25,7 @@
         display: flex;
         gap: 10px;
         margin-bottom: 30px;
+        width: 100%;
       }
       input[type="text"] {
         flex-grow: 1;
@@ -83,7 +84,7 @@
       }
       .videoList {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
         gap: 20px;
       }
       /* MODIFIED: Styling for the new thumbnail item */
@@ -133,6 +134,21 @@
       }
       .video-item:hover .remove {
         opacity: 1;
+      }
+      @media screen and (max-width: 650px) {
+        .shower {
+          min-height: 180px; /* Adjusted for smaller screens */
+        }
+        button {
+          font-size: 12px;
+          padding: 12px 15px;
+        }
+        input[type="text"] {
+          font-size: 12px;
+        }
+        .v-controller {
+          height: 200px !important;
+        }
       }
     </style>
   </head>
@@ -211,7 +227,7 @@
           localStorage.removeItem("lastVideoId");
           return;
         }
-        const embedHtml = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" width="700" height="450" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+        const embedHtml = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" width="700" height="450" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="v-controller"></iframe>`;
         mainPlayer.innerHTML = embedHtml;
         localStorage.setItem("lastVideoId", videoId);
       }
