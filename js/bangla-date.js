@@ -32,10 +32,10 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
     const banglaSeasons = [
       "গ্রীষ্মকাল",
-      "বর্ষা্কাল",
+      "বর্ষাকাল",
       "শরৎ্কাল",
       "হে্মন্তকাল",
-      "শীত্কাল",
+      "শীতকাল",
       "বসন্তকাল",
     ];
     const banglaMonthStart = [
