@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parenthood</title>
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/baby.css" />
+    <link rel="shortcut icon" href="img/baby.webp" type="image/x-icon" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Bad Script", cursive;
+        position: relative;
+      }
+      hr {
+        margin: 0;
+      }
+      .back-to-home {
+        width: 30px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding: 10px;
+      }
+      .title {
+        text-align: center;
+        font-size: 36px;
+      }
+      .f {
+        font-family: "Baumans", system-ui;
+        display: inline-block;
+        font-size: 1.4rem;
+        font-weight: 300;
+      }
+      .box-wrapper {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+        flex-flow: row wrap;
+        justify-content: center;
+      }
+      .box {
+        flex-basis: 250px;
+        height: 300px;
+        border: 1px solid #ccc;
+        border-radius: 15px;
+        text-align: center;
+        position: relative;
+        box-sizing: border-box;
+        background: #eee;
+      }
+      .box img {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        height: 230px;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        object-fit: cover;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+      }
+      .box p {
+        font-family: "Baumans", system-ui;
+        margin: 0;
+        border-bottom: 1px solid #ccc;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 10px;
+      }
+      .box p:last-child {
+        border-bottom: none;
+      }
+      .age-del {
+        font-family: "Baumans", system-ui;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+        font-size: 18px;
+        font-weight: 300;
+      }
+      .age-del b {
+        font-size: 20px;
+        font-weight: 600;
+      }
+      #p-week,
+      #p-day {
+        font-size: 1.2rem;
+        padding-right: 2px;
+        font-weight: normal;
+      }
+      @media screen and (max-width: 768px) {
+        .box-wrapper {
+          flex-direction: column;
+          align-items: center;
+          gap: 20px;
+        }
+        .box {
+          width: 90%;
+          flex-basis: auto;
+        }
+        .age-del {
+          flex-direction: column;
+          align-items: center;
+        }
+        .age-del b {
+          font-size: 20px;
+          font-weight: 300;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- The Modal Popup Structure (Hidden by default) -->
+    <div id="imageModal" class="modal-overlay">
+      <span class="modal-close-btn">×</span>
+      <img class="modal-content" id="modalImage" alt="Enlarged view" />
+    </div>
+    <!-- modal end -->
+    <!-- header start -->
+    <a href="index.html">
+      <img src="img/back.png" alt="Back to Home" class="back-to-home" />
+    </a>
+    <!-- header end -->
+    <h1 class="title">Our Parenthood</h1>
+    <img
+      src="img/hr.png"
+      alt=""
+      style="
+        width: 300px;
+        height: 50px;
+        object-fit: cover;
+        margin: auto;
+        display: block;
+        margin-top: -55px;
+      "
+    />
+    <div class="age-del">
+      <div class="age">
+        <b>Age:</b> <span id="p-week"></span>Weeks, <span id="p-day"></span>days
+      </div>
+      <div class="delivery">
+        <b>Expected Delivery Date: </b><span id="Delivery">3 January, 26</span>
+      </div>
+    </div>
+    <div class="box-wrapper">
+      <!-- box start -->
+      <div class="box">
+        <h3>Mother Introduction</h3>
+        <hr />
+        <div class="details">
+          <p><b>Name: </b>Alma</p>
+          <p><b>Age: </b>27</p>
+          <p><b>BP: </b>60/100</p>
+          <p><b>Weight: </b>46 Kg</p>
+          <p><b>Blood Group: </b>AB+</p>
+          <p><b>Profession: </b>Housewife</p>
+          <p><b>Husband: </b>Sujon Mir</p>
+          <p><b>Husband ProFession: </b>Freelancer</p>
+          <p><b>Address: </b>Munshiganj Sadar</p>
+          <p><b>Phone: </b>+8801700539061</p>
+          <p><b>Doctor: </b>Dr. Chhanda Majumder</p>
+        </div>
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          We Confirmed:
+          <div class="f">11</div>
+          May,
+          <div class="f">25</div>
+        </h3>
+        <img src="img/kit.jpg" alt="Pregnancy Kit" class="img-trigger" />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          USG(P)-
+          <div class="f">1:</div>
+          <div class="f">17</div>
+          May,
+          <div class="f">25</div>
+        </h3>
+        <img src="img/usg-p-1.jpg" alt="" class="img-trigger" />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          USG(R)-
+          <div class="f">1:</div>
+          <div class="f">17</div>
+          May,
+          <div class="f">25</div>
+        </h3>
+        <img src="img/usg-r-1.jpg" alt="" class="img-trigger" />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          USG(R)-
+          <div class="f">1:</div>
+          <div class="f">17</div>
+          May,
+          <div class="f">25</div>
+        </h3>
+        <img src="img/usg-r-1.jpg" alt="" class="img-trigger" />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Cus + Glucose:
+          <div class="f">6</div>
+          June,
+          <div class="f">25</div>
+        </h3>
+        <img src="img/cus-glucus.jpg" alt="" class="img-trigger" />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          CBC + RBC:
+          <div class="f">6</div>
+          June,
+          <div class="f">25</div>
+        </h3>
+        <img src="img/cbc-rbc.jpg" alt="" class="img-trigger" />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          TSH:
+          <div class="f">6</div>
+          June,
+          <div class="f">25</div>
+        </h3>
+        <img src="img/tsh.jpg" alt="" class="img-trigger" />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Blood Group:
+          <div class="f">6</div>
+          June,
+          <div class="f">25</div>
+        </h3>
+        <img src="img/blood-group.jpg" alt="" class="img-trigger" />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          HBsAg:
+          <div class="f">6</div>
+          June,
+          <div class="f">25</div>
+        </h3>
+        <img src="img/HBsAG.jpg" alt="" class="img-trigger" />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Urine R
+          <div class="f">/</div>
+          M
+          <div class="f">/</div>
+          E:
+          <div class="f">6</div>
+          June,
+          <div class="f">25</div>
+        </h3>
+        <img src="img/urine.jpg" alt="" class="img-trigger" />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Urine R
+          <div class="f">/</div>
+          M
+          <div class="f">/</div>
+          E, P-
+          <div class="f">2</div>
+          :
+          <div class="f">6</div>
+          June,
+          <div class="f">25</div>
+        </h3>
+        <img src="img/urin-p-2.jpg" alt="" class="img-trigger" />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Prescription:
+          <div class="f">11</div>
+          June,
+          <div class="f">25</div>
+        </h3>
+        <img src="img/p-1.jpg" alt="" class="img-trigger" />
+      </div>
+      <!-- box end -->
+    </div>
+    <script src="js/baby.js"></script>
+  </body>
+</html>

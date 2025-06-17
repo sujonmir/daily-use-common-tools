@@ -70,6 +70,9 @@ input#endTimeInput {
     border-radius: 0;
     font-weight: bold;
     font-size: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: row;
   }
   .baby span {
@@ -78,6 +81,10 @@ input#endTimeInput {
   .baby div:first-child {
     padding-right: 20px;
     z-index: 9999;
+    padding-top: 0;
+  }
+  .baby div {
+    padding-left: 0;
   }
   .clock-wrapper {
     padding-top: 10px;

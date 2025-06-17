@@ -1,0 +1,56 @@
+/* modal style start */
+/* --- Style for the clickable image trigger --- */
+.img-trigger {
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+}
+.img-trigger:hover {
+  opacity: 0.8;
+}
+
+/* --- Styles for the Popup Modal --- */
+.modal-overlay {
+  display: none; /* <-- CORRECT: Ensures it is hidden on page load */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  /* Centering properties will apply when JS sets display to 'flex' */
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  display: block;
+  max-width: 90%;
+  max-height: 90vh;
+  animation: zoomIn 0.3s ease-out;
+}
+@keyframes zoomIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.modal-close-btn:hover,
+.modal-close-btn:focus {
+  color: #bbb;
+  text-decoration: none;
+}
+/* modal style end */
