@@ -63,7 +63,6 @@ input#endTimeInput {
     margin: 10px;
   }
   .baby {
-    /* bottom: 0 !important; */
     top: calc(100% - 40px);
     left: 0;
     width: 100vw;
@@ -75,7 +74,6 @@ input#endTimeInput {
   }
   .baby span {
     font-size: 24px;
-    /* display: block; */
   }
   .baby div:first-child {
     padding-right: 20px;
