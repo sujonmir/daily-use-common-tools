@@ -79,6 +79,9 @@ input#endTimeInput {
     padding-right: 20px;
     z-index: 9999;
   }
+  .clock-wrapper {
+    padding-top: 10px;
+  }
   .clock {
     font-size: 72px;
   }
