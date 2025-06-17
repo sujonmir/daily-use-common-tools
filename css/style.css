@@ -10,6 +10,26 @@ body {
   background-color: #f4f4f4;
   position: relative;
 }
+.baby {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #000;
+  color: #fff;
+  font-weight: bold;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.baby span {
+  font-size: 24px;
+  /* display: block; */
+}
 /* global floating elements start */
 /* .password {
   position: absolute;
