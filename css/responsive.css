@@ -105,7 +105,7 @@ input#endTimeInput {
     padding: 30px 0;
   }
   .zikir-title {
-    font-size: 72px;
+    font-size: 36px;
     margin-top: 20px;
     line-height: 1.2;
   }
@@ -118,6 +118,10 @@ input#endTimeInput {
     font-family: "Anek Bangla", sans-serif;
     margin-bottom: 50px;
   }
+  .popup-content {
+    width: 100%;
+    height: 100%;
+  }
   .popup-trigger-container .wrapper span::after {
     content: "";
     padding: 0;
@@ -129,7 +133,9 @@ input#endTimeInput {
   .popup-trigger-container .wrapper span:last-of-type {
     border-bottom: none;
   }
-
+  .close-btn {
+    top: 30px;
+  }
   .clock {
     height: 180px;
   }
