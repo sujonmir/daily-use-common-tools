@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fiverr Calculator</title>
+    <link rel="shortcut icon" href="img/fiverr.png" type="image/x-icon" />
+    <link rel="stylesheet" href="css/fonts.css" />
+    <style>
+      /* font-family: "Baumans", system-ui; → 400 */
+      /* font-family: "Anek Bangla", sans-serif; → 100-800 */
+      /* font-family: "Bad Script", cursive; → 400 */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Baumans", system-ui;
+        background: #f0f0f0;
+      }
+      .hr {
+        width: 100%;
+        height: 1px;
+        background-color: #ccc;
+        margin: 20px 0;
+      }
+      .title {
+        text-align: center;
+        font-size: 2.5rem;
+        margin: 20px 0;
+        letter-spacing: 2px;
+      }
+      .calculator_wrapper {
+        width: 800px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin: auto;
+        display: flex;
+        gap: 20px;
+        padding:40px 20px;
+        margin-bottom: 50px;
+      }
+      .calculator_wrapper h3 {
+        text-transform: capitalize;
+        font-size: 16px;
+      }
+      .calculator_wrapper .divider {
+        width: 2px;
+        height: auto;
+        background-color: #ccc;
+      }
+      .cashAdvance {
+        flex-basis: calc(50% - 1px);
+      }
+      .debtFree {
+        flex-basis: calc(50% - 1px);
+      }
+      .sub-title {
+        font-size: 1.8rem;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+      form {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      form input {
+        border-color: #aaa;
+        border-style: solid;
+        border-width: 2px 0px 2px 2px;
+        font-size: 1rem;
+        outline: none;
+      }
+      form input:focus {
+        border-color: #000;
+      }
+      form input[type="number"] {
+        flex-basis: 70%;
+        border-radius: 10px 0 0 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        height: 40px;
+      }
+      form input[type="submit"] {
+        flex-basis: 30%;
+        border-radius: 0 10px 10px 0;
+        padding: 12px 0;
+        background-color: #000;
+        color: white;
+        cursor: pointer;
+        border: none;
+        height: 40px;
+        font-weight: bold;
+        letter-spacing: 2px;
+      }
+      .output {
+        font-weight: bold;
+        color: green;
+        font-size: 1.2rem;
+      }
+      @media screen and (max-width: 768px) {
+        .calculator_wrapper {
+          flex-direction: column;
+          width: 90%;
+          padding: 20px;
+        }
+        .cashAdvance,
+        .debtFree {
+          flex-basis: 100%;
+        }
+        form input[type="number"],
+        form input[type="submit"] {
+          flex-basis: 100%;
+        }
+        form input[type="number"]::placeholder{
+          font-size: .8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="title">Fiverr Calculator</h1>
+    <div class="calculator_wrapper">
+      <!-- cash advance corner start -->
+      <div class="cashAdvance">
+        <h2 class="sub-title">Cash Advance corner</h2>
+        <h3>
+          Calculate Needed Order Volume (Paying CA):
+          <span id="ca-ov-paying-out" class="output">$0</span>
+        </h3>
+        <form action="#">
+          <input
+            type="number"
+            name=""
+            id="ca-ov-paying-in"
+            placeholder="Enter CA Paying Goal"
+            required
+          />
+          <input type="submit" value="Calculate" id="ca-ov-paying-submit" />
+        </form>
+        <div class="hr"></div>
+        <h3>
+          Calculate Needed Order Volume (For profit):
+          <span id="ca-ov-out" class="output">$0</span>
+        </h3>
+        <form action="#">
+          <input
+            type="number"
+            name=""
+            id="ca-ov-in"
+            placeholder="Enter Profit Goal"
+            required
+          />
+          <input type="submit" value="Calculate" id="ca-ov-submit" />
+        </form>
+        <div class="hr"></div>
+        <h3>
+          Calculate The profit: <span id="ca-p-out" class="output">$0</span>
+        </h3>
+        <form action="">
+          <input
+            type="number"
+            name=""
+            id="ca-p-in"
+            placeholder="Enter Order Volume"
+            required
+          />
+          <input type="submit" value="Calculate" id="ca-p-submit" />
+        </form>
+        <div class="hr"></div>
+        <h3>
+          Calculate Amount of paying CA:
+          <span id="ca-pca-out" class="output">$0</span>
+        </h3>
+        <form action="">
+          <input
+            type="number"
+            name=""
+            id="ca-pca-in"
+            placeholder="Enter 'Being Cleared' Amount"
+            required
+          />
+          <input type="submit" value="Calculate" id="ca-pca-submit" />
+        </form>
+        <div class="hr"></div>
+        <h3>
+          Calculate Amount of paying CA (active order):
+          <span id="ca-ao-out" class="output">$0</span>
+        </h3>
+        <form action="">
+          <input
+            type="number"
+            name=""
+            id="ca-ao-in"
+            placeholder="Enter active order Amount"
+            required
+          />
+          <input type="submit" value="Calculate" id="ca-ao-submit" />
+        </form>
+      </div>
+      <!-- cash advance corner end -->
+      <!-- divider start -->
+      <div class="divider"></div>
+      <!-- divider end -->
+      <!-- debt free corner start -->
+      <div class="debtFree">
+        <h2 class="sub-title">Debt Free corner</h2>
+        <h3>
+          Calculate Needed Order Volume:
+          <span id="df-ov-out" class="output">$0</span>
+        </h3>
+        <form action="#">
+          <input
+            type="number"
+            name=""
+            id="df-ov-in"
+            placeholder="Enter profit goal"
+            required
+          />
+          <input type="submit" value="Calculate" id="df-ov-submit" />
+        </form>
+        <div class="hr"></div>
+        <h3>
+          Calculate The profit: <span id="df-p-out" class="output">$0</span>
+        </h3>
+        <form action="">
+          <input
+            type="number"
+            name=""
+            id="df-p-in"
+            placeholder="Enter Order Volume"
+            required
+          />
+          <input type="submit" value="Calculate" id="df-p-submit" />
+        </form>
+      </div>
+      <!-- debt free corner end -->
+    </div>
+    <script src="js/fiverrCal.js"></script>
+  </body>
+</html>

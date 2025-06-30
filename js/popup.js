@@ -8,6 +8,7 @@ function handlePopup() {
   const zikir = document.querySelector("#zikir");
   const password = document.querySelector("#password");
   const yt = document.querySelector("#yt");
+  const fiverrCal = document.querySelector("#fiverrCal");
 
   // Function to toggle the popup
   function togglePopup() {
@@ -33,6 +34,10 @@ function handlePopup() {
   });
   yt.addEventListener("click", function () {
     webPageFrame.src = "yt-video-keeper.html";
+    togglePopup();
+  });
+  fiverrCal.addEventListener("click", function () {
+    webPageFrame.src = "fiverrCal.html";
     togglePopup();
   });
   // zikir.addEventListener("click", togglePopup("zikir.html"));
