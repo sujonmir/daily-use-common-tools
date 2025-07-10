@@ -56,6 +56,7 @@ function createAgeCounter(config) {
 
     weekElement.textContent = weeks;
     dayElement.textContent = days;
+    document.getElementById("ageInDays").innerText = `${totalDays} Days`; // Update age in days
   }
 
   // Run once immediately on page load
