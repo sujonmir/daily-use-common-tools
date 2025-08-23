@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daily Expense & Income Tracker</title>
+    <style>
+      /* CSS styles are identical to the previous version, so they are included for completeness */
+      :root {
+        --primary-color: #4a90e2;
+        --secondary-color: #f5f7fa;
+        --text-color: #333;
+        --border-color: #ddd;
+        --success-color: #28a745;
+        --danger-color: #dc3545;
+        --light-text: #666;
+        --header-height: 60px;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        margin: 0;
+        padding-top: var(--header-height);
+        background-color: var(--secondary-color);
+        color: var(--text-color);
+      }
+      .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 0 20px;
+      }
+      header {
+        background-color: #fff;
+        color: var(--text-color);
+        padding: 0 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--header-height);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      }
+      header .logo a {
+        font-weight: 700;
+        font-size: 1.5em;
+        text-decoration: none;
+        color: var(--primary-color);
+      }
+      header .header-center button {
+        margin: 0 10px;
+      }
+      header .balance {
+        font-size: 1.2em;
+        font-weight: 500;
+      }
+      #current-balance {
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+      .month-header {
+        text-align: center;
+        font-size: 2.5em;
+        font-weight: 700;
+        margin: 30px 0 10px;
+        color: var(--primary-color);
+      }
+      .section-hr {
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 0, 0, 0.75),
+          transparent
+        );
+      }
+      .form-section {
+        background: #fff;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+      }
+      .form-section h2 {
+        margin-top: 0;
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 10px;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        align-items: end;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+      .form-group label {
+        margin-bottom: 5px;
+        font-weight: 500;
+      }
+      .form-group input,
+      .form-group select {
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-size: 1em;
+      }
+      .item-row input,
+      .item-row select {
+        padding: 5px;
+      }
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        background-color: var(--primary-color);
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.2s;
+      }
+      button:hover {
+        background-color: #3a7ac8;
+      }
+      button.add-item-btn {
+        background-color: #28a745;
+      }
+      button.add-item-btn:hover {
+        background-color: #218838;
+      }
+      button.remove-item-btn {
+        background-color: var(--danger-color);
+        padding: 5px 10px;
+        font-size: 0.8em;
+      }
+      button.remove-item-btn:hover {
+        background-color: #c82333;
+      }
+      #calculator-container .item-row {
+        display: grid;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px dashed var(--border-color);
+      }
+      #calculator-container .item-row:last-child {
+        border-bottom: none;
+      }
+      .date-group {
+        margin-bottom: 30px;
+      }
+      .date-header {
+        font-size: 1.8em;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: var(--text-color);
+      }
+      .entry {
+        background-color: #fff;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        border-left: 5px solid;
+        position: relative;
+      }
+      .entry.income {
+        border-color: var(--success-color);
+      }
+      .entry.expense {
+        border-color: var(--danger-color);
+      }
+      .entry-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 700;
+      }
+      .entry-category {
+        font-size: 1.2em;
+      }
+      .entry-total {
+        font-size: 1.4em;
+      }
+      .entry.income .entry-total {
+        color: var(--success-color);
+      }
+      .entry.expense .entry-total {
+        color: var(--danger-color);
+      }
+      .entry-details {
+        margin-top: 10px;
+        color: var(--light-text);
+      }
+      .entry-details ul {
+        padding-left: 20px;
+        margin: 0;
+      }
+      .delete-btn {
+        position: absolute;
+        top: -20px;
+        right: -22px;
+        background: none;
+        border: none;
+        color: var(--danger-color);
+        cursor: pointer;
+        font-size: 1.5rem;
+        font-weight: bold;
+        opacity: 0.5;
+      }
+      .delete-btn:hover {
+        opacity: 1;
+        background: none;
+      }
+      .summary-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin: 40px 0;
+      }
+      .summary-box,
+      .data-management-section {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+      .summary-box h3,
+      .data-management-section h3 {
+        margin-top: 0;
+        text-align: center;
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 10px;
+      }
+      .summary-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .summary-table td {
+        padding: 8px 5px;
+      }
+      .summary-table .label {
+        font-weight: 500;
+      }
+      .summary-table .amount {
+        text-align: right;
+        font-weight: 700;
+      }
+      .summary-table .income {
+        color: var(--success-color);
+      }
+      .summary-table .expense {
+        color: var(--danger-color);
+      }
+      .summary-table .balance {
+        border-top: 2px solid var(--text-color);
+        font-size: 1.1em;
+      }
+      .summary-table .balance .amount {
+        color: var(--primary-color);
+      }
+      .data-management-section {
+        margin-bottom: 40px;
+      }
+      .data-management-section p {
+        color: var(--light-text);
+        text-align: center;
+        margin-top: 0;
+      }
+      .data-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+      footer {
+        background-color: #333;
+        color: #f1f1f1;
+        padding: 40px 0;
+      }
+      .footer-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .footer-column {
+        padding: 0 15px;
+      }
+      .footer-column h4 {
+        color: var(--primary-color);
+        margin-top: 0;
+        border-bottom: 1px solid #555;
+        padding-bottom: 10px;
+      }
+      .footer-column p {
+        margin: 8px 0;
+        font-size: 0.9em;
+        display: flex;
+        justify-content: space-between;
+      }
+      .footer-column .income-amount {
+        color: #5cb85c;
+      }
+      .footer-column .expense-amount {
+        color: #d9534f;
+      }
+      .back-to-home {
+        color: #d9534f !important;
+        margin-right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <a href="index.html" class="back-to-home">← Back</a>
+        <a href="#">FinanceTracker</a>
+      </div>
+      <div class="header-center">
+        <button id="export-monthly-btn">Export Monthly Report</button>
+        <button id="export-yearly-btn">Export Yearly Report</button>
+      </div>
+      <div class="balance">
+        Current Balance: <span id="current-balance">0 BDT</span>
+      </div>
+    </header>
+
+    <main class="container">
+      <h1 class="month-header" id="current-month-header"></h1>
+      <hr class="section-hr" />
+
+      <!-- Entry Form Section -->
+      <section class="form-section">
+        <h2>Add New Transaction</h2>
+        <form id="transaction-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="transaction-date">Date</label>
+              <input type="date" id="transaction-date" required />
+            </div>
+            <div class="form-group">
+              <label for="transaction-type">Type</label>
+              <select id="transaction-type">
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+              </select>
+            </div>
+            <div class="form-group" id="category-group">
+              <label for="expense-category">Category</label>
+              <select id="expense-category">
+                <option value="Groccery">Groccery</option>
+                <option value="Medicines">Medicines</option>
+                <option value="Doctors fee & Medical Test">
+                  Doctors fee & Medical Test
+                </option>
+                <option value="Fishs & Meats">Fishs & Meats</option>
+                <option value="Vegetabls">Vegetabls</option>
+                <option value="Fruits">Fruits</option>
+                <option value="Shopping">Shopping</option>
+                <option value="General Transport Cost">
+                  General Transport Cost
+                </option>
+                <option value="Tour & Hangouts">Tour & Hangouts</option>
+                <option value="Home Rent">Home Rent</option>
+                <option value="Gas & Electricity bills">
+                  Gas & Electricity bills
+                </option>
+                <option value="Phone and WIFI bills">
+                  Phone and WIFI bills
+                </option>
+                <option value="Lend & Gifts">Lend & Gifts</option>
+                <option value="Loan repayment">Loan repayment</option>
+                <option value="professional Expense">
+                  Professional Expense
+                </option>
+                <option value="Personal Snacks">Personal Snacks</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="calculator-container" style="margin-top: 20px">
+            <!-- Dynamic calculator will be injected here -->
+          </div>
+
+          <button
+            type="submit"
+            style="margin-top: 20px; width: 100%; padding: 15px"
+          >
+            Add Transaction
+          </button>
+        </form>
+      </section>
+
+      <!-- Entries Display Section -->
+      <section id="entries-container">
+        <!-- Entries will be dynamically inserted here -->
+      </section>
+
+      <!-- Summary Section -->
+      <section class="summary-section">
+        <div class="summary-box">
+          <h3 id="monthly-summary-title"></h3>
+          <table class="summary-table" id="monthly-summary-table"></table>
+        </div>
+        <div class="summary-box">
+          <h3 id="yearly-summary-title"></h3>
+          <table class="summary-table" id="yearly-summary-table"></table>
+        </div>
+      </section>
+
+      <!-- Data Management Section -->
+      <section class="data-management-section">
+        <h3>Backup & Restore</h3>
+        <p>
+          Your data is saved automatically in this browser. Use these options
+          for backup.
+        </p>
+        <div class="data-buttons">
+          <button id="import-data-btn">Import from Backup</button>
+          <button
+            id="export-data-btn"
+            style="background-color: var(--success-color)"
+          >
+            Create Backup File
+          </button>
+          <input
+            type="file"
+            id="file-importer"
+            accept=".json"
+            style="display: none"
+          />
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-container" id="footer-summary">
+        <!-- 12-month summary will be injected here -->
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        // --- DOM Elements ---
+        const transactionTypeSelect =
+          document.getElementById("transaction-type");
+        const categoryGroup = document.getElementById("category-group");
+        const categorySelect = document.getElementById("expense-category");
+        const calculatorContainer = document.getElementById(
+          "calculator-container"
+        );
+        const transactionForm = document.getElementById("transaction-form");
+        const transactionDateInput =
+          document.getElementById("transaction-date");
+        const entriesContainer = document.getElementById("entries-container");
+        const currentBalanceEl = document.getElementById("current-balance");
+        const currentMonthHeader = document.getElementById(
+          "current-month-header"
+        );
+
+        const monthlySummaryTitle = document.getElementById(
+          "monthly-summary-title"
+        );
+        const monthlySummaryTable = document.getElementById(
+          "monthly-summary-table"
+        );
+        const yearlySummaryTitle = document.getElementById(
+          "yearly-summary-title"
+        );
+        const yearlySummaryTable = document.getElementById(
+          "yearly-summary-table"
+        );
+        const footerSummary = document.getElementById("footer-summary");
+
+        const exportMonthlyBtn = document.getElementById("export-monthly-btn");
+        const exportYearlyBtn = document.getElementById("export-yearly-btn");
+        const importBtn = document.getElementById("import-data-btn");
+        const exportBtn = document.getElementById("export-data-btn");
+        const fileImporter = document.getElementById("file-importer");
+
+        // --- State Management ---
+        let transactions = []; // This is now a cache of the DB data
+        const EXPENSE_CATEGORIES = Array.from(categorySelect.options).map(
+          (opt) => opt.value
+        );
+        let db; // To hold the IndexedDB connection
+
+        // --- IndexedDB Helper Functions ---
+        const initDB = () => {
+          return new Promise((resolve, reject) => {
+            const request = indexedDB.open("FinanceTrackerDB", 1);
+
+            request.onupgradeneeded = (event) => {
+              const db = event.target.result;
+              if (!db.objectStoreNames.contains("transactions")) {
+                db.createObjectStore("transactions", { keyPath: "id" });
+              }
+            };
+
+            request.onsuccess = (event) => {
+              db = event.target.result;
+              console.log("Database opened successfully");
+              resolve();
+            };
+
+            request.onerror = (event) => {
+              console.error("Database error:", event.target.errorCode);
+              reject(event.target.error);
+            };
+          });
+        };
+
+        const dbRequest = (storeName, mode, action, data) => {
+          return new Promise((resolve, reject) => {
+            const transaction = db.transaction(storeName, mode);
+            const store = transaction.objectStore(storeName);
+            const request = store[action](data);
+
+            transaction.oncomplete = () => resolve(request.result);
+            transaction.onerror = (event) => reject(event.target.error);
+          });
+        };
+
+        const getAllTransactions = () =>
+          dbRequest("transactions", "readonly", "getAll");
+        const addTransaction = (tx) =>
+          dbRequest("transactions", "readwrite", "add", tx);
+        const deleteTransaction = (id) =>
+          dbRequest("transactions", "readwrite", "delete", id);
+        const clearTransactions = () =>
+          dbRequest("transactions", "readwrite", "clear");
+
+        // --- Initialization ---
+        const init = async () => {
+          try {
+            await initDB();
+            transactions = await getAllTransactions();
+          } catch (error) {
+            console.error("Failed to initialize database:", error);
+            alert("Could not initialize the database. Data will not be saved.");
+          }
+
+          transactionDateInput.value = new Date().toISOString().split("T")[0];
+          transactionTypeSelect.addEventListener("change", renderCalculator);
+          categorySelect.addEventListener("change", renderCalculator);
+          transactionForm.addEventListener("submit", handleFormSubmit);
+          entriesContainer.addEventListener("click", handleDelete);
+
+          exportMonthlyBtn.addEventListener("click", exportMonthlyReport);
+          exportYearlyBtn.addEventListener("click", exportYearlyReport);
+          importBtn.addEventListener("click", () => fileImporter.click());
+          fileImporter.addEventListener("change", handleImport);
+          exportBtn.addEventListener("click", handleExport);
+
+          renderCalculator();
+          renderApp();
+        };
+
+        // --- Core Rendering Functions (No Changes Here) ---
+        const renderApp = () => {
+          const today = new Date();
+          renderEntries(today.getFullYear(), today.getMonth());
+          updateCurrentBalance();
+          renderSummaries(today.getFullYear(), today.getMonth());
+          renderFooterSummary();
+        };
+        const renderCalculator = () => {
+            const e = transactionTypeSelect.value,
+              t = categorySelect.value;
+            let n;
+            (categoryGroup.style.display = "expense" === e ? "flex" : "none"),
+              (n =
+                "income" === e
+                  ? '\n                    <h4>Income Details</h4>\n                    <div class="item-row" style="grid-template-columns: 1fr 1fr;">\n                         <input type="text" placeholder="Income from (title)" class="item-title" required>\n                         <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                    </div>'
+                  : ((n = `<h4>${t} Details</h4>`),
+                    (() => {
+                      switch (t) {
+                        case "Medicines":
+                          n +=
+                            '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 3fr 1fr 1fr 1fr auto;">\n                                    <input type="text" placeholder="Goods title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Price" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>\n                                    <input type="number" value="0" placeholder="Discount %" class="item-discount">\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
+                          break;
+                        case "Groccery":
+                        case "Fishs & Meats":
+                        case "Vegetabls":
+                        case "Fruits":
+                          n +=
+                            '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 3fr 1fr 1fr 1fr 1fr auto;">\n                                    <input type="text" placeholder="Goods title" class="item-title" required>\n                                    <select class="item-type-select">\n                                        <option value="weight">per Kilogram</option>\n                                        <option value="item">per Item</option>\n                                    </select>\n                                    <input type="number" step="0.01" placeholder="Price" class="item-price" required>\n                                    <input type="number" step="0.01" placeholder="Quantity" class="item-quantity" required>\n                                    <input type="number" step="0.01" value="0" placeholder="Discount (flat)" class="item-discount">\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
+                          break;
+                        case "Doctors fee & Medical Test":
+                          n +=
+                            '\n                            <div class="item-row" style="grid-template-columns: 1fr 1fr 1fr 1fr;">\n                                <input type="text" placeholder="Patient Name" class="patient-name">\n                                <input type="text" placeholder="Doctor Name" class="doctor-name">\n                                <input type="text" placeholder="Doctor Type" class="doctor-type">\n                                <input type="number" step="0.01" placeholder="Doctor Visit Fee" class="doctor-fee" required>\n                            </div>\n                            <h5 style="margin-top:20px;">Medical Tests</h5>\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 1fr 1fr auto;">\n                                    <input type="text" placeholder="Test Title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Test Price" class="item-price" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Test</button>\n                             <div class="item-row" style="grid-template-columns: 1fr; margin-top: 15px;">\n                                <input type="number" step="0.01" value="0" placeholder="Flat Discount on Total Tests" class="total-test-discount">\n                            </div>';
+                          break;
+                        case "Shopping":
+                        case "Personal Snacks":
+                          n +=
+                            '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 3fr 1fr 1fr auto;">\n                                    <input type="text" placeholder="Product title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Item price" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
+                          break;
+                        case "General Transport Cost":
+                          n +=
+                            '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 1fr 1fr 1fr 1fr auto;">\n                                    <input type="text" placeholder="Vehicle Title" class="item-vehicle" required>\n                                    <input type="text" placeholder="From" class="item-from" required>\n                                    <input type="text" placeholder="To" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Fare" class="item-fare" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Trip</button>';
+                          break;
+                        case "Tour & Hangouts":
+                          n +=
+                            '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 1fr 3fr 1fr 1fr auto;">\n                                    <select class="item-type-select">\n                                        <option value="transport">Transport</option>\n                                        <option value="food">Food</option>\n                                        <option value="ticket">Ticket</option>\n                                    </select>\n                                    <input type="text" placeholder="Title (e.g., Bus, Lunch, Museum)" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Price/Fare per person" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Persons / Quantity" class="item-quantity" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Expense Item</button>';
+                          break;
+                        case "Home Rent":
+                          n +=
+                            '<div class="item-row" style="grid-template-columns: 1fr 1fr 1fr;">\n                                    <input type="text" placeholder="Month of rent title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Rent amount" class="item-rent" required>\n                                    <input type="number" value="1" placeholder="Amount of months" class="item-months" required>\n                                </div>';
+                          break;
+                        case "Gas & Electricity bills":
+                          n +=
+                            '<select id="bill-type-select" class="form-group" style="margin-bottom:15px; padding:10px; border: 1px solid var(--border-color); border-radius: 4px;">\n                                    <option value="gas">Gas Bill</option>\n                                    <option value="electricity">Electricity Bill</option>\n                                </select>\n                                <div id="bill-details"></div>';
+                          break;
+                        case "Phone and WIFI bills":
+                          n +=
+                            '<select id="bill-type-select" class="form-group" style="margin-bottom:15px; padding:10px; border: 1px solid var(--border-color); border-radius: 4px;">\n                                    <option value="wifi">WIFI Bill</option>\n                                    <option value="phone">Phone Recharge</option>\n                                </select>\n                                <div id="bill-details"></div>';
+                          break;
+                        case "Lend & Gifts":
+                          n +=
+                            '<select id="lend-gift-type-select" class="form-group" style="margin-bottom:15px; padding:10px; border: 1px solid var(--border-color); border-radius: 4px;">\n                                    <option value="lend">Lend</option>\n                                    <option value="gift">Gift</option>\n                                </select>\n                                <div id="lend-gift-details"></div>';
+                          break;
+                        case "Loan repayment":
+                          n +=
+                            '<div class="item-row" style="grid-template-columns: 1fr 1fr;">\n                                    <input type="text" placeholder="Paying whom (name)" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                </div>';
+                          break;
+                        case "professional Expense":
+                          n +=
+                            '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 1fr 1fr auto;">\n                                    <input type="text" placeholder="Title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
+                      }
+                    })(),
+                    n)),
+              (calculatorContainer.innerHTML = n),
+              attachDynamicHandlers();
+          },
+          renderEntries = (e, t) => {
+            if (
+              ((currentMonthHeader.textContent = `${new Date(
+                e,
+                t
+              ).toLocaleString("en-US", { month: "long", year: "numeric" })}`),
+              0 === transactions.length)
+            )
+              return void (entriesContainer.innerHTML =
+                '<p style="text-align:center; color: var(--light-text); font-size: 1.2em;">No transactions yet. Add a new one to get started!</p>');
+            const n = transactions
+              .filter((n) => {
+                const o = new Date(n.date);
+                return o.getFullYear() === e && o.getMonth() === t;
+              })
+              .sort((e, t) => new Date(t.date) - new Date(e.date));
+            if (0 === n.length)
+              return void (entriesContainer.innerHTML =
+                '<p style="text-align:center; color: var(--light-text);">No transactions for this month.</p>');
+            const o = n.reduce((e, t) => {
+              const n = new Date(t.date).toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              });
+              return e[n] || (e[n] = []), e[n].push(t), e;
+            }, {});
+            let r = "";
+            for (const e in o)
+              (r += `<div class="date-group">\n                            <h2 class="date-header">${e}</h2>\n                            <hr class="section-hr" style="margin-bottom:15px;">`),
+                o[e].forEach((e) => {
+                  r +=
+                    `\n                        <div class="entry ${
+                      e.type
+                    }" data-id="${
+                      e.id
+                    }">\n                             <button class="delete-btn" title="Delete Entry">×</button>\n                            <div class="entry-header">\n                                <span class="entry-category">${
+                      e.category || "Income"
+                    }</span>\n                                <span class="entry-total">` +
+                    ("income" === e.type ? "+" : "-") +
+                    ` ${e.total.toFixed(
+                      2
+                    )} BDT</span>\n                            </div>\n                            <div class="entry-details">${formatEntryDetails(
+                      e
+                    )}</div>\n                        </div>`;
+                }),
+                (r += "</div>");
+            entriesContainer.innerHTML = r;
+          },
+          renderSummaries = (e, t) => {
+            monthlySummaryTitle.textContent = `Summary for ${new Date(
+              e,
+              t
+            ).toLocaleString("en-US", { month: "long", year: "numeric" })}`;
+            const n = getSummaryData(
+              transactions.filter((n) => {
+                const o = new Date(n.date);
+                return o.getFullYear() === e && o.getMonth() === t;
+              })
+            );
+            (monthlySummaryTable.innerHTML = generateSummaryTableHTML(n)),
+              (yearlySummaryTitle.textContent = `Summary for ${e}`);
+            const o = getSummaryData(
+              transactions.filter((t) => new Date(t.date).getFullYear() === e)
+            );
+            yearlySummaryTable.innerHTML = generateSummaryTableHTML(o);
+          },
+          renderFooterSummary = () => {
+            const e = new Date(),
+              t = [[], [], []];
+            for (let n = 0; n < 12; n++) {
+              const o = new Date(e.getFullYear(), e.getMonth() - n, 1),
+                r = o.getFullYear(),
+                a = o.getMonth(),
+                i = transactions.filter((e) => {
+                  const t = new Date(e.date);
+                  return t.getFullYear() === r && t.getMonth() === a;
+                }),
+                l = i
+                  .filter((e) => "income" === e.type)
+                  .reduce((e, t) => e + t.total, 0),
+                s = i
+                  .filter((e) => "expense" === e.type)
+                  .reduce((e, t) => e + t.total, 0),
+                c = `<p>\n                    <strong>${o.toLocaleString(
+                  "en-US",
+                  { month: "short", year: "2-digit" }
+                )}:</strong> \n                    <span>\n                        <span class="income-amount">${l.toFixed(
+                  0
+                )}</span> | \n                        <span class="expense-amount">${s.toFixed(
+                  0
+                )}</span>\n                    </span>\n                   </p>`;
+              n < 4 ? t[0].push(c) : n < 8 ? t[1].push(c) : t[2].push(c);
+            }
+            const n = ["Latest 4 Months", "5-8 Months Ago", "9-12 Months Ago"];
+            let o = "";
+            for (let e = 0; e < 3; e++)
+              o += `<div class="footer-column">\n                            <h4>${
+                n[e]
+              }</h4>\n                            ${t[e].join(
+                ""
+              )}\n                         </div>`;
+            footerSummary.innerHTML = o;
+          };
+
+        // --- Event Handlers & Logic (No Changes Here) ---
+        const handleFormSubmit = async (e) => {
+          e.preventDefault();
+          const date = transactionDateInput.value;
+          const type = transactionTypeSelect.value;
+          const newTransaction = {
+            id: Date.now(),
+            date,
+            type,
+            details: [],
+            total: 0,
+          };
+          if (type === "income") {
+            newTransaction.category = "Income";
+            const title =
+              calculatorContainer.querySelector(".item-title").value;
+            const amount = parseFloat(
+              calculatorContainer.querySelector(".item-amount").value
+            );
+            newTransaction.details.push({ title, amount });
+            newTransaction.total = amount;
+          } else {
+            newTransaction.category = categorySelect.value;
+            const calculation = calculateExpense(newTransaction.category);
+            newTransaction.details = calculation.details;
+            newTransaction.total = calculation.total;
+          }
+          if (isNaN(newTransaction.total) || newTransaction.total <= 0) {
+            alert("Please check your inputs. The total amount is invalid.");
+            return;
+          }
+          try {
+            await addTransaction(newTransaction);
+            transactions.push(newTransaction); // Update local cache
+            renderApp();
+            transactionForm.reset();
+            renderCalculator();
+          } catch (error) {
+            console.error("Failed to save transaction:", error);
+            alert("Error: Could not save the transaction to the database.");
+          }
+        };
+        const handleDelete = async (e) => {
+          if (e.target.classList.contains("delete-btn")) {
+            if (
+              confirm(
+                "Are you sure you want to delete this entry? This action is permanent."
+              )
+            ) {
+              const entryEl = e.target.closest(".entry");
+              const id = parseInt(entryEl.dataset.id);
+              try {
+                await deleteTransaction(id);
+                transactions = transactions.filter((t) => t.id !== id);
+                renderApp();
+              } catch (error) {
+                console.error("Failed to delete transaction:", error);
+                alert(
+                  "Error: Could not delete the transaction from the database."
+                );
+              }
+            }
+          }
+        };
+        const calculateExpense = (e) => {
+          const t = { details: [], total: 0 },
+            n = Array.from(calculatorContainer.querySelectorAll(".item-row"));
+          switch (e) {
+            case "Medicines":
+              n.forEach((e) => {
+                const n = e.querySelector(".item-title").value,
+                  o = parseFloat(e.querySelector(".item-price").value),
+                  r = parseFloat(e.querySelector(".item-quantity").value),
+                  a = parseFloat(e.querySelector(".item-discount").value),
+                  i = o * r * (1 - a / 100);
+                t.details.push({
+                  title: n,
+                  price: o,
+                  quantity: r,
+                  discount: a,
+                  itemTotal: i,
+                }),
+                  (t.total += i);
+              });
+              break;
+            case "Groccery":
+            case "Fishs & Meats":
+            case "Vegetabls":
+            case "Fruits":
+              n.forEach((e) => {
+                const n = e.querySelector(".item-title").value,
+                  o = e.querySelector(".item-type-select").value,
+                  r = parseFloat(e.querySelector(".item-price").value),
+                  a = parseFloat(e.querySelector(".item-quantity").value),
+                  i = parseFloat(e.querySelector(".item-discount").value),
+                  s = r * a - i;
+                t.details.push({
+                  title: n,
+                  type: o,
+                  price: r,
+                  quantity: a,
+                  discount: i,
+                  itemTotal: s,
+                }),
+                  (t.total += s);
+              });
+              break;
+            case "Doctors fee & Medical Test":
+              const o =
+                  calculatorContainer.querySelector(".patient-name").value,
+                r = calculatorContainer.querySelector(".doctor-name").value,
+                a = calculatorContainer.querySelector(".doctor-type").value,
+                i = parseFloat(
+                  calculatorContainer.querySelector(".doctor-fee").value
+                );
+              t.details.push({
+                type: "Doctor Fee",
+                patientName: o,
+                doctorName: r,
+                doctorType: a,
+                fee: i,
+              }),
+                (t.total += i);
+              let s = 0;
+              const l = calculatorContainer.querySelectorAll(
+                  ".items-list .item-row"
+                ),
+                c = [];
+              l.forEach((e) => {
+                const t = e.querySelector(".item-title").value,
+                  n = parseFloat(e.querySelector(".item-price").value);
+                t && n > 0 && (c.push({ title: t, price: n }), (s += n));
+              });
+              const d = parseFloat(
+                  calculatorContainer.querySelector(".total-test-discount")
+                    .value
+                ),
+                u = s - d;
+              t.details.push({
+                type: "Medical Tests",
+                items: c,
+                testsTotal: s,
+                testDiscount: d,
+                payableTests: u,
+              }),
+                (t.total += u);
+              break;
+            case "Shopping":
+            case "Personal Snacks":
+              n.forEach((e) => {
+                const n = e.querySelector(".item-title").value,
+                  o = parseFloat(e.querySelector(".item-price").value),
+                  r = parseFloat(e.querySelector(".item-quantity").value),
+                  a = o * r;
+                t.details.push({
+                  title: n,
+                  price: o,
+                  quantity: r,
+                  itemTotal: a,
+                }),
+                  (t.total += a);
+              });
+              break;
+            case "General Transport Cost":
+              n.forEach((e) => {
+                const n = e.querySelector(".item-vehicle").value,
+                  o = e.querySelector(".item-from").value,
+                  r = e.querySelector(".item-to").value,
+                  a = parseFloat(e.querySelector(".item-fare").value);
+                t.details.push({ vehicle: n, from: o, to: r, fare: a }),
+                  (t.total += a);
+              });
+              break;
+            case "Tour & Hangouts":
+              n.forEach((e) => {
+                const n = e.querySelector(".item-type-select").value,
+                  o = e.querySelector(".item-title").value,
+                  r = parseFloat(e.querySelector(".item-price").value),
+                  a = parseFloat(e.querySelector(".item-quantity").value),
+                  i = r * a;
+                t.details.push({
+                  type: n,
+                  title: o,
+                  price: r,
+                  quantity: a,
+                  itemTotal: i,
+                }),
+                  (t.total += i);
+              });
+              break;
+            case "Home Rent":
+              const m = n[0].querySelector(".item-title").value,
+                p = parseFloat(n[0].querySelector(".item-rent").value),
+                y = parseFloat(n[0].querySelector(".item-months").value);
+              (t.total = p * y),
+                t.details.push({
+                  title: m,
+                  rent: p,
+                  months: y,
+                  total: t.total,
+                });
+              break;
+            case "Gas & Electricity bills":
+              "gas" === document.getElementById("bill-type-select").value
+                ? (() => {
+                    const e = parseFloat(
+                        n[0].querySelector(".item-price").value
+                      ),
+                      o = parseFloat(
+                        n[0].querySelector(".item-quantity").value
+                      ),
+                      r = parseFloat(n[0].querySelector(".item-labour").value);
+                    (t.total = e * o + r),
+                      t.details.push({
+                        type: "Gas",
+                        price: e,
+                        quantity: o,
+                        labour: r,
+                        total: t.total,
+                      });
+                  })()
+                : (() => {
+                    const e = n[0].querySelector(".item-title").value,
+                      o = parseFloat(n[0].querySelector(".item-amount").value);
+                    (t.total = o),
+                      t.details.push({
+                        type: "Electricity",
+                        title: e,
+                        amount: o,
+                      });
+                  })();
+              break;
+            case "Phone and WIFI bills":
+              "wifi" === document.getElementById("bill-type-select").value
+                ? (() => {
+                    const e = n[0].querySelector(".item-title").value,
+                      o = parseFloat(n[0].querySelector(".item-price").value),
+                      r = parseFloat(
+                        n[0].querySelector(".item-quantity").value
+                      );
+                    (t.total = o * r),
+                      t.details.push({
+                        type: "WIFI",
+                        title: e,
+                        price: o,
+                        quantity: r,
+                        total: t.total,
+                      });
+                  })()
+                : (() => {
+                    const e = n[0].querySelector(".item-number").value,
+                      o = parseFloat(n[0].querySelector(".item-price").value),
+                      r = parseFloat(
+                        n[0].querySelector(".item-discount").value
+                      );
+                    (t.total = o - r),
+                      t.details.push({
+                        type: "Phone",
+                        number: e,
+                        amount: o,
+                        discount: r,
+                        total: t.total,
+                      });
+                  })();
+              break;
+            case "Lend & Gifts":
+              "lend" === document.getElementById("lend-gift-type-select").value
+                ? (() => {
+                    const e = n[0].querySelector(".item-person").value,
+                      o = parseFloat(n[0].querySelector(".item-amount").value);
+                    (t.total = o),
+                      t.details.push({ type: "Lend", person: e, amount: o });
+                  })()
+                : n.forEach((e) => {
+                    const n = e.querySelector(".item-title").value,
+                      o = parseFloat(e.querySelector(".item-price").value),
+                      r = parseFloat(e.querySelector(".item-quantity").value),
+                      a = o * r;
+                    t.details.push({
+                      type: "Gift",
+                      title: n,
+                      price: o,
+                      quantity: r,
+                      itemTotal: a,
+                    }),
+                      (t.total += a);
+                  });
+              break;
+            case "Loan repayment":
+              const f = n[0].querySelector(".item-to").value,
+                g = parseFloat(n[0].querySelector(".item-amount").value);
+              (t.total = g), t.details.push({ to: f, amount: g });
+              break;
+            case "professional Expense":
+              n.forEach((e) => {
+                const n = e.querySelector(".item-title").value,
+                  o = parseFloat(e.querySelector(".item-amount").value);
+                t.details.push({ title: n, amount: o }), (t.total += o);
+              });
+          }
+          return t;
+        };
+        const attachDynamicHandlers = () => {
+          const addItemBtn = calculatorContainer.querySelector(".add-item-btn");
+          if (addItemBtn) {
+            addItemBtn.onclick = () => {
+              const list = calculatorContainer.querySelector(".items-list");
+              const firstItem = list.querySelector(".item-row");
+              const newItem = firstItem.cloneNode(true);
+              newItem
+                .querySelectorAll("input")
+                .forEach((input) => (input.value = ""));
+              if (newItem.querySelector(".item-quantity"))
+                newItem.querySelector(".item-quantity").value = "1";
+              if (newItem.querySelector(".item-discount"))
+                newItem.querySelector(".item-discount").value = "0";
+              const removeBtn = newItem.querySelector(".remove-item-btn");
+              removeBtn.style.display = "inline-block";
+              removeBtn.onclick = () => newItem.remove();
+              list.appendChild(newItem);
+            };
+          }
+
+          const billTypeSelect = document.getElementById("bill-type-select");
+          if (billTypeSelect) {
+            const renderBillDetails = () => {
+              const billDetailsContainer =
+                document.getElementById("bill-details");
+              let html = "";
+              if (billTypeSelect.value === "gas") {
+                html = `<div class="item-row" style="grid-template-columns: 1fr 1fr 1fr;">
+                                    <input type="number" step="0.01" placeholder="Cilinder price" class="item-price" required>
+                                    <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>
+                                    <input type="number" step="0.01" value="0" placeholder="Labour cost" class="item-labour">
+                                </div>`;
+              } else if (billTypeSelect.value === "electricity") {
+                html = `<div class="item-row" style="grid-template-columns: 1fr 1fr;">
+                                    <input type="text" placeholder="Title of the Month" class="item-title" required>
+                                    <input type="number" step="0.01" placeholder="Bill amount" class="item-amount" required>
+                                </div>`;
+              } else if (billTypeSelect.value === "wifi") {
+                html = `<div class="item-row" style="grid-template-columns: 1fr 1fr 1fr;">
+                                    <input type="text" placeholder="WIFI Bill month title" class="item-title" required>
+                                    <input type="number" step="0.01" placeholder="Monthly bill amount" class="item-price" required>
+                                    <input type="number" value="1" placeholder="Quantity of months" class="item-quantity" required>
+                                </div>`;
+              } else if (billTypeSelect.value === "phone") {
+                html = `<div class="item-row" style="grid-template-columns: 1fr 1fr 1fr;">
+                                    <input type="text" placeholder="Phone number" class="item-number" required>
+                                    <input type="number" step="0.01" placeholder="Amount" class="item-price" required>
+                                    <input type="number" step="0.01" value="0" placeholder="Discount" class="item-discount">
+                                </div>`;
+              }
+              billDetailsContainer.innerHTML = html;
+            };
+            billTypeSelect.addEventListener("change", renderBillDetails);
+            renderBillDetails();
+          }
+
+          const lendGiftTypeSelect = document.getElementById(
+            "lend-gift-type-select"
+          );
+          if (lendGiftTypeSelect) {
+            const renderLendGiftDetails = () => {
+              const detailsContainer =
+                document.getElementById("lend-gift-details");
+              let html = "";
+              if (lendGiftTypeSelect.value === "lend") {
+                html = `<div class="item-row" style="grid-template-columns: 1fr 1fr;">
+                                    <input type="text" placeholder="Person name" class="item-person" required>
+                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>
+                                </div>`;
+                detailsContainer.innerHTML = html;
+              } else {
+                // gift
+                html = `<div class="items-list">
+                                    <div class="item-row" style="grid-template-columns: 1fr 1fr 1fr auto;">
+                                        <input type="text" placeholder="Gift title" class="item-title" required>
+                                        <input type="number" step="0.01" placeholder="Item price" class="item-price" required>
+                                        <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>
+                                        <button type="button" class="remove-item-btn" style="display:none;">X</button>
+                                    </div>
+                                </div>
+                                <button type="button" class="add-item-btn">+ Add Gift</button>`;
+                detailsContainer.innerHTML = html;
+                // FIX: Attach handler ONLY to the newly created button to avoid recursion.
+                const addGiftBtn =
+                  detailsContainer.querySelector(".add-item-btn");
+                if (addGiftBtn) {
+                  addGiftBtn.onclick = () => {
+                    const list = detailsContainer.querySelector(".items-list");
+                    const firstItem = list.querySelector(".item-row");
+                    const newItem = firstItem.cloneNode(true);
+                    newItem
+                      .querySelectorAll("input")
+                      .forEach((input) => (input.value = ""));
+                    if (newItem.querySelector(".item-quantity"))
+                      newItem.querySelector(".item-quantity").value = "1";
+                    const removeBtn = newItem.querySelector(".remove-item-btn");
+                    removeBtn.style.display = "inline-block";
+                    removeBtn.onclick = () => newItem.remove();
+                    list.appendChild(newItem);
+                  };
+                }
+              }
+            };
+            lendGiftTypeSelect.addEventListener(
+              "change",
+              renderLendGiftDetails
+            );
+            renderLendGiftDetails();
+          }
+        };
+
+        // --- Helper & Utility Functions (No Changes Here) ---
+        const updateCurrentBalance = () => {
+            const e = transactions
+                .filter((e) => "income" === e.type)
+                .reduce((e, t) => e + t.total, 0),
+              t = transactions
+                .filter((e) => "expense" === e.type)
+                .reduce((e, t) => e + t.total, 0),
+              n = e - t;
+            (currentBalanceEl.textContent = `${n.toFixed(2)} BDT`),
+              (currentBalanceEl.style.color =
+                n >= 0 ? "var(--success-color)" : "var(--danger-color)");
+          },
+          formatEntryDetails = (e) => {
+            let t = "<ul>";
+            return (
+              e.details.forEach((n) => {
+                let o = "";
+                (o =
+                  n.title && n.amount
+                    ? `<li>${n.title}: ${n.amount.toFixed(2)}</li>`
+                    : n.title && n.itemTotal
+                    ? `<li>${n.title} (x${
+                        n.quantity || 1
+                      }): ${n.itemTotal.toFixed(2)}</li>`
+                    : n.vehicle
+                    ? `<li>${n.vehicle} (${n.from} → ${n.to}): ${n.fare.toFixed(
+                        2
+                      )}</li>`
+                    : "Doctor Fee" === n.type
+                    ? `<li>Doctor Fee (${n.doctorName}): ${n.fee.toFixed(
+                        2
+                      )}</li>`
+                    : "Medical Tests" === n.type
+                    ? `<li>Tests: ${n.payableTests.toFixed(2)} (Total: ${
+                        n.testsTotal
+                      } - Discount: ${n.testDiscount})</li>`
+                    : "Tour & Hangouts" === e.category && n.itemTotal
+                    ? `<li>${n.type}: ${n.title} (x${
+                        n.quantity
+                      }) - ${n.itemTotal.toFixed(2)}</li>`
+                    : n.to && n.amount
+                    ? `<li>Paid to ${n.to}: ${n.amount.toFixed(2)}</li>`
+                    : "Lend" === n.type
+                    ? `<li>Lent to ${n.person}: ${n.amount.toFixed(2)}</li>`
+                    : `<li>${JSON.stringify(n)}</li>`),
+                  (t += o);
+              }),
+              t + "</ul>"
+            );
+          },
+          getSummaryData = (e) => {
+            const t = { income: 0, expense: 0, balance: 0, categories: {} };
+            return (
+              EXPENSE_CATEGORIES.forEach((e) => (t.categories[e] = 0)),
+              e.forEach((e) => {
+                "income" === e.type
+                  ? (t.income += e.total)
+                  : ((t.expense += e.total),
+                    void 0 !== t.categories[e.category] &&
+                      (t.categories[e.category] += e.total));
+              }),
+              (t.balance = t.income - t.expense),
+              t
+            );
+          },
+          generateSummaryTableHTML = (e) => {
+            let t = `<tbody>\n                <tr>\n                    <td class="label">♥ Total Income</td>\n                    <td class="amount income">+ ${e.income.toFixed(
+              2
+            )}</td>\n                </tr>`;
+            for (const n in e.categories)
+              e.categories[n] > 0 &&
+                (t += `<tr>\n                        <td class="label">→ ${n}</td>\n                        <td class="amount expense">- ${e.categories[
+                  n
+                ].toFixed(2)}</td>\n                     </tr>`);
+            return (t += `<tr class="balance">\n                        <td class="label">Balance</td>\n                        <td class="amount">${e.balance.toFixed(
+              2
+            )}</td>\n                    </tr>\n             </tbody>`);
+          };
+
+        // --- Report & Data Management ---
+        const exportMonthlyReport = () => {
+          // MODIFIED: Strict prompt and validation for M,YY format
+          const input = prompt(
+            "Enter month and year in M,YY format (e.g., 1,25 for Jan 2025)"
+          );
+          if (!input) return;
+
+          const parts = input.split(",");
+          if (parts.length !== 2) {
+            alert(
+              "Invalid format. Please use M,YY format with a comma (e.g., 1,25)."
+            );
+            return;
+          }
+
+          const monthNum = parseInt(parts[0].trim());
+          const yearShort = parseInt(parts[1].trim());
+
+          if (
+            isNaN(monthNum) ||
+            isNaN(yearShort) ||
+            monthNum < 1 ||
+            monthNum > 12 ||
+            yearShort < 0
+          ) {
+            alert("Invalid numbers for month or year. Month must be 1-12.");
+            return;
+          }
+
+          const month = monthNum - 1; // JS month is 0-indexed
+          const year = 2000 + yearShort;
+
+          const monthTransactions = transactions.filter((t) => {
+            const date = new Date(t.date);
+            return date.getFullYear() === year && date.getMonth() === month;
+          });
+
+          if (monthTransactions.length === 0) {
+            alert(
+              `No data found for ${new Date(year, month).toLocaleString(
+                "en-US",
+                { month: "long", year: "numeric" }
+              )}.`
+            );
+            return;
+          }
+
+          const filename = `Expense_Report_${year}_${String(month + 1).padStart(
+            2,
+            "0"
+          )}.csv`;
+          exportToCSV(monthTransactions, filename);
+        };
+
+        const exportYearlyReport = () => {
+          const yearInput = prompt("Enter year to export (e.g., '2025')");
+
+          // FIX: Check if the user clicked "Cancel" or closed the prompt.
+          // The prompt returns null if the user cancels, so we exit silently.
+          if (yearInput === null) {
+            return;
+          }
+
+          // If the user did not cancel, proceed with validation for empty or invalid input.
+          const year = parseInt(yearInput.trim());
+          if (isNaN(year)) {
+            alert("Please enter a valid year.");
+            return;
+          }
+
+          const yearTransactions = transactions.filter(
+            (t) => new Date(t.date).getFullYear() === year
+          );
+
+          if (yearTransactions.length === 0) {
+            alert(`No data found for the year ${year}.`);
+            return;
+          }
+
+          const filename = `Expense_Report_${year}.csv`;
+          exportToCSV(yearTransactions, filename);
+        };
+
+        const exportToCSV = (data, filename) => {
+          const headers = [
+            "ID",
+            "Date",
+            "Type",
+            "Category",
+            "Total",
+            "Details",
+          ];
+          const csvRows = [headers.join(",")];
+          data.forEach((t) => {
+            const detailsString = JSON.stringify(t.details).replace(/"/g, '""');
+            const row = [
+              t.id,
+              t.date,
+              t.type,
+              t.category,
+              t.total,
+              `"${detailsString}"`,
+            ];
+            csvRows.push(row.join(","));
+          });
+          downloadFile(csvRows.join("\n"), filename, "text/csv;charset=utf-8;");
+        };
+
+        const handleImport = (event) => {
+          const file = event.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            if (
+              !confirm(
+                "Are you sure you want to import this file? This will ERASE all current data."
+              )
+            ) {
+              fileImporter.value = "";
+              return;
+            }
+            try {
+              const importedData = JSON.parse(e.target.result);
+              if (!Array.isArray(importedData))
+                throw new Error("Data is not in the correct array format.");
+
+              await clearTransactions();
+              const transaction = db.transaction("transactions", "readwrite");
+              const store = transaction.objectStore("transactions");
+              importedData.forEach((item) => store.add(item));
+
+              await new Promise((resolve, reject) => {
+                transaction.oncomplete = resolve;
+                transaction.onerror = reject;
+              });
+
+              transactions = importedData;
+              renderApp();
+              alert("Data successfully imported and overwritten!");
+            } catch (error) {
+              alert(
+                "Error importing file. Please ensure it is a valid backup file.\n\n" +
+                  error.message
+              );
+            }
+          };
+          reader.readAsText(file);
+          fileImporter.value = "";
+        };
+
+        const handleExport = async () => {
+          const dataToExport = await getAllTransactions();
+          if (dataToExport.length === 0) {
+            alert("No data to export.");
+            return;
+          }
+          const dataStr = JSON.stringify(dataToExport, null, 2);
+
+          // MODIFIED: Generate filename with a timestamp
+          const now = new Date();
+          const timestamp = `${now.getFullYear()}-${String(
+            now.getMonth() + 1
+          ).padStart(2, "0")}-${String(now.getDate()).padStart(
+            2,
+            "0"
+          )}_${String(now.getHours()).padStart(2, "0")}-${String(
+            now.getMinutes()
+          ).padStart(2, "0")}-${String(now.getSeconds()).padStart(2, "0")}`;
+          const fileName = `financetracker-backup_${timestamp}.json`;
+
+          downloadFile(dataStr, fileName, "application/json");
+        };
+
+        const downloadFile = (content, fileName, contentType) => {
+          const blob = new Blob([content], { type: contentType });
+          const link = document.createElement("a");
+          const url = URL.createObjectURL(blob);
+          link.setAttribute("href", url);
+          link.setAttribute("download", fileName);
+          link.style.visibility = "hidden";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        };
+
+        // --- Start the App ---
+        init();
+      });
+    </script>
+  </body>
+</html>

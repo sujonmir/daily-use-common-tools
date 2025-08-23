@@ -62,6 +62,9 @@ input#endTimeInput {
   body {
     margin: 10px;
   }
+  .baby-wrapper {
+    display: block;
+  }
   .baby {
     top: calc(100% - 40px);
     left: 0;
@@ -156,6 +159,12 @@ input#endTimeInput {
   h1.qa-title {
     line-height: 1;
     padding-bottom: 10px;
+  }
+  .arabicdateWrapper {
+    display: none;
+  }
+  .floating-menu-wrapper{
+    display: none;
   }
 }
 @media screen and (max-width: 375px) {

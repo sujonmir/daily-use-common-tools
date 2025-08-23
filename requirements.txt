@@ -1,0 +1,167 @@
+i want a webpage where these features i need:
+1. I want to calculate daily expense and income
+
+2. expense type or categories: 
+
+    Medicines / Doctors fee & Medical Test / Groccery (This option will be selected By default) / Fishs & Meats / Vegetabls / Fruits / Shopping / General Transport Cost / Tour & Hangouts / Home Rent / Gas & Electricity bills / Phone and WIFI bills / Lend & Gifts / Loan repayment / professional Expense / Personal Snacks
+
+3. All expense and income entry will contains the date. I mean when i submit something It will be shown under date Header
+
+4. On these expense categories, expense calculator would be like this (Medicines): 
+
+	Goods title: Price of goods item * quantity * discount% = total price of the item
+	Goods title: Price of goods item * quantity * discount% = total price of the item
+	Goods title: Price of goods item * quantity * discount% = total price of the item
+	Goods title: Price of goods item * quantity * discount% = total price of the item
+	Goods title: Price of goods item * quantity * discount% = total price of the item
+	Goods title: Price of goods item * quantity * discount% = total price of the item
+    ........................
+    ----------------------------------------------------------------------
+    Total Expense: sum of all item total price
+	
+5. On these expense categories, expense calculator would be like this (Groccery, Fishs & Meats, Vegetabls, Fruits ): in this calculator will have two types (Item price / per Weight price in killograms)
+
+	Goods title: Price of goods in killograms * quantity in killograms = total price of these item - rounded discount  = Payable price of this items
+	Goods title: Price of goods in killograms * quantity in killograms = total price of these item - rounded discount  = Payable price of this items
+    Goods title: Price of goods (item price, could be packets, bundles or bottle) * quantity * flat discount = Payable price
+	Goods title: Price of goods in killograms * quantity in killograms = total price of these item - rounded discount  = Payable price of this items
+	Goods title: Price of goods in killograms * quantity in killograms = total price of these item - rounded discount  = Payable price of this items
+    Goods title: Price of goods (item price, could be packets, bundles or bottle) * quantity * flat discount = Payable price
+	Goods title: Price of goods in killograms * quantity in killograms = total price of these item - rounded discount  = Payable price of this items
+    Goods title: Price of goods (item price: could be packets bundles or bottle) * quantity * flat discount = Payable price
+    ............................
+    ----------------------------------------------------------------------
+    Total Expense: sum of all Payable items price
+	
+
+
+6. On these expense categories (Shopping), expense calculator would be like this:
+
+    Product title: Item price * quantity  = payable price
+    Product title: Item price * quantity  = payable price
+    Product title: Item price * quantity  = payable price
+    ........
+    -------------------------
+    Total expense: sum of all payable price
+
+7. for General Transport Cost, expense calculator would be like this:
+
+    Vichaels title: Place title (from) - Place Title (to) = fare
+    Vichaels title: Place title (from) - Place Title (to) = fare
+    Vichaels title: Place title (from) - Place Title (to) = fare
+    Vichaels title: Place title (from) - Place Title (to) = fare
+    ..............
+    -----------------------------------------------------------------
+    Total Expense: Sum of all fare
+
+8. for "Doctors fee & Medical Test", expense calculator would be like this:
+
+    Patient Name, Doctor name, Doctor type : Visit Fee of this Doctor
+    Test Title: price of the test 
+    Test Title: price of the test 
+    Test Title: price of the test
+    ...........
+    ------------------------------
+    Total price of test - Flat Discount = Payable price of test + doctor visit fee = Total Expense
+
+9. for "Tour & Hangouts", expense calculator would be like this:
+
+    Have to selecte type of "Tour & Hangouts" expense and they will be like: transports fare / Foods / ticket price
+    so, 
+    transport title + (from, to): fare * person = payable fare
+    transport title + (from, to): fare * person = payable fare
+    transport title + (from, to): fare * person = payable fare
+    Foods title: Item price * quantity = Payable price
+    Foods title: Item price * quantity = Payable price
+    Foods title: Item price * quantity = Payable price
+    Tocket title: Ticket price * quantity = Payable price
+    Tocket title: Ticket price * quantity = Payable price
+    .................
+    --------------------------------------------------------
+    Total expense: sum of all payable price
+
+
+
+10. For "Home Rent", "Gas & Electricity bills", "Phone and WIFI bills", expense calculator would be like this:
+
+    Month of rent title: Rent amount * amount of month = payable home rent
+    ---------------------------------
+    title of the "Gas & Electricity bills": if it is gas bills
+        → Cilinder price * quantity + Labour cost = Payable price
+    and if it is: Electricity bill:
+        → Title of the Month: Bill amount
+    = Total expense Gas & Electricity bills
+
+    --------------------------------
+    Wifi Bill month title: monthly bill amount * quantity of month = payable Wifi Bill
+    phone recharge: phone number , amount * discount = payable price
+    .....
+    = total expense: sum of all payable in this categories
+
+
+11. for Lend & Gifts, expense calculator would be like this:
+
+    If it is Lend:
+        → Person name: amount
+    if it is Gift:
+        → gift title: Item price * quantity = Paybale Price
+
+    ......
+    = total expense
+
+12. for Loan repayment, expense calculator would be like this:
+
+    Paying whom (name): amount
+
+
+13. for "professional Expense", expense calculator would be like this:
+
+    Tilte: amount
+    Tilte: amount
+    Tilte: amount
+    ....
+    ----------
+    total expense: sum of aLL amount
+
+14. for Personal Snacks: 
+
+    Snaks title: item price * quantity = Paybale price
+    Snaks title: item price * quantity = Paybale price
+    Snaks title: item price * quantity = Paybale Price
+    ..................
+    ------------------------------------
+    Total expense: sum of all payable price
+
+
+15. Income entry: calculator will be like this: Income from (title): amount
+
+
+16. At the Top right corner, i want to show: Current Balance: Total Income - total expense = current balance
+
+17. Now the plan is: when i select a expense and then category, calculator/form will be apear. and entry will be submitted or posted. but only current month of entry we can see in the webpage. but all entry will be saved in local server. and we can export monthly (have to select month Name like: 1. january, 25 or 4. April, 25) or yearly (2025 or 2026 have to select) report of "income & expense" in excel sheet. but only visible which month or year has entried to export. at the top of the page: we need a header. in header, left side will contain a link (for go to index.html), on right corder of header need, to show current balance and at the middle of the header, i need export buttons (monthly export and yearly export) and this header will be fixed in top.
+
+
+and after header, we can see the month name like: January, 25 (Bold, larger that all text, text align center and need a hr line)
+after this header, all date subheader should be visible but if they has entry to show. (bold and larger text and need a hr line there)
+now, when entry will be posted they will be seen under date subheader like: 1 January, 25  or like under 19 January, 25
+
+
+After all of this entry: i need to show Monthly and Yearly Expense list in a same line
+left side will show: monthy Income and expense
+right side: Yearly Income and  expense
+
+and List will be like this and formatted this list as like tables: (both yearly and monthly)
+    ♥ Total Income: total amount of Income
+    → Medicines : total expense
+    → Doctors fee & Medical Test: total expense
+    → Groccery: total expense
+    (like this, all category name and total expense)
+    ....
+    Balance = Total Income - Total expense
+
+
+
+at the footer: i need 3 colums and 4 lines in each column
+Last 12 Month of (Income: amount | Expense: amount) will be displayed
+Suppose in the previous month we have no entry as it is new web app. So amount value will be 0 BDT.
+

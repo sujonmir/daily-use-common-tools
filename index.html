@@ -10,12 +10,24 @@
     <title>Clock & Tools</title>
   </head>
   <body>
-    <a href="baby.html">
+    <a href="baby.html" class="baby-wrapper">
       <div class="baby">
         <div><span id="p-week"></span> Weeks</div>
         <div><span id="p-day"></span> Days</div>
       </div>
     </a>
+    <div class="floating-menu-wrapper">
+      <div class="floating-menu">
+        <a href="./baby.html" class="baby-icon">
+          <img src="./img/baby.webp" alt="Baby" />
+          <span>Baby Health</span>
+        </a>
+        <a href="personal-finance-tracker.html" class="finance-tracker">
+          <img src="./img/budget.png" alt="Finance Tracker" />
+          <span>Finance Tracker</span>
+        </a>
+      </div>
+    </div>
     <!-- global floating elements start-->
     <!-- <div class="password" id="password">PW & QR Generator</div> -->
     <!-- global floating elements end-->
@@ -40,7 +52,7 @@
         <span id="fhs-bangla-year"></span> বঙ্গাব্দ,
         <span id="fhs-bangla-season"></span>
       </div>
-      <div>
+      <div class="arabicdateWrapper">
         <span class="date-title">আরবিঃ </span
         ><span class="date" id="arabicDateBangla"></span>
       </div>

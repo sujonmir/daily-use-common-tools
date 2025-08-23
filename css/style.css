@@ -31,6 +31,7 @@ body {
 .baby div {
   padding-left: 20px;
 }
+
 /* global floating elements start */
 /* .password {
   position: absolute;
@@ -39,7 +40,7 @@ body {
 .clock-wrapper {
   display: flex;
   justify-content: center;
-  padding-top: 50px;
+  padding-top: 20px;
 }
 .clock {
   font-size: 100px;
@@ -335,3 +336,42 @@ h3.title {
 }
 
 /* popup style end */
+
+/* baby wrapper */
+.baby-wrapper {
+  display: none;
+}
+/* floating menu start */
+.floating-menu-wrapper {
+  display: block;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-family: "Baumans", system-ui;
+}
+.floating-menu-wrapper .floating-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.floating-menu-wrapper .floating-menu a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-decoration: none;
+  color: #000;
+}
+.floating-menu-wrapper .floating-menu span {
+  font-size: 12px;
+  display: inline-block;
+  margin-top: 5px;
+  font-weight: 300;
+  /* letter-spacing: 1px; */
+}
+.floating-menu-wrapper .floating-menu img {
+  width: 30px;
+  height: 30px;
+}
+/* floating menu end */
