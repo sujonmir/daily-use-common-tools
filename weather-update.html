@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tranqwool Environmental Wellness Widget</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .tranqwool-widget {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        max-width: 600px;
+        margin: 20px auto;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        padding: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .tranqwool-widget::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #8b5cf6, #06b6d4, #10b981);
+      }
+
+      .affirmation {
+        background: linear-gradient(135deg, #fdf4ff 0%, #fce7f3 100%);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+        text-align: center;
+        border: 1px solid #f3e8ff;
+      }
+
+      .affirmation h3 {
+        color: #7c3aed;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .affirmation p {
+        color: #6b21a8;
+        font-style: italic;
+        line-height: 1.6;
+        font-size: 16px;
+      }
+
+      .widget-header {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+
+      .widget-header h2 {
+        color: #1e293b;
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .widget-header p {
+        color: #64748b;
+        font-size: 14px;
+      }
+
+      .environmental-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      @media (max-width: 640px) {
+        .environmental-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .env-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .env-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .card-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e293b;
+      }
+
+      .weather-icon {
+        font-size: 32px;
+      }
+
+      .main-value {
+        font-size: 36px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 8px;
+      }
+
+      .condition {
+        color: #64748b;
+        font-size: 16px;
+        margin-bottom: 16px;
+        text-transform: capitalize;
+      }
+
+      .details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .detail-item {
+        text-align: center;
+      }
+
+      .detail-label {
+        color: #64748b;
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+
+      .detail-value {
+        font-weight: 600;
+        font-size: 16px;
+      }
+
+      .aqi-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .aqi-scale {
+        padding-top: 16px;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .aqi-scale-label {
+        color: #64748b;
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      .aqi-bar {
+        display: flex;
+        height: 8px;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 4px;
+        position: relative;
+      }
+
+      .aqi-segment {
+        flex: 1;
+      }
+
+      .aqi-marker {
+        position: absolute;
+        top: -2px;
+        width: 2px;
+        height: 12px;
+        background: #1e293b;
+        border-radius: 1px;
+        transform: translateX(-50%);
+      }
+
+      .aqi-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        color: #64748b;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px 20px;
+        color: #64748b;
+      }
+
+      .loading-spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid #e2e8f0;
+        border-top: 3px solid #8b5cf6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 16px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .error {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        padding: 12px;
+        color: #dc2626;
+        font-size: 14px;
+        text-align: center;
+        margin-top: 16px;
+      }
+
+      .footer-note {
+        text-align: center;
+        color: #94a3b8;
+        font-size: 12px;
+        margin-top: 20px;
+      }
+
+      .location-input-section {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 20px;
+        border: 1px solid #e2e8f0;
+      }
+
+      .location-input-form {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .location-input {
+        flex: 1;
+        min-width: 200px;
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+
+      .location-btn {
+        padding: 8px 16px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        background: white;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+
+      .location-btn:hover {
+        background: #f3f4f6;
+      }
+
+      .location-btn.primary {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+      }
+
+      .location-btn.primary:hover {
+        background: #2563eb;
+      }
+
+      .location-display {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        color: #1e293b;
+      }
+
+      .refresh-btn {
+        background: rgba(139, 92, 246, 0.1);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 6px;
+        padding: 6px 12px;
+        cursor: pointer;
+        font-size: 12px;
+        color: #7c3aed;
+        transition: all 0.2s;
+      }
+
+      .refresh-btn:hover {
+        background: rgba(139, 92, 246, 0.2);
+      }
+
+      /* AQI Color classes */
+      .aqi-good {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .aqi-fair {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .aqi-moderate {
+        background: #fed7aa;
+        color: #ea580c;
+      }
+      .aqi-poor {
+        background: #fecaca;
+        color: #dc2626;
+      }
+      .aqi-very-poor {
+        background: #e9d5ff;
+        color: #7c3aed;
+      }
+
+      /* Detail value colors */
+      .humidity {
+        color: #0284c7;
+      }
+      .wind {
+        color: #059669;
+      }
+      .pressure {
+        color: #7c3aed;
+      }
+      .visibility {
+        color: #0891b2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tranqwool-widget" id="tranqwoolWidget">
+      <div class="loading" id="loadingState">
+        <div class="loading-spinner"></div>
+        🌡️ Loading environmental data...
+      </div>
+    </div>
+
+    <script>
+      class TranqwoolWeatherWidget {
+        constructor() {
+          this.apiKey = "5dbf762b4521798c4696b69cf4d5268d";
+          this.customLocation = "";
+          this.affirmations = [
+            "Today brings new opportunities to grow and flourish in harmony with nature.",
+            "I breathe deeply and appreciate the clean air that nourishes my body and soul.",
+            "Every weather condition offers its own unique beauty and lessons.",
+            "I am grateful for the environment that sustains and inspires me daily.",
+            "My awareness of air quality helps me make mindful choices for my health.",
+            "I find peace in understanding and connecting with my surroundings.",
+            "Today I choose to be conscious of my impact on the world around me.",
+            "The weather reminds me that change is natural and often beautiful.",
+            "I trust in my ability to adapt and thrive in any environmental condition.",
+            "My mindful awareness of air quality protects my wellbeing and vitality.",
+            "I am in tune with nature's rhythms and respect its powerful influence.",
+            "Every breath I take connects me more deeply to the world around me.",
+            "I appreciate the technology that helps me stay informed and healthy.",
+            "Today I celebrate the harmony between human innovation and natural wisdom.",
+            "My environmental consciousness is a gift I give to future generations.",
+            "I find strength in being prepared and informed about my surroundings.",
+            "The air I breathe carries the energy of life and infinite possibilities.",
+            "I am grateful for the ability to make informed decisions about my health.",
+            "Weather patterns remind me of life's beautiful complexity and wonder.",
+            "I choose to see environmental awareness as an act of self-love and care.",
+          ];
+          this.init();
+        }
+
+        async init() {
+          try {
+            const weatherData = await this.fetchWeatherData();
+            this.renderWidget(weatherData);
+          } catch (error) {
+            console.error("Weather data error:", error);
+            this.renderError(error.message);
+          }
+        }
+
+        async fetchWeatherData() {
+          try {
+            let lat, lon, location;
+
+            if (this.customLocation) {
+              const geoResponse = await fetch(
+                `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(
+                  this.customLocation
+                )}&limit=1&appid=${this.apiKey}`
+              );
+              const geoData = await geoResponse.json();
+              if (!geoData.length) throw new Error("Location not found");
+              lat = geoData[0].lat;
+              lon = geoData[0].lon;
+              location = `${geoData[0].name}, ${geoData[0].country}`;
+            } else {
+              const savedLocation = localStorage.getItem("userGeoLocation");
+              if (savedLocation) {
+                const coords = JSON.parse(savedLocation);
+                lat = coords.lat;
+                lon = coords.lon;
+              } else {
+                try {
+                  const position = await this.getUserLocation();
+                  lat = position.coords.latitude;
+                  lon = position.coords.longitude;
+                  localStorage.setItem(
+                    "userGeoLocation",
+                    JSON.stringify({ lat, lon })
+                  );
+                } catch (geoError) {
+                  console.warn(
+                    "Geolocation failed:",
+                    geoError.message,
+                    "- Defaulting to New York."
+                  );
+                  lat = 40.7128;
+                  lon = -74.006;
+                  location = "New York, US (Default)";
+                }
+              }
+            }
+
+            // --- NEW LOGIC: GET LOCATION NAME FROM COORDINATES ---
+            // If the location name hasn't been set (i.e., we used GPS or saved coords),
+            // perform a reverse geocode lookup to find the name.
+            if (!location) {
+              const reverseGeoResponse = await fetch(
+                `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${this.apiKey}`
+              );
+              const reverseGeoData = await reverseGeoResponse.json();
+              if (reverseGeoData.length > 0) {
+                location = `${reverseGeoData[0].name}, ${reverseGeoData[0].country}`;
+              } else {
+                location = "Unknown Location"; // Fallback
+              }
+            }
+            // --- END NEW LOGIC ---
+
+            const weatherResponse = await fetch(
+              `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=metric`
+            );
+            if (!weatherResponse.ok)
+              throw new Error("Weather data unavailable");
+            const weatherData = await weatherResponse.json();
+
+            const aqiResponse = await fetch(
+              `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${this.apiKey}`
+            );
+            const aqiData = aqiResponse.ok ? await aqiResponse.json() : null;
+
+            return {
+              location: location,
+              temperature: Math.round(weatherData.main.temp),
+              condition: weatherData.weather[0].main,
+              description: weatherData.weather[0].description,
+              humidity: weatherData.main.humidity,
+              windSpeed: Math.round(weatherData.wind.speed * 3.6),
+              pressure: weatherData.main.pressure,
+              visibility: weatherData.visibility
+                ? Math.round(weatherData.visibility / 1000)
+                : null,
+              aqi: aqiData ? aqiData.list[0].main.aqi : null,
+              affirmation: this.getDailyAffirmation(),
+              timestamp: new Date().toISOString(),
+            };
+          } catch (error) {
+            console.error("Error fetching weather data:", error);
+            throw error;
+          }
+        }
+
+        getUserLocation() {
+          return new Promise((resolve, reject) => {
+            if (!navigator.geolocation) {
+              return reject(new Error("Geolocation not supported"));
+            }
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              timeout: 10000,
+              enableHighAccuracy: true,
+              maximumAge: 300000,
+            });
+          });
+        }
+
+        getDailyAffirmation() {
+          const dayOfYear = Math.floor(
+            (new Date() - new Date(new Date().getFullYear(), 0, 0)) /
+              (1000 * 60 * 60 * 24)
+          );
+          return this.affirmations[dayOfYear % this.affirmations.length];
+        }
+
+        getWeatherIcon(condition) {
+          const icons = {
+            Clear: "☀️",
+            Clouds: "☁️",
+            Rain: "🌧️",
+            Drizzle: "🌦️",
+            Thunderstorm: "⛈️",
+            Snow: "❄️",
+            Mist: "🌫️",
+            Fog: "🌫️",
+            Haze: "🌫️",
+          };
+          return icons[condition] || "⛅";
+        }
+
+        getAQIClass(aqi) {
+          if (aqi === 1) return "aqi-good";
+          if (aqi === 2) return "aqi-fair";
+          if (aqi === 3) return "aqi-moderate";
+          if (aqi === 4) return "aqi-poor";
+          if (aqi === 5) return "aqi-very-poor";
+          return "aqi-good";
+        }
+
+        getAQICategory(aqi) {
+          if (aqi === 1) return "Good";
+          if (aqi === 2) return "Fair";
+          if (aqi === 3) return "Moderate";
+          if (aqi === 4) return "Poor";
+          if (aqi === 5) return "Very Poor";
+          return "Good";
+        }
+
+        renderWidget(data) {
+          const aqiClass = this.getAQIClass(data.aqi);
+          const aqiCategory = this.getAQICategory(data.aqi);
+          const aqiValue = data.aqi || "N/A";
+
+          document.getElementById("tranqwoolWidget").innerHTML = `
+                    <div class="affirmation">
+                        <h3>💜 Daily Affirmation ✨</h3>
+                        <p>"${data.affirmation}"</p>
+                    </div>
+                    <div class="widget-header">
+                        <h2>Environmental Wellness</h2>
+                        <div class="location-input-section">
+                            <div class="location-input-form">
+                                <div class="location-display" id="locationDisplay">📍 ${
+                                  data.location
+                                }</div>
+                                <input type="text" id="locationInput" class="location-input" placeholder="Enter city name..." style="display: none;">
+                                <button onclick="toggleLocationInput()" id="changeLocationBtn" class="location-btn">Change Location</button>
+                                <button onclick="searchLocation()" id="searchBtn" class="location-btn primary" style="display: none;">Search</button>
+                                <button onclick="useCurrentLocation()" id="gpsBtn" class="location-btn" style="display: none;">Use GPS</button>
+                                <button onclick="cancelLocationInput()" id="cancelBtn" class="location-btn" style="display: none;">Cancel</button>
+                                <button onclick="refreshData()" class="refresh-btn">↻ Refresh</button>
+                            </div>
+                        </div>
+                        <p>Real-time conditions in Celsius</p>
+                    </div>
+                    <div class="environmental-grid">
+                        <div class="env-card">
+                            <div class="card-header">
+                                <div class="card-title">Weather</div>
+                                <div class="weather-icon">${this.getWeatherIcon(
+                                  data.condition
+                                )}</div>
+                            </div>
+                            <div class="main-value">${data.temperature}°C</div>
+                            <div class="condition">${data.description}</div>
+                            <div class="details-grid">
+                                <div class="detail-item">
+                                    <div class="detail-label">Humidity</div>
+                                    <div class="detail-value humidity">${
+                                      data.humidity
+                                    }%</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Wind</div>
+                                    <div class="detail-value wind">${
+                                      data.windSpeed
+                                    } km/h</div>
+                                </div>
+                                ${
+                                  data.pressure
+                                    ? `<div class="detail-item"><div class="detail-label">Pressure</div><div class="detail-value pressure">${data.pressure} hPa</div></div>`
+                                    : ""
+                                }
+                                ${
+                                  data.visibility
+                                    ? `<div class="detail-item"><div class="detail-label">Visibility</div><div class="detail-value visibility">${data.visibility} km</div></div>`
+                                    : ""
+                                }
+                            </div>
+                        </div>
+                        <div class="env-card">
+                            <div class="card-header">
+                                <div class="card-title">Air Quality</div>
+                                <div class="aqi-badge ${aqiClass}">${aqiCategory}</div>
+                            </div>
+                            <div class="main-value">${aqiValue}</div>
+                            <div class="condition">AQI Index</div>
+                            <div class="aqi-scale">
+                                <div class="aqi-scale-label">AQI Scale</div>
+                                <div class="aqi-bar">
+                                    <div class="aqi-segment" style="background: #22c55e;"></div>
+                                    <div class="aqi-segment" style="background: #eab308;"></div>
+                                    <div class="aqi-segment" style="background: #f97316;"></div>
+                                    <div class="aqi-segment" style="background: #ef4444;"></div>
+                                    <div class="aqi-segment" style="background: #8b5cf6;"></div>
+                                    ${
+                                      data.aqi
+                                        ? `<div class="aqi-marker" style="left: ${Math.min(
+                                            (data.aqi / 5) * 100,
+                                            100
+                                          )}%"></div>`
+                                        : ""
+                                    }
+                                </div>
+                                <div class="aqi-labels"><span>Good</span><span>Hazardous</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-note">Perfect air for your Tranqwool aromatherapy experience 🌿</div>
+                `;
+        }
+
+        renderError(message) {
+          document.getElementById("tranqwoolWidget").innerHTML = `
+                    <div class="affirmation">
+                        <h3>💜 Daily Affirmation ✨</h3>
+                        <p>"${this.getDailyAffirmation()}"</p>
+                    </div>
+                    <div class="widget-header">
+                        <h2>Environmental Wellness</h2>
+                        <div class="error">Unable to load weather data: ${message}</div>
+                        <button onclick="refreshData()" class="refresh-btn">Try Again</button>
+                    </div>
+                `;
+        }
+      }
+
+      let widgetInstance;
+
+      function toggleLocationInput() {
+        document.getElementById("locationDisplay").style.display = "none";
+        document.getElementById("changeLocationBtn").style.display = "none";
+        document.getElementById("locationInput").style.display = "block";
+        document.getElementById("searchBtn").style.display = "block";
+        document.getElementById("gpsBtn").style.display = "block";
+        document.getElementById("cancelBtn").style.display = "block";
+        document.getElementById("locationInput").focus();
+      }
+
+      function cancelLocationInput() {
+        document.getElementById("locationDisplay").style.display = "flex";
+        document.getElementById("changeLocationBtn").style.display = "block";
+        document.getElementById("locationInput").style.display = "none";
+        document.getElementById("searchBtn").style.display = "none";
+        document.getElementById("gpsBtn").style.display = "none";
+        document.getElementById("cancelBtn").style.display = "none";
+        document.getElementById("locationInput").value = "";
+      }
+
+      async function searchLocation() {
+        const location = document.getElementById("locationInput").value.trim();
+        if (!location) return;
+        widgetInstance.customLocation = location;
+        document.getElementById(
+          "tranqwoolWidget"
+        ).innerHTML = `<div class="loading"><div class="loading-spinner"></div>🌡️ Loading data for ${location}...</div>`;
+        await widgetInstance.init();
+      }
+
+      async function useCurrentLocation() {
+        widgetInstance.customLocation = "";
+        localStorage.removeItem("userGeoLocation");
+        document.getElementById(
+          "tranqwoolWidget"
+        ).innerHTML = `<div class="loading"><div class="loading-spinner"></div>🌡️ Getting your current location...</div>`;
+        await widgetInstance.init();
+      }
+
+      function refreshData() {
+        document.getElementById(
+          "tranqwoolWidget"
+        ).innerHTML = `<div class="loading"><div class="loading-spinner"></div>🌡️ Refreshing data...</div>`;
+        widgetInstance.init();
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        widgetInstance = new TranqwoolWeatherWidget();
+      });
+
+      document.addEventListener("keypress", (e) => {
+        if (e.key === "Enter" && e.target.id === "locationInput") {
+          searchLocation();
+        }
+      });
+    </script>
+  </body>
+</html>

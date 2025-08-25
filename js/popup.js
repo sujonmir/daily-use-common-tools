@@ -9,6 +9,7 @@ function handlePopup() {
   const password = document.querySelector("#password");
   const yt = document.querySelector("#yt");
   const fiverrCal = document.querySelector("#fiverrCal");
+  const weatherUpdate = document.querySelector("#weather-update");
 
   // Function to toggle the popup
   function togglePopup() {
@@ -38,6 +39,10 @@ function handlePopup() {
   });
   fiverrCal.addEventListener("click", function () {
     webPageFrame.src = "fiverrCal.html";
+    togglePopup();
+  });
+  weatherUpdate.addEventListener("click", function () {
+    webPageFrame.src = "weather-update.html";
     togglePopup();
   });
   // zikir.addEventListener("click", togglePopup("zikir.html"));
