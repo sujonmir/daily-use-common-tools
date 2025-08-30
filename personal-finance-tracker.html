@@ -330,9 +330,116 @@
         color: #d9534f !important;
         margin-right: 20px;
       }
+      #special-footer-note {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        background: #eee;
+        color: #333;
+        padding: 20px 0;
+        justify-content: center;
+        align-items: center;
+      }
+      #special-footer-note .keyword-sum {
+        display: inline-block;
+        margin: 6px 12px 6px 0;
+        padding: 6px 14px;
+        background: #eaf6ff;
+        border-radius: 16px;
+        color: #3576b8;
+        font-weight: 600;
+      }
     </style>
   </head>
   <body>
+    <!-- Floating Keyword Sum Feature -->
+    <style>
+      #floating-keyword-btn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 2000;
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 56px;
+        height: 56px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+        font-size: 2em;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+      #floating-keyword-btn:hover {
+        background: #3576b8;
+      }
+      #keyword-popup {
+        display: none;
+        position: fixed;
+        bottom: 100px;
+        right: 40px;
+        z-index: 2100;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+        padding: 24px 20px 18px 20px;
+        min-width: 260px;
+        max-width: 90vw;
+      }
+      #keyword-popup h3 {
+        margin: 0 0 10px 0;
+        font-size: 1.2em;
+        color: var(--primary-color);
+      }
+      #keyword-popup input[type="text"] {
+        width: 100%;
+        padding: 8px 10px;
+        margin-bottom: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-size: 1em;
+        box-sizing: border-box;
+      }
+      #keyword-popup button[type="submit"] {
+        width: 100%;
+        padding: 10px 0;
+        background: var(--success-color);
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 1em;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      #keyword-popup .close-popup {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        background: none;
+        border: none;
+        color: #888;
+        font-size: 1.2em;
+        cursor: pointer;
+      }
+    </style>
+    <button id="floating-keyword-btn" title="Keyword Sum">🔍</button>
+    <div id="keyword-popup">
+      <button class="close-popup" title="Close">&times;</button>
+      <h3>Add Keyword</h3>
+      <form id="keyword-form" autocomplete="off">
+        <input
+          type="text"
+          id="keyword-input"
+          placeholder="Enter keyword"
+          required
+        />
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <!-- End Floating Keyword Sum Feature -->
     <header>
       <div class="logo">
         <a href="index.html" class="back-to-home">← Back</a>
@@ -392,7 +499,7 @@
                 </option>
                 <option value="Lend & Gifts">Lend & Gifts</option>
                 <option value="Loan repayment">Loan repayment</option>
-                <option value="professional Expense">
+                <option value="Professional Expense">
                   Professional Expense
                 </option>
                 <option value="Personal Snacks">Personal Snacks</option>
@@ -456,6 +563,7 @@
       </section>
     </main>
 
+    <div id="special-footer-note"></div>
     <footer>
       <div class="container footer-container" id="footer-summary">
         <!-- 12-month summary will be injected here -->
@@ -463,6 +571,127 @@
     </footer>
 
     <script>
+      // Keyword Income Tracking Feature
+      (function () {
+        "use strict";
+
+        // Store keywords in memory for this session
+        const keywords = [];
+
+        // Show the keyword input form
+        function showForm() {
+          const popup = document.getElementById("keyword-popup");
+          const input = document.getElementById("keyword-input");
+          popup.style.display = "block";
+          input.value = "";
+          input.focus();
+        }
+
+        // Hide the keyword input form
+        function hideForm() {
+          const popup = document.getElementById("keyword-popup");
+          popup.style.display = "none";
+        }
+
+        // Update the sums display in the footer
+        function updateSums() {
+          const note = document.getElementById("special-footer-note");
+
+          // Check if we have transactions to process
+          if (!window.transactions || !Array.isArray(window.transactions)) {
+            note.innerHTML =
+              '<span style="color:#888;">No transactions available</span>';
+            return;
+          }
+
+          // Calculate sums for each keyword
+          const results = keywords
+            .map((keyword) => {
+              let sum = 0;
+
+              // Loop through all transactions
+              window.transactions.forEach((tx) => {
+                if (tx.type === "income" && Array.isArray(tx.details)) {
+                  // Check each detail in the transaction
+                  tx.details.forEach((detail) => {
+                    if (detail.title && detail.amount != null) {
+                      if (
+                        detail.title
+                          .toLowerCase()
+                          .includes(keyword.toLowerCase())
+                      ) {
+                        sum += parseFloat(detail.amount) || 0;
+                      }
+                    }
+                  });
+                }
+              });
+
+              // Return formatted HTML for keywords with matches, as per user's request
+              if (sum > 0) {
+                // The user requested a specific format: <span value="keyword">Keyword: sum</span>
+                return `<span class="keyword-sum" value="${keyword.toLowerCase()}">${keyword}: ${sum.toLocaleString()} BDT</span>`;
+              }
+              return "";
+            })
+            .filter((html) => html !== ""); // Filter out keywords with no matches
+
+          // Update the display
+          note.innerHTML =
+            results.length > 0
+              ? results.join("")
+              : '<span style="color:#888;">No matching income found for keywords</span>';
+
+          console.log("Keywords:", keywords);
+          console.log("Updated sums");
+        }
+
+        // Initialize the feature
+        function init() {
+          // Get DOM elements
+          const btn = document.getElementById("floating-keyword-btn");
+          const popup = document.getElementById("keyword-popup");
+          const closeBtn = popup.querySelector(".close-popup");
+          const form = document.getElementById("keyword-form");
+
+          // Add event listeners
+          btn.addEventListener("click", showForm);
+          closeBtn.addEventListener("click", hideForm);
+          popup.addEventListener("click", (e) => {
+            if (e.target === popup) hideForm();
+          });
+
+          // Handle form submission
+          form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const input = document.getElementById("keyword-input");
+            const keyword = input.value.trim();
+
+            if (
+              keyword &&
+              !keywords.some((k) => k.toLowerCase() === keyword.toLowerCase())
+            ) {
+              keywords.push(keyword);
+              updateSums();
+              console.log("Added keyword:", keyword);
+            }
+
+            hideForm();
+          });
+
+          // Make the update function available globally
+          window.updateKeywordFooterNote = updateSums;
+
+          console.log("Keyword tracking initialized");
+        }
+
+        // Start when document is ready
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", init);
+        } else {
+          init();
+        }
+      })();
       document.addEventListener("DOMContentLoaded", async () => {
         // --- DOM Elements ---
         const transactionTypeSelect =
@@ -503,6 +732,7 @@
 
         // --- State Management ---
         let transactions = []; // This is now a cache of the DB data
+        window.transactions = transactions; // Make it globally accessible for the keyword feature
         const EXPENSE_CATEGORIES = Array.from(categorySelect.options).map(
           (opt) => opt.value
         );
@@ -557,13 +787,15 @@
         const init = async () => {
           try {
             await initDB();
-            transactions = await getAllTransactions();
+            window.transactions = transactions = await getAllTransactions();
           } catch (error) {
             console.error("Failed to initialize database:", error);
             alert("Could not initialize the database. Data will not be saved.");
           }
 
           transactionDateInput.value = new Date().toISOString().split("T")[0];
+          // Update keyword sums after loading transactions
+          if (window.updateKeywordFooterNote) window.updateKeywordFooterNote();
           transactionTypeSelect.addEventListener("change", renderCalculator);
           categorySelect.addEventListener("change", renderCalculator);
           transactionForm.addEventListener("submit", handleFormSubmit);
@@ -615,7 +847,6 @@
                         break;
                       case "Shopping":
                       case "Personal Snacks":
-                      case "Others":
                         n +=
                           '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 3fr 1fr 1fr auto;">\n                                    <input type="text" placeholder="Product title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Item price" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
                         break;
@@ -647,7 +878,8 @@
                         n +=
                           '<div class="item-row" style="grid-template-columns: 1fr 1fr;">\n                                    <input type="text" placeholder="Paying whom (name)" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                </div>';
                         break;
-                      case "professional Expense":
+                      case "Professional Expense":
+                      case "Others":
                         n +=
                           '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 1fr 1fr auto;">\n                                    <input type="text" placeholder="Title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
                     }
@@ -826,7 +1058,10 @@
             await addTransaction(newTransaction);
             transactions.push(newTransaction); // Update local cache
             renderApp();
+            if (window.updateKeywordFooterNote)
+              window.updateKeywordFooterNote();
             transactionForm.reset();
+            transactionDateInput.value = new Date().toISOString().split("T")[0];
             renderCalculator();
           } catch (error) {
             console.error("Failed to save transaction:", error);
@@ -844,8 +1079,12 @@
               const id = parseInt(entryEl.dataset.id);
               try {
                 await deleteTransaction(id);
-                transactions = transactions.filter((t) => t.id !== id);
+                window.transactions = transactions = transactions.filter(
+                  (t) => t.id !== id
+                );
                 renderApp();
+                if (window.updateKeywordFooterNote)
+                  window.updateKeywordFooterNote();
               } catch (error) {
                 console.error("Failed to delete transaction:", error);
                 alert(
@@ -940,7 +1179,6 @@
               break;
             case "Shopping":
             case "Personal Snacks":
-            case "Others":
               n.forEach((e) => {
                 const n = e.querySelector(".item-title").value,
                   o = parseFloat(e.querySelector(".item-price").value),
@@ -1085,7 +1323,8 @@
                 g = parseFloat(n[0].querySelector(".item-amount").value);
               (t.total = g), t.details.push({ to: f, amount: g });
               break;
-            case "professional Expense":
+            case "Professional Expense":
+            case "Others":
               n.forEach((e) => {
                 const n = e.querySelector(".item-title").value,
                   o = parseFloat(e.querySelector(".item-amount").value);
@@ -1423,8 +1662,10 @@
                 transaction.onerror = reject;
               });
 
-              transactions = importedData;
+              window.transactions = transactions = importedData;
               renderApp();
+              if (window.updateKeywordFooterNote)
+                window.updateKeywordFooterNote();
               alert("Data successfully imported and overwritten!");
             } catch (error) {
               alert(
