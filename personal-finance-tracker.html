@@ -1505,7 +1505,7 @@
                     ? `<li>Doctor Fee (${n.doctorName}): ${n.fee.toFixed(
                         2
                       )}</li>`
-                    : "Medical Tests" === n.type
+                    : "Medical Tests" === n.type // This line is correct, no change Needed 
                     ? `<li>Tests: ${n.payableTests.toFixed(2)} (Total: ${
                         n.testsTotal
                       } - Discount: ${n.testDiscount})</li>`
@@ -1513,6 +1513,20 @@
                     ? `<li>${n.type}: ${n.title} (x${
                         n.quantity
                       }) - ${n.itemTotal.toFixed(2)}</li>`
+                    : "Home Rent" === e.category && n.total // Added for Home Rent
+                    ? `<li>${n.title} (x${n.months}): ${n.total.toFixed(
+                        2
+                      )}</li>`
+                    : "Gas & Electricity bills" === e.category && n.type === "Gas" // Added for Gas Bill
+                    ? `<li>Gas Bill (x${n.quantity}): ${n.total.toFixed(
+                        2
+                      )}</li>`
+                    : "Gas & Electricity bills" === e.category && n.type === "Electricity" // Added for Electricity Bill
+                    ? `<li>${n.title}: ${n.amount.toFixed(2)}</li>`
+                    : "Phone and WIFI bills" === e.category && n.type === "WIFI" // Added for WIFI Bill
+                    ? `<li>${n.title} (x${n.quantity}): ${n.total.toFixed(
+                        2
+                      )}</li>`
                     : n.to && n.amount
                     ? `<li>Paid to ${n.to}: ${n.amount.toFixed(2)}</li>`
                     : "Lend" === n.type
