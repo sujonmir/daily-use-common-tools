@@ -12,10 +12,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const POPUP_TRIGGER_SELECTOR = ".img-trigger";
+  const FULLSCREEN_CONTENT_SELECTOR = ".full-screen-mode";
 
   // --- Initialization ---
   createAgeCounter(AGE_COUNTER_CONFIG);
   setupImagePopup(POPUP_TRIGGER_SELECTOR);
+  setupContentFullscreen(FULLSCREEN_CONTENT_SELECTOR);
 });
 
 /**
@@ -119,5 +121,72 @@ function setupImagePopup(triggerSelector) {
       // Close only if the dark overlay is clicked
       closeModal();
     }
+  });
+}
+
+/**
+ * Sets up fullscreen functionality for a specific content element.
+ * When the element is in fullscreen, a close button is added.
+ * @param {string} selector - The CSS selector for the clickable element.
+ */
+function setupContentFullscreen(selector) {
+  const elements = document.querySelectorAll(selector);
+  if (elements.length === 0) {
+    return;
+  }
+
+  const closeFullscreen = () => {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  };
+
+  const handleFullscreenChange = () => {
+    const fullscreenEl =
+      document.fullscreenElement || document.webkitFullscreenElement;
+    // When entering fullscreen, add a class to the fullscreen element
+    if (fullscreenEl) {
+      fullscreenEl.classList.add("in-fullscreen");
+    } else {
+      // When exiting fullscreen, remove the class from all potential elements
+      elements.forEach((el) => el.classList.remove("in-fullscreen"));
+    }
+  };
+
+  // Add a single, global listener for fullscreen changes
+  document.addEventListener("fullscreenchange", handleFullscreenChange);
+  document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+
+  // Set up each fullscreen-capable element
+  elements.forEach((element) => {
+    const openFullscreen = (e) => {
+      // Do not trigger fullscreen if the click is on the close button itself
+      if (e.target.matches(".fullscreen-close-btn")) {
+        return;
+      }
+      // Request fullscreen for the card
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.webkitRequestFullscreen) {
+        /* Safari */
+        element.webkitRequestFullscreen();
+      } else if (element.msRequestFullscreen) {
+        /* IE11 */
+        element.msRequestFullscreen();
+      }
+    };
+
+    // Find the close button *inside* this specific card
+    const closeBtn = element.querySelector(".fullscreen-close-btn");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", closeFullscreen);
+    }
+
+    // Add the click listener to the card itself
+    element.addEventListener("click", openFullscreen);
   });
 }
