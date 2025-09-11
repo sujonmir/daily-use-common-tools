@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Daily Expense & Income Tracker</title>
-    <link rel="shortcut icon" href="./img/budget.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="./img/budget.webp" type="image/x-icon" />
     <style>
       /* CSS styles are identical to the previous version, so they are included for completeness */
       :root {
@@ -1505,7 +1505,7 @@
                     ? `<li>Doctor Fee (${n.doctorName}): ${n.fee.toFixed(
                         2
                       )}</li>`
-                    : "Medical Tests" === n.type // This line is correct, no change Needed 
+                    : "Medical Tests" === n.type // This line is correct, no change Needed
                     ? `<li>Tests: ${n.payableTests.toFixed(2)} (Total: ${
                         n.testsTotal
                       } - Discount: ${n.testDiscount})</li>`
@@ -1517,11 +1517,13 @@
                     ? `<li>${n.title} (x${n.months}): ${n.total.toFixed(
                         2
                       )}</li>`
-                    : "Gas & Electricity bills" === e.category && n.type === "Gas" // Added for Gas Bill
+                    : "Gas & Electricity bills" === e.category &&
+                      n.type === "Gas" // Added for Gas Bill
                     ? `<li>Gas Bill (x${n.quantity}): ${n.total.toFixed(
                         2
                       )}</li>`
-                    : "Gas & Electricity bills" === e.category && n.type === "Electricity" // Added for Electricity Bill
+                    : "Gas & Electricity bills" === e.category &&
+                      n.type === "Electricity" // Added for Electricity Bill
                     ? `<li>${n.title}: ${n.amount.toFixed(2)}</li>`
                     : "Phone and WIFI bills" === e.category && n.type === "WIFI" // Added for WIFI Bill
                     ? `<li>${n.title} (x${n.quantity}): ${n.total.toFixed(
