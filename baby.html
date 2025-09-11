@@ -148,6 +148,7 @@
         padding: 2em; /* Use em-based padding */
         box-sizing: border-box;
         font-size: 16px; /* Set a base font size for predictable scaling */
+        cursor: context-menu !important;
       }
 
       /* Style the title in fullscreen */
@@ -245,6 +246,10 @@
       .in-fullscreen .fullscreen-close-btn {
         display: block;
       }
+      .gray {
+        color: #888;
+        /* font-weight: bold; */
+      }
 
       /* --- Mobile Responsive Fullscreen --- */
       @media screen and (max-width: 768px) {
@@ -321,8 +326,12 @@
         <div class="details">
           <p><b>Name: </b>Alma</p>
           <p><b>Age: </b>27</p>
-          <p><b>BP: </b>70/110</p>
-          <p><b>Weight: </b>50 Kg</p>
+          <p>
+            <b>BP: </b><span><span class="gray">60/100 to</span> 70/110</span>
+          </p>
+          <p>
+            <b>Weight: </b><span><span class="gray">46 to</span> 50 Kg</span>
+          </p>
           <p><b>Blood Group: </b>AB+</p>
           <p><b>Profession: </b>Housewife</p>
           <p><b>Husband: </b>Sujon Mir</p>
