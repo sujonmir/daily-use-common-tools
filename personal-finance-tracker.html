@@ -530,6 +530,7 @@
                   Professional Expense
                 </option>
                 <option value="Personal Snacks">Personal Snacks</option>
+                <option value="Educational Expense">Educational Expense</option>
                 <option value="Others">Others</option>
               </select>
             </div>
@@ -904,6 +905,13 @@
                       case "Loan repayment":
                         n +=
                           '<div class="item-row" style="grid-template-columns: 1fr 1fr;">\n                                    <input type="text" placeholder="Paying whom (name)" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                </div>';
+                        break;
+                      case "Educational Expense":
+                        n += `<select id="educational-expense-type-select" class="form-group" style="margin-bottom:15px; padding:10px; border: 1px solid var(--border-color); border-radius: 4px;">
+                                    <option value="academic">Academic</option>
+                                    <option value="educational_goods">Educational Goods</option>
+                                </select>
+                                <div id="educational-expense-details"></div>`;
                         break;
                       case "Professional Expense":
                       case "Others":
@@ -1357,6 +1365,26 @@
                 g = parseFloat(n[0].querySelector(".item-amount").value);
               (t.total = g), t.details.push({ to: f, amount: g });
               break;
+            case "Educational Expense":
+              const subType = document.getElementById("educational-expense-type-select").value;
+              if (subType === "academic") {
+                  const person = n[0].querySelector(".item-person").value;
+                  const feeType = n[0].querySelector(".item-fee-type").value;
+                  const amount = parseFloat(n[0].querySelector(".item-amount").value);
+                  t.total = amount;
+                  t.details.push({ subType: "Academic", person, feeType, amount });
+              } else { // educational_goods
+                  n.forEach(row => {
+                      const title = row.querySelector(".item-title").value;
+                      const price = parseFloat(row.querySelector(".item-price").value);
+                      const quantity = parseFloat(row.querySelector(".item-quantity").value);
+                      const discount = parseFloat(row.querySelector(".item-discount").value);
+                      const itemTotal = price * quantity - discount;
+                      t.details.push({ subType: "Educational Good", title, price, quantity, discount, itemTotal });
+                      t.total += itemTotal;
+                  });
+              }
+              break;
             case "Professional Expense":
             case "Others":
               n.forEach((e) => {
@@ -1477,6 +1505,52 @@
             );
             renderLendGiftDetails();
           }
+
+          const educationalExpenseTypeSelect = document.getElementById("educational-expense-type-select");
+          if (educationalExpenseTypeSelect) {
+              const renderEducationalExpenseDetails = () => {
+                  const detailsContainer = document.getElementById("educational-expense-details");
+                  let html = "";
+                  if (educationalExpenseTypeSelect.value === "academic") {
+                      html = `<div class="item-row" style="grid-template-columns: 1fr 1fr 1fr;">
+                                  <input type="text" placeholder="Person for (Name)" class="item-person" required>
+                                  <input type="text" placeholder="Fee Type (e.g., Admission, Monthly)" class="item-fee-type" required>
+                                  <input type="number" step="0.01" placeholder="Fee Amount" class="item-amount" required>
+                              </div>`;
+                      detailsContainer.innerHTML = html;
+                  } else { // educational_goods
+                      html = `<div class="items-list">
+                                  <div class="item-row" style="grid-template-columns: 3fr 1fr 1fr 1fr auto;">
+                                      <input type="text" placeholder="Goods title" class="item-title" required>
+                                      <input type="number" step="0.01" placeholder="Price" class="item-price" required>
+                                      <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>
+                                      <input type="number" step="0.01" value="0" placeholder="Discount (flat)" class="item-discount">
+                                      <button type="button" class="remove-item-btn" style="display:none;">X</button>
+                                  </div>
+                              </div>
+                              <button type="button" class="add-item-btn">+ Add Item</button>`;
+                      detailsContainer.innerHTML = html;
+                      
+                      const addEduItemBtn = detailsContainer.querySelector(".add-item-btn");
+                      if (addEduItemBtn) {
+                          addEduItemBtn.onclick = () => {
+                              const list = detailsContainer.querySelector(".items-list");
+                              const firstItem = list.querySelector(".item-row");
+                              const newItem = firstItem.cloneNode(true);
+                              newItem.querySelectorAll("input").forEach((input) => (input.value = ""));
+                              if (newItem.querySelector(".item-quantity")) newItem.querySelector(".item-quantity").value = "1";
+                              if (newItem.querySelector(".item-discount")) newItem.querySelector(".item-discount").value = "0";
+                              const removeBtn = newItem.querySelector(".remove-item-btn");
+                              removeBtn.style.display = "inline-block";
+                              removeBtn.onclick = () => newItem.remove();
+                              list.appendChild(newItem);
+                          };
+                      }
+                  }
+              };
+              educationalExpenseTypeSelect.addEventListener("change", renderEducationalExpenseDetails);
+              renderEducationalExpenseDetails();
+          }
         };
 
         // --- Helper & Utility Functions (No Changes Here) ---
@@ -1498,7 +1572,11 @@
               e.details.forEach((n) => {
                 let o = "";
                 (o =
-                  n.title && n.amount
+                  e.category === "Educational Expense" && n.subType === "Academic"
+                    ? `<li>${n.feeType} for ${n.person}: ${n.amount.toFixed(2)}</li>`
+                    : e.category === "Educational Expense" && n.subType === "Educational Good"
+                    ? `<li>${n.title} (x${n.quantity}): ${n.itemTotal.toFixed(2)}</li>`
+                    : n.title && n.amount
                     ? `<li>${n.title}: ${n.amount.toFixed(2)}</li>`
                     : n.title && n.itemTotal
                     ? `<li>${n.title} (x${
@@ -1666,6 +1744,10 @@
             return "";
           }
           return details.map(n => {
+                if (category === "Educational Expense") {
+                    if (n.subType === "Academic") return `Academic - ${n.feeType} for ${n.person}: ${n.amount.toFixed(2)}`;
+                    if (n.subType === "Educational Good") return `Goods - ${n.title} (x${n.quantity}): ${n.itemTotal.toFixed(2)}`;
+                }
                 if (n.title && n.amount)
                     return `${n.title}: ${n.amount.toFixed(2)}`;
                 if (n.title && n.itemTotal)
