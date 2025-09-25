@@ -187,6 +187,7 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
         border-left: 5px solid;
         position: relative;
+        padding-bottom: 40px; /* Make space for edit button */
       }
       .entry.income {
         border-color: var(--success-color);
@@ -235,6 +236,23 @@
       .delete-btn:hover {
         opacity: 1;
         background: none;
+      }
+      .edit-btn {
+        position: absolute;
+        bottom: 10px;
+        right: 15px;
+        background: none;
+        border: none;
+        color: var(--primary-color);
+        cursor: pointer;
+        font-size: 0.9em;
+        font-weight: bold;
+        opacity: 0.7;
+      }
+      .edit-btn:hover {
+        opacity: 1;
+        text-decoration: underline;
+        background: none; /* Override default button hover */
       }
       .summary-section {
         display: grid;
@@ -486,7 +504,7 @@
       <hr class="section-hr" />
 
       <!-- Entry Form Section -->
-      <section class="form-section">
+      <section id="form-section" class="form-section">
         <h2>Add New Transaction</h2>
         <form id="transaction-form">
           <div class="form-grid">
@@ -524,7 +542,9 @@
                 <option value="Phone and WIFI bills">
                   Phone and WIFI bills
                 </option>
-                <option value="Lend, Donate & Gifts">Lend, Donate & Gifts</option>
+                <option value="Lend, Donate & Gifts">
+                  Lend, Donate & Gifts
+                </option>
                 <option value="Loan repayment">Loan repayment</option>
                 <option value="Professional Expense">
                   Professional Expense
@@ -621,6 +641,14 @@
           popup.style.display = "none";
         }
 
+        // This function will be defined in the main script block later
+        // but we declare it here so the IIFE knows it might exist.
+        let formatToIndianCurrency = (num) =>
+          num.toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+
         // Update the sums display in the footer
         function updateSums() {
           const note = document.getElementById("special-footer-note");
@@ -630,6 +658,11 @@
             note.innerHTML =
               '<span style="color:#888;">No transactions available</span>';
             return;
+          }
+
+          // Check if the global formatter function is available
+          if (typeof window.formatToIndianCurrency === "function") {
+            formatToIndianCurrency = window.formatToIndianCurrency;
           }
 
           // Calculate sums for each keyword
@@ -658,7 +691,9 @@
               // Return formatted HTML for keywords with matches, as per user's request
               if (sum > 0) {
                 // The user requested a specific format: <span value="keyword">Keyword: sum</span>
-                return `<span class="keyword-sum" value="${keyword.toLowerCase()}"><span>${keyword}:</span> ${sum.toLocaleString()} BDT</span>`;
+                return `<span class="keyword-sum" value="${keyword.toLowerCase()}"><span>${keyword}:</span> ${formatToIndianCurrency(
+                  sum
+                )} BDT</span>`;
               }
               return "";
             })
@@ -669,9 +704,6 @@
             results.length > 0
               ? results.join("")
               : '<span style="color:#888;">No matching income found for keywords</span>';
-
-          console.log("Keywords:", keywords);
-          console.log("Updated sums");
         }
 
         // Initialize the feature
@@ -701,7 +733,6 @@
             ) {
               keywords.push(keyword);
               updateSums();
-              console.log("Added keyword:", keyword);
             }
 
             hideForm();
@@ -709,8 +740,6 @@
 
           // Make the update function available globally
           window.updateKeywordFooterNote = updateSums;
-
-          console.log("Keyword tracking initialized");
         }
 
         // Start when document is ready
@@ -780,7 +809,6 @@
 
             request.onsuccess = (event) => {
               db = event.target.result;
-              console.log("Database opened successfully");
               resolve();
             };
 
@@ -795,7 +823,12 @@
           return new Promise((resolve, reject) => {
             const transaction = db.transaction(storeName, mode);
             const store = transaction.objectStore(storeName);
-            const request = store[action](data);
+            let request;
+            if (data !== undefined) {
+              request = store[action](data);
+            } else {
+              request = store[action]();
+            }
 
             transaction.oncomplete = () => resolve(request.result);
             transaction.onerror = (event) => reject(event.target.error);
@@ -810,6 +843,19 @@
           dbRequest("transactions", "readwrite", "delete", id);
         const clearTransactions = () =>
           dbRequest("transactions", "readwrite", "clear");
+
+        // --- NEW: Currency Formatting Helper ---
+        const formatToIndianCurrency = (num) => {
+          if (typeof num !== "number") {
+            return num;
+          }
+          // Using Intl.NumberFormat is more robust and locale-aware
+          return new Intl.NumberFormat("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }).format(num);
+        };
+        window.formatToIndianCurrency = formatToIndianCurrency; // Make it globally available
 
         // --- Initialization ---
         const init = async () => {
@@ -827,7 +873,7 @@
           transactionTypeSelect.addEventListener("change", renderCalculator);
           categorySelect.addEventListener("change", renderCalculator);
           transactionForm.addEventListener("submit", handleFormSubmit);
-          entriesContainer.addEventListener("click", handleDelete);
+          entriesContainer.addEventListener("click", handleEntryAction);
 
           exportMonthlyBtn.addEventListener("click", exportMonthlyReport);
           exportYearlyBtn.addEventListener("click", exportYearlyReport);
@@ -839,7 +885,7 @@
           renderApp();
         };
 
-        // --- Core Rendering Functions (No Changes Here) ---
+        // --- Core Rendering Functions ---
         const renderApp = () => {
           const today = new Date();
           renderEntries(today.getFullYear(), today.getMonth());
@@ -959,21 +1005,17 @@
 
             let html = "";
             for (const date in groupedByDate) {
-              // NEW: Calculate the total expense for this specific day.
-              // This is very efficient as it only looks at the transactions for the current day.
               const dailyTotalExpense = groupedByDate[date]
                 .filter((t) => t.type === "expense")
                 .reduce((sum, t) => sum + t.total, 0);
 
-              // NEW: Create the total string, but only if there were expenses.
               const totalHtml =
                 dailyTotalExpense > 0
-                  ? `<span class="daily-total">Expense: -${dailyTotalExpense.toFixed(
-                      2
+                  ? `<span class="daily-total">Expense: -${formatToIndianCurrency(
+                      dailyTotalExpense
                     )} BDT</span>`
                   : "";
 
-              // MODIFIED: The date header now includes the daily total.
               html += `<div class="date-group">
                             <h2 class="date-header">
                                 <span>${date}</span>
@@ -991,11 +1033,12 @@
                                 }</span>
                                 <span class="entry-total">${
                                   t.type === "income" ? "+" : "-"
-                                } ${t.total.toFixed(2)} BDT</span>
+                                } ${formatToIndianCurrency(t.total)} BDT</span>
                             </div>
                             <div class="entry-details">${formatEntryDetails(
                               t
                             )}</div>
+                            <button class="edit-btn" title="Edit Entry">Edit</button>
                         </div>`;
               });
               html += `</div>`;
@@ -1040,10 +1083,14 @@
                 c = `<p>\n                    <strong>${o.toLocaleString(
                   "en-US",
                   { month: "short", year: "2-digit" }
-                )}:</strong> \n                    <span>\n                        <span class="income-amount">${l.toFixed(
-                  0
-                )}</span> | \n                        <span class="expense-amount">${s.toFixed(
-                  0
+                )}:</strong> \n                    <span>\n                        <span class="income-amount">${new Intl.NumberFormat(
+                  "en-IN"
+                ).format(
+                  l.toFixed(0)
+                )}</span> | \n                        <span class="expense-amount">${new Intl.NumberFormat(
+                  "en-IN"
+                ).format(
+                  s.toFixed(0)
                 )}</span>\n                    </span>\n                   </p>`;
               n < 4 ? t[0].push(c) : n < 8 ? t[1].push(c) : t[2].push(c);
             }
@@ -1058,7 +1105,7 @@
             footerSummary.innerHTML = o;
           };
 
-        // --- Event Handlers & Logic (No Changes Here) ---
+        // --- Event Handlers & Logic ---
         const handleFormSubmit = async (e) => {
           e.preventDefault();
           const date = transactionDateInput.value;
@@ -1103,7 +1150,8 @@
             alert("Error: Could not save the transaction to the database.");
           }
         };
-        const handleDelete = async (e) => {
+
+        const handleEntryAction = async (e) => {
           if (e.target.classList.contains("delete-btn")) {
             if (
               confirm(
@@ -1127,8 +1175,51 @@
                 );
               }
             }
+          } else if (e.target.classList.contains("edit-btn")) {
+            const entryEl = e.target.closest(".entry");
+            const id = parseInt(entryEl.dataset.id);
+            const transactionToEdit = transactions.find((t) => t.id === id);
+
+            if (!transactionToEdit) return;
+
+            // 1. Pre-fill the form
+            document
+              .getElementById("form-section")
+              .scrollIntoView({ behavior: "smooth" });
+            transactionDateInput.value = transactionToEdit.date;
+            transactionTypeSelect.value = transactionToEdit.type;
+
+            // Trigger change to update category visibility
+            transactionTypeSelect.dispatchEvent(new Event("change"));
+
+            if (transactionToEdit.type === "expense") {
+              categorySelect.value = transactionToEdit.category;
+              // Trigger change to render correct calculator
+              categorySelect.dispatchEvent(new Event("change"));
+            }
+
+            // Allow the DOM to update with the correct calculator template
+            setTimeout(() => {
+              populateCalculator(transactionToEdit);
+            }, 100);
+
+            // 2. Delete the old transaction from state and DB
+            try {
+              await deleteTransaction(id);
+              window.transactions = transactions = transactions.filter(
+                (t) => t.id !== id
+              );
+              // Re-render immediately to show the item has been removed and is now being edited
+              renderApp();
+              if (window.updateKeywordFooterNote)
+                window.updateKeywordFooterNote();
+            } catch (error) {
+              console.error("Failed to delete transaction for editing:", error);
+              alert("Error: Could not start edit process.");
+            }
           }
         };
+
         const calculateExpense = (e) => {
           const t = { details: [], total: 0 },
             n = Array.from(calculatorContainer.querySelectorAll(".item-row"));
@@ -1338,7 +1429,8 @@
                     (t.total = o),
                       t.details.push({ type: "Lend", person: e, amount: o });
                   })()
-                : "donate" === document.getElementById("lend-gift-type-select").value
+                : "donate" ===
+                  document.getElementById("lend-gift-type-select").value
                 ? (() => {
                     const e = n[0].querySelector(".item-person").value,
                       o = parseFloat(n[0].querySelector(".item-amount").value);
@@ -1366,23 +1458,46 @@
               (t.total = g), t.details.push({ to: f, amount: g });
               break;
             case "Educational Expense":
-              const subType = document.getElementById("educational-expense-type-select").value;
+              const subType = document.getElementById(
+                "educational-expense-type-select"
+              ).value;
               if (subType === "academic") {
-                  const person = n[0].querySelector(".item-person").value;
-                  const feeType = n[0].querySelector(".item-fee-type").value;
-                  const amount = parseFloat(n[0].querySelector(".item-amount").value);
-                  t.total = amount;
-                  t.details.push({ subType: "Academic", person, feeType, amount });
-              } else { // educational_goods
-                  n.forEach(row => {
-                      const title = row.querySelector(".item-title").value;
-                      const price = parseFloat(row.querySelector(".item-price").value);
-                      const quantity = parseFloat(row.querySelector(".item-quantity").value);
-                      const discount = parseFloat(row.querySelector(".item-discount").value);
-                      const itemTotal = price * quantity - discount;
-                      t.details.push({ subType: "Educational Good", title, price, quantity, discount, itemTotal });
-                      t.total += itemTotal;
+                const person = n[0].querySelector(".item-person").value;
+                const feeType = n[0].querySelector(".item-fee-type").value;
+                const amount = parseFloat(
+                  n[0].querySelector(".item-amount").value
+                );
+                t.total = amount;
+                t.details.push({
+                  subType: "Academic",
+                  person,
+                  feeType,
+                  amount,
+                });
+              } else {
+                // educational_goods
+                n.forEach((row) => {
+                  const title = row.querySelector(".item-title").value;
+                  const price = parseFloat(
+                    row.querySelector(".item-price").value
+                  );
+                  const quantity = parseFloat(
+                    row.querySelector(".item-quantity").value
+                  );
+                  const discount = parseFloat(
+                    row.querySelector(".item-discount").value
+                  );
+                  const itemTotal = price * quantity - discount;
+                  t.details.push({
+                    subType: "Educational Good",
+                    title,
+                    price,
+                    quantity,
+                    discount,
+                    itemTotal,
                   });
+                  t.total += itemTotal;
+                });
               }
               break;
             case "Professional Expense":
@@ -1395,6 +1510,232 @@
           }
           return t;
         };
+
+        const populateCalculator = (tx) => {
+          const details = tx.details;
+          if (!details) return;
+
+          if (tx.type === "income") {
+            calculatorContainer.querySelector(".item-title").value =
+              details[0]?.title || "";
+            calculatorContainer.querySelector(".item-amount").value =
+              details[0]?.amount || "";
+            return;
+          }
+
+          const populateList = (selector, details, populator) => {
+            const list = calculatorContainer.querySelector(selector);
+            if (!list) return;
+            const template = list.querySelector(".item-row");
+            if (!template) return;
+            list.innerHTML = "";
+            if (!details || details.length === 0) {
+              list.appendChild(template.cloneNode(true)); // Add a blank one back
+              return;
+            }
+            details.forEach((detail, index) => {
+              const newItem = template.cloneNode(true);
+              populator(newItem, detail);
+              const removeBtn = newItem.querySelector(".remove-item-btn");
+              if (removeBtn) {
+                removeBtn.style.display =
+                  details.length > 1 ? "inline-block" : "none";
+                removeBtn.onclick = () => newItem.remove();
+              }
+              list.appendChild(newItem);
+            });
+          };
+
+          switch (tx.category) {
+            case "Medicines":
+              populateList(".items-list", details, (row, detail) => {
+                row.querySelector(".item-title").value = detail.title;
+                row.querySelector(".item-price").value = detail.price;
+                row.querySelector(".item-quantity").value = detail.quantity;
+                row.querySelector(".item-discount").value = detail.discount;
+              });
+              break;
+            case "Groccery":
+            case "Milk, Fishs & Meats":
+            case "Vegetabls":
+            case "Fruits":
+              populateList(".items-list", details, (row, detail) => {
+                row.querySelector(".item-title").value = detail.title;
+                row.querySelector(".item-type-select").value = detail.type;
+                row.querySelector(".item-price").value = detail.price;
+                row.querySelector(".item-quantity").value = detail.quantity;
+                row.querySelector(".item-discount").value = detail.discount;
+              });
+              break;
+            case "Doctors fee & Medical Test": {
+              const feeDetail = details.find((d) => d.type === "Doctor Fee");
+              const testDetail = details.find(
+                (d) => d.type === "Medical Tests"
+              );
+              if (feeDetail) {
+                calculatorContainer.querySelector(".patient-name").value =
+                  feeDetail.patientName;
+                calculatorContainer.querySelector(".doctor-name").value =
+                  feeDetail.doctorName;
+                calculatorContainer.querySelector(".doctor-type").value =
+                  feeDetail.doctorType;
+                calculatorContainer.querySelector(".doctor-fee").value =
+                  feeDetail.fee;
+              }
+              if (testDetail && testDetail.items) {
+                populateList(".items-list", testDetail.items, (row, detail) => {
+                  row.querySelector(".item-title").value = detail.title;
+                  row.querySelector(".item-price").value = detail.price;
+                });
+                calculatorContainer.querySelector(
+                  ".total-test-discount"
+                ).value = testDetail.testDiscount;
+              }
+              break;
+            }
+            case "Shopping":
+            case "Personal Snacks":
+              populateList(".items-list", details, (row, detail) => {
+                row.querySelector(".item-title").value = detail.title;
+                row.querySelector(".item-price").value = detail.price;
+                row.querySelector(".item-quantity").value = detail.quantity;
+              });
+              break;
+            case "General Transport Cost":
+              populateList(".items-list", details, (row, detail) => {
+                row.querySelector(".item-vehicle").value = detail.vehicle;
+                row.querySelector(".item-from").value = detail.from;
+                row.querySelector(".item-to").value = detail.to;
+                row.querySelector(".item-fare").value = detail.fare;
+              });
+              break;
+            case "Tour & Hangouts":
+              populateList(".items-list", details, (row, detail) => {
+                row.querySelector(".item-type-select").value = detail.type;
+                row.querySelector(".item-title").value = detail.title;
+                row.querySelector(".item-price").value = detail.price;
+                row.querySelector(".item-quantity").value = detail.quantity;
+              });
+              break;
+            case "Home Rent": {
+              const detail = details[0];
+              if (!detail) break;
+              const row = calculatorContainer.querySelector(".item-row");
+              row.querySelector(".item-title").value = detail.title;
+              row.querySelector(".item-rent").value = detail.rent;
+              row.querySelector(".item-months").value = detail.months;
+              break;
+            }
+            case "Gas & Electricity bills": {
+              const detail = details[0];
+              if (!detail) break;
+              const select = document.getElementById("bill-type-select");
+              select.value = detail.type.toLowerCase();
+              select.dispatchEvent(new Event("change"));
+              setTimeout(() => {
+                const row = calculatorContainer.querySelector(".item-row");
+                if (detail.type === "Gas") {
+                  row.querySelector(".item-price").value = detail.price;
+                  row.querySelector(".item-quantity").value = detail.quantity;
+                  row.querySelector(".item-labour").value = detail.labour;
+                } else {
+                  row.querySelector(".item-title").value = detail.title;
+                  row.querySelector(".item-amount").value = detail.amount;
+                }
+              }, 50);
+              break;
+            }
+            case "Phone and WIFI bills": {
+              const detail = details[0];
+              if (!detail) break;
+              const select = document.getElementById("bill-type-select");
+              select.value = detail.type.toLowerCase();
+              select.dispatchEvent(new Event("change"));
+              setTimeout(() => {
+                const row = calculatorContainer.querySelector(".item-row");
+                if (detail.type === "WIFI") {
+                  row.querySelector(".item-title").value = detail.title;
+                  row.querySelector(".item-price").value = detail.price;
+                  row.querySelector(".item-quantity").value = detail.quantity;
+                } else {
+                  row.querySelector(".item-number").value = detail.number;
+                  row.querySelector(".item-price").value = detail.amount;
+                  row.querySelector(".item-discount").value = detail.discount;
+                }
+              }, 50);
+              break;
+            }
+            case "Lend, Donate & Gifts": {
+              const detailType = details[0]?.type;
+              if (!detailType) break;
+              const select = document.getElementById("lend-gift-type-select");
+              select.value = detailType.toLowerCase();
+              select.dispatchEvent(new Event("change"));
+              setTimeout(() => {
+                if (detailType === "Lend" || detailType === "Donate") {
+                  const row = calculatorContainer.querySelector(".item-row");
+                  row.querySelector(".item-person").value = details[0].person;
+                  row.querySelector(".item-amount").value = details[0].amount;
+                } else {
+                  populateList(
+                    "#lend-gift-details .items-list",
+                    details,
+                    (row, detail) => {
+                      row.querySelector(".item-title").value = detail.title;
+                      row.querySelector(".item-price").value = detail.price;
+                      row.querySelector(".item-quantity").value =
+                        detail.quantity;
+                    }
+                  );
+                }
+              }, 50);
+              break;
+            }
+            case "Loan repayment": {
+              const detail = details[0];
+              if (!detail) break;
+              const row = calculatorContainer.querySelector(".item-row");
+              row.querySelector(".item-to").value = detail.to;
+              row.querySelector(".item-amount").value = detail.amount;
+              break;
+            }
+            case "Educational Expense": {
+              const detailType = details[0]?.subType;
+              if (!detailType) break;
+              const select = document.getElementById(
+                "educational-expense-type-select"
+              );
+              select.value =
+                detailType === "Academic" ? "academic" : "educational_goods";
+              select.dispatchEvent(new Event("change"));
+              setTimeout(() => {
+                if (detailType === "Academic") {
+                  const row = calculatorContainer.querySelector(".item-row");
+                  row.querySelector(".item-person").value = details[0].person;
+                  row.querySelector(".item-fee-type").value =
+                    details[0].feeType;
+                  row.querySelector(".item-amount").value = details[0].amount;
+                } else {
+                  populateList(".items-list", details, (row, detail) => {
+                    row.querySelector(".item-title").value = detail.title;
+                    row.querySelector(".item-price").value = detail.price;
+                    row.querySelector(".item-quantity").value = detail.quantity;
+                    row.querySelector(".item-discount").value = detail.discount;
+                  });
+                }
+              }, 50);
+              break;
+            }
+            case "Professional Expense":
+            case "Others":
+              populateList(".items-list", details, (row, detail) => {
+                row.querySelector(".item-title").value = detail.title;
+                row.querySelector(".item-amount").value = detail.amount;
+              });
+              break;
+          }
+        };
+
         const attachDynamicHandlers = () => {
           const addItemBtn = calculatorContainer.querySelector(".add-item-btn");
           if (addItemBtn) {
@@ -1460,7 +1801,10 @@
               const detailsContainer =
                 document.getElementById("lend-gift-details");
               let html = "";
-              if (lendGiftTypeSelect.value === "lend" || lendGiftTypeSelect.value === "donate") {
+              if (
+                lendGiftTypeSelect.value === "lend" ||
+                lendGiftTypeSelect.value === "donate"
+              ) {
                 html = `<div class="item-row" style="grid-template-columns: 1fr 1fr;">
                                     <input type="text" placeholder="Person name" class="item-person" required>
                                     <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>
@@ -1478,7 +1822,6 @@
                                 </div>
                                 <button type="button" class="add-item-btn">+ Add Gift</button>`;
                 detailsContainer.innerHTML = html;
-                // FIX: Attach handler ONLY to the newly created button to avoid recursion.
                 const addGiftBtn =
                   detailsContainer.querySelector(".add-item-btn");
                 if (addGiftBtn) {
@@ -1506,20 +1849,25 @@
             renderLendGiftDetails();
           }
 
-          const educationalExpenseTypeSelect = document.getElementById("educational-expense-type-select");
+          const educationalExpenseTypeSelect = document.getElementById(
+            "educational-expense-type-select"
+          );
           if (educationalExpenseTypeSelect) {
-              const renderEducationalExpenseDetails = () => {
-                  const detailsContainer = document.getElementById("educational-expense-details");
-                  let html = "";
-                  if (educationalExpenseTypeSelect.value === "academic") {
-                      html = `<div class="item-row" style="grid-template-columns: 1fr 1fr 1fr;">
+            const renderEducationalExpenseDetails = () => {
+              const detailsContainer = document.getElementById(
+                "educational-expense-details"
+              );
+              let html = "";
+              if (educationalExpenseTypeSelect.value === "academic") {
+                html = `<div class="item-row" style="grid-template-columns: 1fr 1fr 1fr;">
                                   <input type="text" placeholder="Person for (Name)" class="item-person" required>
                                   <input type="text" placeholder="Fee Type (e.g., Admission, Monthly)" class="item-fee-type" required>
                                   <input type="number" step="0.01" placeholder="Fee Amount" class="item-amount" required>
                               </div>`;
-                      detailsContainer.innerHTML = html;
-                  } else { // educational_goods
-                      html = `<div class="items-list">
+                detailsContainer.innerHTML = html;
+              } else {
+                // educational_goods
+                html = `<div class="items-list">
                                   <div class="item-row" style="grid-template-columns: 3fr 1fr 1fr 1fr auto;">
                                       <input type="text" placeholder="Goods title" class="item-title" required>
                                       <input type="number" step="0.01" placeholder="Price" class="item-price" required>
@@ -1529,31 +1877,39 @@
                                   </div>
                               </div>
                               <button type="button" class="add-item-btn">+ Add Item</button>`;
-                      detailsContainer.innerHTML = html;
-                      
-                      const addEduItemBtn = detailsContainer.querySelector(".add-item-btn");
-                      if (addEduItemBtn) {
-                          addEduItemBtn.onclick = () => {
-                              const list = detailsContainer.querySelector(".items-list");
-                              const firstItem = list.querySelector(".item-row");
-                              const newItem = firstItem.cloneNode(true);
-                              newItem.querySelectorAll("input").forEach((input) => (input.value = ""));
-                              if (newItem.querySelector(".item-quantity")) newItem.querySelector(".item-quantity").value = "1";
-                              if (newItem.querySelector(".item-discount")) newItem.querySelector(".item-discount").value = "0";
-                              const removeBtn = newItem.querySelector(".remove-item-btn");
-                              removeBtn.style.display = "inline-block";
-                              removeBtn.onclick = () => newItem.remove();
-                              list.appendChild(newItem);
-                          };
-                      }
-                  }
-              };
-              educationalExpenseTypeSelect.addEventListener("change", renderEducationalExpenseDetails);
-              renderEducationalExpenseDetails();
+                detailsContainer.innerHTML = html;
+
+                const addEduItemBtn =
+                  detailsContainer.querySelector(".add-item-btn");
+                if (addEduItemBtn) {
+                  addEduItemBtn.onclick = () => {
+                    const list = detailsContainer.querySelector(".items-list");
+                    const firstItem = list.querySelector(".item-row");
+                    const newItem = firstItem.cloneNode(true);
+                    newItem
+                      .querySelectorAll("input")
+                      .forEach((input) => (input.value = ""));
+                    if (newItem.querySelector(".item-quantity"))
+                      newItem.querySelector(".item-quantity").value = "1";
+                    if (newItem.querySelector(".item-discount"))
+                      newItem.querySelector(".item-discount").value = "0";
+                    const removeBtn = newItem.querySelector(".remove-item-btn");
+                    removeBtn.style.display = "inline-block";
+                    removeBtn.onclick = () => newItem.remove();
+                    list.appendChild(newItem);
+                  };
+                }
+              }
+            };
+            educationalExpenseTypeSelect.addEventListener(
+              "change",
+              renderEducationalExpenseDetails
+            );
+            renderEducationalExpenseDetails();
           }
         };
 
-        // --- Helper & Utility Functions (No Changes Here) ---
+        // --- Helper & Utility Functions ---
         const updateCurrentBalance = () => {
             const e = transactions
                 .filter((e) => "income" === e.type)
@@ -1562,7 +1918,7 @@
                 .filter((e) => "expense" === e.type)
                 .reduce((e, t) => e + t.total, 0),
               n = e - t;
-            (currentBalanceEl.textContent = `${n.toFixed(2)} BDT`),
+            (currentBalanceEl.textContent = `${formatToIndianCurrency(n)} BDT`),
               (currentBalanceEl.style.color =
                 n >= 0 ? "var(--success-color)" : "var(--danger-color)");
           },
@@ -1572,54 +1928,68 @@
               e.details.forEach((n) => {
                 let o = "";
                 (o =
-                  e.category === "Educational Expense" && n.subType === "Academic"
-                    ? `<li>${n.feeType} for ${n.person}: ${n.amount.toFixed(2)}</li>`
-                    : e.category === "Educational Expense" && n.subType === "Educational Good"
-                    ? `<li>${n.title} (x${n.quantity}): ${n.itemTotal.toFixed(2)}</li>`
+                  e.category === "Educational Expense" &&
+                  n.subType === "Academic"
+                    ? `<li>${n.feeType} for ${
+                        n.person
+                      }: ${formatToIndianCurrency(n.amount)}</li>`
+                    : e.category === "Educational Expense" &&
+                      n.subType === "Educational Good"
+                    ? `<li>${n.title} (x${
+                        n.quantity
+                      }): ${formatToIndianCurrency(n.itemTotal)}</li>`
                     : n.title && n.amount
-                    ? `<li>${n.title}: ${n.amount.toFixed(2)}</li>`
+                    ? `<li>${n.title}: ${formatToIndianCurrency(n.amount)}</li>`
                     : n.title && n.itemTotal
                     ? `<li>${n.title} (x${
                         n.quantity || 1
-                      }): ${n.itemTotal.toFixed(2)}</li>`
+                      }): ${formatToIndianCurrency(n.itemTotal)}</li>`
                     : n.vehicle
-                    ? `<li>${n.vehicle} (${n.from} → ${n.to}): ${n.fare.toFixed(
-                        2
-                      )}</li>`
+                    ? `<li>${n.vehicle} (${n.from} → ${
+                        n.to
+                      }): ${formatToIndianCurrency(n.fare)}</li>`
                     : "Doctor Fee" === n.type
-                    ? `<li>Doctor Fee (${n.doctorName}): ${n.fee.toFixed(
-                        2
-                      )}</li>`
-                    : "Medical Tests" === n.type // This line is correct, no change Needed
-                    ? `<li>Tests: ${n.payableTests.toFixed(2)} (Total: ${
-                        n.testsTotal
-                      } - Discount: ${n.testDiscount})</li>`
+                    ? `<li>Doctor Fee (${
+                        n.doctorName
+                      }): ${formatToIndianCurrency(n.fee)}</li>`
+                    : "Medical Tests" === n.type
+                    ? `<li>Tests: ${formatToIndianCurrency(
+                        n.payableTests
+                      )} (Total: ${n.testsTotal} - Discount: ${
+                        n.testDiscount
+                      })</li>`
                     : "Tour & Hangouts" === e.category && n.itemTotal
                     ? `<li>${n.type}: ${n.title} (x${
                         n.quantity
-                      }) - ${n.itemTotal.toFixed(2)}</li>`
-                    : "Home Rent" === e.category && n.total // Added for Home Rent
-                    ? `<li>${n.title} (x${n.months}): ${n.total.toFixed(
-                        2
+                      }) - ${formatToIndianCurrency(n.itemTotal)}</li>`
+                    : "Home Rent" === e.category && n.total
+                    ? `<li>${n.title} (x${n.months}): ${formatToIndianCurrency(
+                        n.total
                       )}</li>`
                     : "Gas & Electricity bills" === e.category &&
-                      n.type === "Gas" // Added for Gas Bill
-                    ? `<li>Gas Bill (x${n.quantity}): ${n.total.toFixed(
-                        2
+                      n.type === "Gas"
+                    ? `<li>Gas Bill (x${n.quantity}): ${formatToIndianCurrency(
+                        n.total
                       )}</li>`
                     : "Gas & Electricity bills" === e.category &&
-                      n.type === "Electricity" // Added for Electricity Bill
-                    ? `<li>${n.title}: ${n.amount.toFixed(2)}</li>`
-                    : "Phone and WIFI bills" === e.category && n.type === "WIFI" // Added for WIFI Bill
-                    ? `<li>${n.title} (x${n.quantity}): ${n.total.toFixed(
-                        2
-                      )}</li>`
+                      n.type === "Electricity"
+                    ? `<li>${n.title}: ${formatToIndianCurrency(n.amount)}</li>`
+                    : "Phone and WIFI bills" === e.category && n.type === "WIFI"
+                    ? `<li>${n.title} (x${
+                        n.quantity
+                      }): ${formatToIndianCurrency(n.total)}</li>`
                     : n.to && n.amount
-                    ? `<li>Paid to ${n.to}: ${n.amount.toFixed(2)}</li>`
+                    ? `<li>Paid to ${n.to}: ${formatToIndianCurrency(
+                        n.amount
+                      )}</li>`
                     : "Lend" === n.type
-                    ? `<li>Lent to ${n.person}: ${n.amount.toFixed(2)}</li>`
+                    ? `<li>Lent to ${n.person}: ${formatToIndianCurrency(
+                        n.amount
+                      )}</li>`
                     : "Donate" === n.type
-                    ? `<li>Donated to ${n.person}: ${n.amount.toFixed(2)}</li>`
+                    ? `<li>Donated to ${n.person}: ${formatToIndianCurrency(
+                        n.amount
+                      )}</li>`
                     : `<li>${JSON.stringify(n)}</li>`),
                   (t += o);
               }),
@@ -1642,22 +2012,21 @@
             );
           },
           generateSummaryTableHTML = (e) => {
-            let t = `<tbody>\n                <tr>\n                    <td class="label">♥ Total Income</td>\n                    <td class="amount income">+ ${e.income.toFixed(
-              2
+            let t = `<tbody>\n                <tr>\n                    <td class="label">♥ Total Income</td>\n                    <td class="amount income">+ ${formatToIndianCurrency(
+              e.income
             )}</td>\n                </tr>`;
             for (const n in e.categories)
               e.categories[n] > 0 &&
-                (t += `<tr>\n                        <td class="label">→ ${n}</td>\n                        <td class="amount expense">- ${e.categories[
-                  n
-                ].toFixed(2)}</td>\n                     </tr>`);
-            return (t += `<tr class="balance">\n                        <td class="label">Balance</td>\n                        <td class="amount">${e.balance.toFixed(
-              2
+                (t += `<tr>\n                        <td class="label">→ ${n}</td>\n                        <td class="amount expense">- ${formatToIndianCurrency(
+                  e.categories[n]
+                )}</td>\n                     </tr>`);
+            return (t += `<tr class="balance">\n                        <td class="label">Balance</td>\n                        <td class="amount">${formatToIndianCurrency(
+              e.balance
             )}</td>\n                    </tr>\n             </tbody>`);
           };
 
         // --- Report & Data Management ---
         const exportMonthlyReport = () => {
-          // MODIFIED: Strict prompt and validation for M,YY format
           const input = prompt(
             "Enter month and year in M,YY format (e.g., 1,25 for Jan 2025)"
           );
@@ -1685,7 +2054,7 @@
             return;
           }
 
-          const month = monthNum - 1; // JS month is 0-indexed
+          const month = monthNum - 1;
           const year = 2000 + yearShort;
 
           const monthTransactions = transactions.filter((t) => {
@@ -1712,14 +2081,10 @@
 
         const exportYearlyReport = () => {
           const yearInput = prompt("Enter year to export (e.g., '2025')");
-
-          // FIX: Check if the user clicked "Cancel" or closed the prompt.
-          // The prompt returns null if the user cancels, so we exit silently.
           if (yearInput === null) {
             return;
           }
 
-          // If the user did not cancel, proceed with validation for empty or invalid input.
           const year = parseInt(yearInput.trim());
           if (isNaN(year)) {
             alert("Please enter a valid year.");
@@ -1743,39 +2108,58 @@
           if (!details || details.length === 0) {
             return "";
           }
-          return details.map(n => {
-                if (category === "Educational Expense") {
-                    if (n.subType === "Academic") return `Academic - ${n.feeType} for ${n.person}: ${n.amount.toFixed(2)}`;
-                    if (n.subType === "Educational Good") return `Goods - ${n.title} (x${n.quantity}): ${n.itemTotal.toFixed(2)}`;
-                }
-                if (n.title && n.amount)
-                    return `${n.title}: ${n.amount.toFixed(2)}`;
-                if (n.title && n.itemTotal)
-                    return `${n.title} (x${n.quantity || 1}): ${n.itemTotal.toFixed(2)}`;
-                if (n.vehicle)
-                    return `${n.vehicle} (${n.from} → ${n.to}): ${n.fare.toFixed(2)}`;
-                if (n.type === "Doctor Fee")
-                    return `Doctor Fee (${n.doctorName}): ${n.fee.toFixed(2)}`;
-                if (n.type === "Medical Tests")
-                    return `Tests: ${n.payableTests.toFixed(2)} (Total: ${n.testsTotal} - Discount: ${n.testDiscount})`;
-                if (category === "Tour & Hangouts" && n.itemTotal)
-                    return `${n.type}: ${n.title} (x${n.quantity}) - ${n.itemTotal.toFixed(2)}`;
-                if (category === "Home Rent" && n.total)
-                    return `${n.title} (x${n.months}): ${n.total.toFixed(2)}`;
-                if (category === "Gas & Electricity bills" && n.type === "Gas")
-                    return `Gas Bill (x${n.quantity}): ${n.total.toFixed(2)}`;
-                if (category === "Gas & Electricity bills" && n.type === "Electricity")
-                    return `${n.title}: ${n.amount.toFixed(2)}`;
-                if (category === "Phone and WIFI bills" && n.type === "WIFI")
-                    return `${n.title} (x${n.quantity}): ${n.total.toFixed(2)}`;
-                if (n.to && n.amount)
-                    return `Paid to ${n.to}: ${n.amount.toFixed(2)}`;
-                if (n.type === "Lend")
-                    return `Lent to ${n.person}: ${n.amount.toFixed(2)}`;
-                if (n.type === "Donate")
-                    return `Donated to ${n.person}: ${n.amount.toFixed(2)}`;
-                return JSON.stringify(n);
-          }).join("; ");
+          return details
+            .map((n) => {
+              if (category === "Educational Expense") {
+                if (n.subType === "Academic")
+                  return `Academic - ${n.feeType} for ${
+                    n.person
+                  }: ${n.amount.toFixed(2)}`;
+                if (n.subType === "Educational Good")
+                  return `Goods - ${n.title} (x${
+                    n.quantity
+                  }): ${n.itemTotal.toFixed(2)}`;
+              }
+              if (n.title && n.amount)
+                return `${n.title}: ${n.amount.toFixed(2)}`;
+              if (n.title && n.itemTotal)
+                return `${n.title} (x${n.quantity || 1}): ${n.itemTotal.toFixed(
+                  2
+                )}`;
+              if (n.vehicle)
+                return `${n.vehicle} (${n.from} → ${n.to}): ${n.fare.toFixed(
+                  2
+                )}`;
+              if (n.type === "Doctor Fee")
+                return `Doctor Fee (${n.doctorName}): ${n.fee.toFixed(2)}`;
+              if (n.type === "Medical Tests")
+                return `Tests: ${n.payableTests.toFixed(2)} (Total: ${
+                  n.testsTotal
+                } - Discount: ${n.testDiscount})`;
+              if (category === "Tour & Hangouts" && n.itemTotal)
+                return `${n.type}: ${n.title} (x${
+                  n.quantity
+                }) - ${n.itemTotal.toFixed(2)}`;
+              if (category === "Home Rent" && n.total)
+                return `${n.title} (x${n.months}): ${n.total.toFixed(2)}`;
+              if (category === "Gas & Electricity bills" && n.type === "Gas")
+                return `Gas Bill (x${n.quantity}): ${n.total.toFixed(2)}`;
+              if (
+                category === "Gas & Electricity bills" &&
+                n.type === "Electricity"
+              )
+                return `${n.title}: ${n.amount.toFixed(2)}`;
+              if (category === "Phone and WIFI bills" && n.type === "WIFI")
+                return `${n.title} (x${n.quantity}): ${n.total.toFixed(2)}`;
+              if (n.to && n.amount)
+                return `Paid to ${n.to}: ${n.amount.toFixed(2)}`;
+              if (n.type === "Lend")
+                return `Lent to ${n.person}: ${n.amount.toFixed(2)}`;
+              if (n.type === "Donate")
+                return `Donated to ${n.person}: ${n.amount.toFixed(2)}`;
+              return JSON.stringify(n);
+            })
+            .join("; ");
         };
 
         const exportToCSV = (data, filename) => {
@@ -1792,10 +2176,10 @@
           let totalExpense = 0;
 
           data.forEach((t) => {
-            if (t.type === 'income') {
-                totalIncome += t.total;
+            if (t.type === "income") {
+              totalIncome += t.total;
             } else {
-                totalExpense += t.total;
+              totalExpense += t.total;
             }
             const detailsString = formatDetailsForCSV(t.details, t.category);
             const row = [
@@ -1803,16 +2187,18 @@
               t.date,
               t.type,
               t.category,
-              t.total,
+              t.total.toFixed(2),
               `"${detailsString.replace(/"/g, '""')}"`,
             ];
             csvRows.push(row.join(","));
           });
 
-          csvRows.push('');
+          csvRows.push("");
           csvRows.push(`"Total Income",,,,${totalIncome.toFixed(2)}`);
           csvRows.push(`"Total Expense",,,,${totalExpense.toFixed(2)}`);
-          csvRows.push(`"Balance",,,,${(totalIncome - totalExpense).toFixed(2)}`);
+          csvRows.push(
+            `"Balance",,,,${(totalIncome - totalExpense).toFixed(2)}`
+          );
 
           downloadFile(csvRows.join("\n"), filename, "text/csv;charset=utf-8;");
         };
@@ -1869,7 +2255,6 @@
           }
           const dataStr = JSON.stringify(dataToExport, null, 2);
 
-          // MODIFIED: Generate filename with a timestamp
           const now = new Date();
           const timestamp = `${now.getFullYear()}-${String(
             now.getMonth() + 1
