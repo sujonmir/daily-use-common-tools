@@ -368,7 +368,10 @@ h3.title {
   display: inline-block;
   margin-top: 5px;
   font-weight: 300;
-  /* letter-spacing: 1px; */
+  transition: all linear 0.2s;
+}
+.floating-menu-wrapper .floating-menu .f-set:hover span {
+  font-weight: 700;
 }
 .floating-menu-wrapper .floating-menu img {
   width: 30px;
