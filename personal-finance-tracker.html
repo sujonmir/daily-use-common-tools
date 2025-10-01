@@ -372,6 +372,120 @@
       #special-footer-note .keyword-sum span {
         font-weight: 600;
       }
+
+      /* Grid definitions for calculator rows */
+      .grid-income, .grid-loan, .grid-lend-donate, .grid-electricity-bill { grid-template-columns: 1fr 1fr; }
+      .grid-home-rent, .grid-gas-bill, .grid-wifi-bill, .grid-phone-bill, .grid-edu-academic { grid-template-columns: 1fr 1fr 1fr; }
+      .grid-others, .grid-doctor-test, .grid-gift { grid-template-columns: 1fr 1fr auto; }
+      .grid-shopping { grid-template-columns: 3fr 1fr 1fr auto; }
+      .grid-doctor-fee { grid-template-columns: 1fr 1fr 1fr 1fr; }
+      .grid-medicines, .grid-edu-goods { grid-template-columns: 3fr 1fr 1fr 1fr auto; }
+      .grid-transport { grid-template-columns: 1fr 1fr 1fr 1fr auto; }
+      .grid-tour { grid-template-columns: 1fr 3fr 1fr 1fr auto; }
+      .grid-groccery { grid-template-columns: 3fr 1fr 1fr 1fr 1fr auto; }
+      
+
+      /* Mobile Responsiveness */
+      @media (max-width: 768px) {
+        body {
+          padding-top: 0;
+        }
+        .container {
+          padding: 0 15px;
+          margin-top: 15px;
+        }
+        header {
+          position: static;
+          flex-direction: column;
+          height: auto;
+          gap: 15px;
+          padding: 15px;
+          align-items: stretch;
+        }
+        header .logo {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+        }
+        header .logo a {
+          font-size: 1.3em;
+        }
+        header .header-center {
+          order: 3;
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          gap: 10px;
+        }
+        header .header-center button {
+          width: 100%;
+          margin: 0;
+        }
+        header .balance {
+          text-align: center;
+          font-size: 1.1em;
+        }
+        .month-header {
+          font-size: 1.8em;
+        }
+        .date-header {
+          font-size: 1.3em;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 5px;
+        }
+        .daily-total {
+          font-size: 0.8em;
+        }
+        #calculator-container .item-row {
+          grid-template-columns: 1fr !important; /* Stack all items */
+          gap: 8px;
+        }
+        #calculator-container .item-row input,
+        #calculator-container .item-row select {
+          width: 100%;
+          box-sizing: border-box;
+        }
+        .summary-section {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          margin: 30px 0;
+        }
+        .data-management-section {
+           margin-bottom: 30px;
+        }
+        .data-buttons {
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+        }
+        .data-buttons button {
+          width: 100%;
+          max-width: 300px;
+        }
+        .footer-container {
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+        .delete-btn {
+          right: 5px;
+          top: 5px;
+          font-size: 1.3rem;
+          opacity: 0.6;
+        }
+        .entry {
+          padding-bottom: 50px; /* ensure space for edit button */
+        }
+        #keyword-popup {
+            bottom: 20px;
+            right: 15px;
+            left: 15px;
+            width: auto;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+      }
     </style>
   </head>
   <body>
@@ -900,41 +1014,41 @@
           (categoryGroup.style.display = "expense" === e ? "flex" : "none"),
             (n =
               "income" === e
-                ? '\n                    <h4>Income Details</h4>\n                    <div class="item-row" style="grid-template-columns: 1fr 1fr;">\n                         <input type="text" placeholder="Income from (title)" class="item-title" required>\n                         <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                    </div>'
+                ? '\n                    <h4>Income Details</h4>\n                    <div class="item-row grid-income">\n                         <input type="text" placeholder="Income from (title)" class="item-title" required>\n                         <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                    </div>'
                 : ((n = `<h4>${t} Details</h4>`),
                   (() => {
                     switch (t) {
                       case "Medicines":
                         n +=
-                          '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 3fr 1fr 1fr 1fr auto;">\n                                    <input type="text" placeholder="Goods title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Price" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>\n                                    <input type="number" value="0" placeholder="Discount %" class="item-discount">\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
+                          '\n                            <div class="items-list">\n                                <div class="item-row grid-medicines">\n                                    <input type="text" placeholder="Goods title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Price" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>\n                                    <input type="number" value="0" placeholder="Discount %" class="item-discount">\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
                         break;
                       case "Groccery":
                       case "Milk, Fishs & Meats":
                       case "Vegetabls":
                       case "Fruits":
                         n +=
-                          '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 3fr 1fr 1fr 1fr 1fr auto;">\n                                    <input type="text" placeholder="Goods title" class="item-title" required>\n                                    <select class="item-type-select">\n                                        <option value="weight">per Kilogram</option>\n                                        <option value="item">per Item</option>\n                                    </select>\n                                    <input type="number" step="0.01" placeholder="Price" class="item-price" required>\n                                    <input type="number" step="0.01" placeholder="Quantity" class="item-quantity" required>\n                                    <input type="number" step="0.01" value="0" placeholder="Discount (flat)" class="item-discount">\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
+                          '\n                            <div class="items-list">\n                                <div class="item-row grid-groccery">\n                                    <input type="text" placeholder="Goods title" class="item-title" required>\n                                    <select class="item-type-select">\n                                        <option value="weight">per Kilogram</option>\n                                        <option value="item">per Item</option>\n                                    </select>\n                                    <input type="number" step="0.01" placeholder="Price" class="item-price" required>\n                                    <input type="number" step="0.01" placeholder="Quantity" class="item-quantity" required>\n                                    <input type="number" step="0.01" value="0" placeholder="Discount (flat)" class="item-discount">\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
                         break;
                       case "Doctors fee & Medical Test":
                         n +=
-                          '\n                            <div class="item-row" style="grid-template-columns: 1fr 1fr 1fr 1fr;">\n                                <input type="text" placeholder="Patient Name" class="patient-name">\n                                <input type="text" placeholder="Doctor Name" class="doctor-name">\n                                <input type="text" placeholder="Doctor Type" class="doctor-type">\n                                <input type="number" step="0.01" placeholder="Doctor Visit Fee" class="doctor-fee" required>\n                            </div>\n                            <h5 style="margin-top:20px;">Medical Tests</h5>\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 1fr 1fr auto;">\n                                    <input type="text" placeholder="Test Title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Test Price" class="item-price" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Test</button>\n                             <div class="item-row" style="grid-template-columns: 1fr; margin-top: 15px;">\n                                <input type="number" step="0.01" value="0" placeholder="Flat Discount on Total Tests" class="total-test-discount">\n                            </div>';
+                          '\n                            <div class="item-row grid-doctor-fee">\n                                <input type="text" placeholder="Patient Name" class="patient-name">\n                                <input type="text" placeholder="Doctor Name" class="doctor-name">\n                                <input type="text" placeholder="Doctor Type" class="doctor-type">\n                                <input type="number" step="0.01" placeholder="Doctor Visit Fee" class="doctor-fee" required>\n                            </div>\n                            <h5 style="margin-top:20px;">Medical Tests</h5>\n                            <div class="items-list">\n                                <div class="item-row grid-doctor-test">\n                                    <input type="text" placeholder="Test Title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Test Price" class="item-price" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Test</button>\n                             <div class="item-row" style="margin-top: 15px;">\n                                <input type="number" step="0.01" value="0" placeholder="Flat Discount on Total Tests" class="total-test-discount">\n                            </div>';
                         break;
                       case "Shopping":
                       case "Personal Snacks":
                         n +=
-                          '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 3fr 1fr 1fr auto;">\n                                    <input type="text" placeholder="Product title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Item price" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
+                          '\n                            <div class="items-list">\n                                <div class="item-row grid-shopping">\n                                    <input type="text" placeholder="Product title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Item price" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
                         break;
                       case "General Transport Cost":
                         n +=
-                          '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 1fr 1fr 1fr 1fr auto;">\n                                    <input type="text" placeholder="Vehicle Title" class="item-vehicle" required>\n                                    <input type="text" placeholder="From" class="item-from" required>\n                                    <input type="text" placeholder="To" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Fare" class="item-fare" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Trip</button>';
+                          '\n                            <div class="items-list">\n                                <div class="item-row grid-transport">\n                                    <input type="text" placeholder="Vehicle Title" class="item-vehicle" required>\n                                    <input type="text" placeholder="From" class="item-from" required>\n                                    <input type="text" placeholder="To" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Fare" class="item-fare" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Trip</button>';
                         break;
                       case "Tour & Hangouts":
                         n +=
-                          '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 1fr 3fr 1fr 1fr auto;">\n                                    <select class="item-type-select">\n                                        <option value="transport">Transport</option>\n                                        <option value="food">Food</option>\n                                        <option value="ticket">Ticket</option>\n                                    </select>\n                                    <input type="text" placeholder="Title (e.g., Bus, Lunch, Museum)" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Price/Fare per person" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Persons / Quantity" class="item-quantity" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Expense Item</button>';
+                          '\n                            <div class="items-list">\n                                <div class="item-row grid-tour">\n                                    <select class="item-type-select">\n                                        <option value="transport">Transport</option>\n                                        <option value="food">Food</option>\n                                        <option value="ticket">Ticket</option>\n                                    </select>\n                                    <input type="text" placeholder="Title (e.g., Bus, Lunch, Museum)" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Price/Fare per person" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Persons / Quantity" class="item-quantity" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Expense Item</button>';
                         break;
                       case "Home Rent":
                         n +=
-                          '<div class="item-row" style="grid-template-columns: 1fr 1fr 1fr;">\n                                    <input type="text" placeholder="Month of rent title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Rent amount" class="item-rent" required>\n                                    <input type="number" value="1" placeholder="Amount of months" class="item-months" required>\n                                </div>';
+                          '<div class="item-row grid-home-rent">\n                                    <input type="text" placeholder="Month of rent title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Rent amount" class="item-rent" required>\n                                    <input type="number" value="1" placeholder="Amount of months" class="item-months" required>\n                                </div>';
                         break;
                       case "Gas & Electricity bills":
                         n +=
@@ -950,7 +1064,7 @@
                         break;
                       case "Loan repayment":
                         n +=
-                          '<div class="item-row" style="grid-template-columns: 1fr 1fr;">\n                                    <input type="text" placeholder="Paying whom (name)" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                </div>';
+                          '<div class="item-row grid-loan">\n                                    <input type="text" placeholder="Paying whom (name)" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                </div>';
                         break;
                       case "Educational Expense":
                         n += `<select id="educational-expense-type-select" class="form-group" style="margin-bottom:15px; padding:10px; border: 1px solid var(--border-color); border-radius: 4px;">
@@ -962,7 +1076,7 @@
                       case "Professional Expense":
                       case "Others":
                         n +=
-                          '\n                            <div class="items-list">\n                                <div class="item-row" style="grid-template-columns: 1fr 1fr auto;">\n                                    <input type="text" placeholder="Title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
+                          '\n                            <div class="items-list">\n                                <div class="item-row grid-others">\n                                    <input type="text" placeholder="Title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
                     }
                   })(),
                   n)),
@@ -1764,24 +1878,24 @@
                 document.getElementById("bill-details");
               let html = "";
               if (billTypeSelect.value === "gas") {
-                html = `<div class="item-row" style="grid-template-columns: 1fr 1fr 1fr;">
+                html = `<div class="item-row grid-gas-bill">
                                     <input type="number" step="0.01" placeholder="Cilinder price" class="item-price" required>
                                     <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>
                                     <input type="number" step="0.01" value="0" placeholder="Labour cost" class="item-labour">
                                 </div>`;
               } else if (billTypeSelect.value === "electricity") {
-                html = `<div class="item-row" style="grid-template-columns: 1fr 1fr;">
+                html = `<div class="item-row grid-electricity-bill">
                                     <input type="text" placeholder="Title of the Month" class="item-title" required>
                                     <input type="number" step="0.01" placeholder="Bill amount" class="item-amount" required>
                                 </div>`;
               } else if (billTypeSelect.value === "wifi") {
-                html = `<div class="item-row" style="grid-template-columns: 1fr 1fr 1fr;">
+                html = `<div class="item-row grid-wifi-bill">
                                     <input type="text" placeholder="WIFI Bill month title" class="item-title" required>
                                     <input type="number" step="0.01" placeholder="Monthly bill amount" class="item-price" required>
                                     <input type="number" value="1" placeholder="Quantity of months" class="item-quantity" required>
                                 </div>`;
               } else if (billTypeSelect.value === "phone") {
-                html = `<div class="item-row" style="grid-template-columns: 1fr 1fr 1fr;">
+                html = `<div class="item-row grid-phone-bill">
                                     <input type="text" placeholder="Phone number" class="item-number" required>
                                     <input type="number" step="0.01" placeholder="Amount" class="item-price" required>
                                     <input type="number" step="0.01" value="0" placeholder="Discount" class="item-discount">
@@ -1805,7 +1919,7 @@
                 lendGiftTypeSelect.value === "lend" ||
                 lendGiftTypeSelect.value === "donate"
               ) {
-                html = `<div class="item-row" style="grid-template-columns: 1fr 1fr;">
+                html = `<div class="item-row grid-lend-donate">
                                     <input type="text" placeholder="Person name" class="item-person" required>
                                     <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>
                                 </div>`;
@@ -1813,7 +1927,7 @@
               } else {
                 // gift
                 html = `<div class="items-list">
-                                    <div class="item-row" style="grid-template-columns: 1fr 1fr 1fr auto;">
+                                    <div class="item-row grid-gift">
                                         <input type="text" placeholder="Gift title" class="item-title" required>
                                         <input type="number" step="0.01" placeholder="Item price" class="item-price" required>
                                         <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>
@@ -1859,7 +1973,7 @@
               );
               let html = "";
               if (educationalExpenseTypeSelect.value === "academic") {
-                html = `<div class="item-row" style="grid-template-columns: 1fr 1fr 1fr;">
+                html = `<div class="item-row grid-edu-academic">
                                   <input type="text" placeholder="Person for (Name)" class="item-person" required>
                                   <input type="text" placeholder="Fee Type (e.g., Admission, Monthly)" class="item-fee-type" required>
                                   <input type="number" step="0.01" placeholder="Fee Amount" class="item-amount" required>
@@ -1868,7 +1982,7 @@
               } else {
                 // educational_goods
                 html = `<div class="items-list">
-                                  <div class="item-row" style="grid-template-columns: 3fr 1fr 1fr 1fr auto;">
+                                  <div class="item-row grid-edu-goods">
                                       <input type="text" placeholder="Goods title" class="item-title" required>
                                       <input type="number" step="0.01" placeholder="Price" class="item-price" required>
                                       <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>
@@ -2020,9 +2134,15 @@
                 (t += `<tr>\n                        <td class="label">→ ${n}</td>\n                        <td class="amount expense">- ${formatToIndianCurrency(
                   e.categories[n]
                 )}</td>\n                     </tr>`);
-            return (t += `<tr class="balance">\n                        <td class="label">Balance</td>\n                        <td class="amount">${formatToIndianCurrency(
+            const balanceColorStyle =
+              e.balance < 0
+                ? `style="color: var(--danger-color);"`
+                : `style="color: var(--primary-color);"`;
+            return (t += `<tr class="balance">\n                        <td class="label">Balance</td>\n                        <td class="amount"><span ${balanceColorStyle}>${formatToIndianCurrency(
               e.balance
-            )}</td>\n                    </tr>\n             </tbody>`);
+            )}</span> | <span class="expense">${formatToIndianCurrency(
+              e.expense
+            )}</span></td>\n                    </tr>\n             </tbody>`);
           };
 
         // --- Report & Data Management ---

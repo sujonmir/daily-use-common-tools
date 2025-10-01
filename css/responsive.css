@@ -62,32 +62,9 @@ input#endTimeInput {
   body {
     margin: 10px;
   }
-  .baby-wrapper {
-    display: block;
-  }
-  .baby {
-    top: calc(100% - 40px);
-    left: 0;
-    width: 100vw;
-    height: 40px;
-    border-radius: 0;
-    font-weight: bold;
-    font-size: 10px;
+  /* footer menu */
+  .footer-menu-wrapper {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-  }
-  .baby span {
-    font-size: 24px;
-  }
-  .baby div:first-child {
-    padding-right: 20px;
-    z-index: 9999;
-    padding-top: 0;
-  }
-  .baby div {
-    padding-left: 0;
   }
   .clock-wrapper {
     padding-top: 10px;
@@ -163,7 +140,7 @@ input#endTimeInput {
   .arabicdateWrapper {
     display: none;
   }
-  .floating-menu-wrapper{
+  .floating-menu-wrapper {
     display: none;
   }
 }
