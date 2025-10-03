@@ -2092,6 +2092,11 @@
                     ? `<li>${n.title} (x${
                         n.quantity
                       }): ${formatToIndianCurrency(n.total)}</li>`
+                    : "Phone and WIFI bills" === e.category &&
+                      n.type === "Phone"
+                    ? `<li>Phone Recharge (${n.number}): ${formatToIndianCurrency(
+                        n.total
+                      )}</li>`
                     : n.to && n.amount
                     ? `<li>Paid to ${n.to}: ${formatToIndianCurrency(
                         n.amount
