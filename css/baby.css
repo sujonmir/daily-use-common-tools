@@ -24,8 +24,8 @@
 }
 .modal-content {
   display: block;
-  max-width: 90%;
-  max-height: 90vh;
+  max-width: 95%;
+  max-height: 95vh;
   animation: zoomIn 0.3s ease-out;
 }
 @keyframes zoomIn {

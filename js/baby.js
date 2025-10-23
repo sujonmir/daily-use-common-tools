@@ -58,7 +58,10 @@ function createAgeCounter(config) {
 
     weekElement.textContent = weeks;
     dayElement.textContent = days;
-    document.getElementById("ageInDays").innerText = `${totalDays} Days`; // Update age in days
+    document.getElementById("ageInDays").innerText = `${totalDays} Days`;
+    document.getElementById("p-month").innerText = `${Math.floor(
+      totalDays / 30
+    )} Months ${totalDays % 30} Days`;
   }
 
   // Run once immediately on page load
