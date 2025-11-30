@@ -5,7 +5,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   // --- Configuration ---
   const AGE_COUNTER_CONFIG = {
-    startDate: "2025-04-04T00:00:00",
+    startDate: "2025-03-29T00:00:00",
     weekElementId: "p-week",
     dayElementId: "p-day",
     updateInterval: 3600000, // 1 hour in milliseconds
