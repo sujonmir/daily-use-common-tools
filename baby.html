@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -17,6 +17,10 @@
         font-family: "Bad Script", cursive;
         position: relative;
       }
+      .bangla {
+        font-family: var(--bangla-font);
+      }
+
       hr {
         margin: 0;
       }
@@ -71,6 +75,24 @@
         object-fit: cover;
         border-top: 1px solid #ccc;
         border-bottom: 1px solid #ccc;
+      }
+      .box video {
+        width: 100%;
+        height: 230px;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        object-fit: cover;
+
+        /* Styling */
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+
+        /* Clean up */
+        margin: 0;
+        padding: 0;
       }
       .box p {
         font-family: "Baumans", system-ui;
@@ -162,7 +184,8 @@
         font-size: 3.5rem;
       }
       .in-fullscreen h3 {
-        font-family: "Bad Script", cursive; /* Use the page's script font for titles */
+        font-family:
+          "Bad Script", cursive; /* Use the page's script font for titles */
         font-size: 3.5rem; /* A large, clean title size */
         margin-bottom: 1rem;
         text-align: center;
@@ -183,7 +206,8 @@
       /* --- Styles for the 'Mother Introduction' card --- */
 
       .in-fullscreen .details {
-        font-family: "Baumans", system-ui; /* Use the more blocky font for data */
+        font-family:
+          "Baumans", system-ui; /* Use the more blocky font for data */
         font-size: 1.2rem; /* Readable font size */
         line-height: 1.2;
         text-align: left;
@@ -309,6 +333,11 @@
       <img class="modal-content" id="modalImage" alt="Enlarged view" />
     </div>
     <!-- modal end -->
+    <!-- The Video Modal Popup Structure (Hidden by default) -->
+    <div id="videoModal" class="modal-overlay">
+      <span class="modal-close-btn video-modal-close-btn">×</span>
+      <video class="modal-content" id="modalVideo" controls autoplay></video>
+    </div>
     <!-- header start -->
     <a href="index.html">
       <img src="img/back.webp" alt="Back to Home" class="back-to-home" />
@@ -350,10 +379,10 @@
           <p><b>Name: </b>Alma</p>
           <p><b>Age: </b>27</p>
           <p>
-            <b>BP: </b><span><span class="gray">60/100 to</span> 70/100</span>
+            <b>BP: </b><span><span class="gray">60/100 to</span> 70/110</span>
           </p>
           <p>
-            <b>Weight: </b><span><span class="gray">46 to</span> 59 Kg</span>
+            <b>Weight: </b><span><span class="gray">46 to</span> 61 Kg</span>
           </p>
           <p><b>Blood Group: </b>AB+</p>
           <p><b>Profession: </b>Housewife</p>
@@ -926,6 +955,675 @@
           alt="Prescription of Chhanda Mojumder"
           class="img-trigger"
         />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Oxygen Inhalation-<span class="f">2:</span>
+          <div class="f">3</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/oxygen_2.webp"
+          alt="Oxygen Inhalation"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Pregnancy Photoshoot:
+          <div class="f">6</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/pregnancy-photoshoot (1).webp"
+          alt="Pregnancy photoshoot: Photo 1"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Pregnancy Photoshoot:
+          <div class="f">6</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/pregnancy-photoshoot (2).webp"
+          alt="Pregnancy photoshoot: Photo 2"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Pregnancy Photoshoot:
+          <div class="f">6</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/pregnancy-photoshoot (3).webp"
+          alt="Pregnancy photoshoot: Photo 3"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Pregnancy Photoshoot:
+          <div class="f">6</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/pregnancy-photoshoot (4).webp"
+          alt="Pregnancy photoshoot: Photo 4"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          USG of PF:
+          <div class="f">12</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/usg-6 (1).webp"
+          alt="Usg of Pregnancy Profile: 6th"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          USG of PF:
+          <div class="f">12</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/usg-6 (2).webp"
+          alt="Usg of Pregnancy Profile: 6th"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Prescription-
+          <div class="f">7:</div>
+          <div class="f">13</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/p-7.webp"
+          alt="Prescription of Chhanda Mojumder: 7th"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Oxygen Inhalation-<span class="f">3:</span>
+          <div class="f">24</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/oxygen_3.webp"
+          alt="Oxygen Inhalation 3rd Time"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          USG of PF:
+          <div class="f">24</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/usg-7 (1).webp"
+          alt="USG of Pregnancy Profile: 7th Time"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          USG of PF:
+          <div class="f">24</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/usg-7 (2).webp"
+          alt="USG of Pregnancy Profile: 7th Time"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          USG of PF:
+          <div class="f">24</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/usg-7 (3).webp"
+          alt="USG of Pregnancy Profile: 7th Time"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Prescription- <span class="f">8:</span>
+          <div class="f">24</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/p-8.webp"
+          alt="Prescription of Chhanda Mojumder: 8th"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          <small
+            >Admitted to The Hospital:
+            <div class="f">28</div>
+            Dec,
+            <div class="f">25</div>
+          </small>
+        </h3>
+        <img
+          src="img/admit-hospital.webp"
+          alt="Admitted to The Hospital (Popular Collage & Hospital)"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Dad’s first hold:
+          <div class="f">28</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/baby-born.webp"
+          alt="Newborn girl in her father's arms for the first time"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Fuppi's first hold:
+          <div class="f">28</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/baby-born-2.webp"
+          alt="Newborn girl in her Fuppi's arms for the first time"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          <small>Father and uncle's bond:</small>
+          <div class="f">28</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/Baby-born-3.webp"
+          alt="Deep family ties"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          <small>Unveiling the baby's face:</small>
+          <div class="f">28</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/Baby-born-4.webp"
+          alt="Newborn girl in her father's arms for the first time"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Baby with her mom:
+          <div class="f">28</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/baby-with-mother.webp"
+          alt="Baby with Mother"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          CBC:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/cbc_popular.webp"
+          alt="CBC Test in popular hospital"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Serum Electrolyties:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/serum_electrolyties_popular.webp"
+          alt="CSerum Electrolyties Test in popular hospital"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Discharge Certificate-1:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/discharge_certificate (1).webp"
+          alt="Discharge Certificate: 1st Page"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Discharge Certificate-2:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/discharge_certificate (2).webp"
+          alt="Discharge Certificate: 2nd Page"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Discharge Certificate-3:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/discharge_certificate (3).webp"
+          alt="Discharge Certificate: 3rd Page"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Hospital Bill:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/Hospital_bill (1).webp"
+          alt="Hospital Bill Page No: 1"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Hospital Bill:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/Hospital_bill (2).webp"
+          alt="Hospital Bill Page No: 2"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Hospital Bill:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/Hospital_bill (3).webp"
+          alt="Hospital Bill Page No: 3"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Hospital Bill:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/Hospital_bill (4).webp"
+          alt="Hospital Bill Page No: 4"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Hospital Bill:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/Hospital_bill (5).webp"
+          alt="Hospital Bill Page No: 5"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Hospital Bill:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/Hospital_bill (6).webp"
+          alt="Hospital Bill Page No: 6"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Hospital Bill:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/Hospital_bill (7).webp"
+          alt="Hospital Bill Page No: 7"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Hospital Bill:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/Hospital_bill (8).webp"
+          alt="Hospital Bill Page No: 8"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Hospital Bill:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/Hospital_bill (9).webp"
+          alt="Hospital Bill Page No: 9"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Discharge:
+          <div class="f">30</div>
+          Dec,
+          <div class="f">25</div>
+        </h3>
+        <img
+          src="img/discharge.webp"
+          alt="Discharging from hospital"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box full-screen-mode">
+        <button class="fullscreen-close-btn">×</button>
+        <h3>
+          Baby Birth Record: Part-
+          <div class="f">1</div>
+        </h3>
+        <hr />
+        <p class="card-text-wrapper">
+          <b>Hospital Name:</b>
+          <small> <i>Popular Collage & Hospital, Dhanmondi, Dhaka</i></small
+          ><br />
+          <b>Admission Time:</b>
+          <small><i>7:00 AM (28 Dec, 25)</i></small
+          ><br />
+          <b>Admitted For:</b>
+          <small><i>Trying normal trial with help of induction.</i></small>
+        </p>
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box full-screen-mode">
+        <button class="fullscreen-close-btn">×</button>
+        <h3>
+          Baby Birth Record: Part-
+          <div class="f">2</div>
+        </h3>
+        <hr />
+        <p class="card-text-wrapper">
+          <b>Decision for C-Section:</b>
+          <small> <i>4:14 PM</i></small
+          ><br />
+          <b>Baby Born At:</b>
+          <small><i>5:47 PM</i></small>
+          <b>Baby Weight:</b>
+          <small><i>2.9 KG</i></small
+          ><br />
+          <strong>Discharge Date:</strong>
+          <small><i>30 Dec, 2025</i></small>
+        </p>
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          New Year Celebration:
+          <div class="f">1</div>
+          Jan,
+          <div class="f">26</div>
+        </h3>
+        <video
+          src="media/Video/1 January 26 - Sifra's crying video.mp4"
+          alt="New Year Celebration By Crying"
+          class="video video-trigger"
+          controls
+          controlsList="nofullscreen"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Prescription-
+          <div class="f">9:</div>
+          <div class="f">2</div>
+          Jan,
+          <div class="f">26</div>
+        </h3>
+        <img
+          src="img/p-9.webp"
+          alt="Prescription of Chhanda Mojumder: 9th"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Akika's Goat:
+          <div class="f">2</div>
+          Jan,
+          <div class="f">26</div>
+        </h3>
+        <img
+          src="img/akika_goat_1.webp"
+          alt="Goat of Akika: picture 1"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Akika's Goat:
+          <div class="f">2</div>
+          Jan,
+          <div class="f">26</div>
+        </h3>
+        <img
+          src="img/akika_goat_2.webp"
+          alt="Goat of Akika: picture 2"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Akika:
+          <div class="f">3</div>
+          Jan,
+          <div class="f">26</div>
+        </h3>
+        <img src="img/Akika.webp" alt="Akika" class="img-trigger" />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box full-screen-mode">
+        <button class="fullscreen-close-btn">×</button>
+        <h3>
+          Akika & Naming:
+          <div class="f">3.1.26</div>
+        </h3>
+        <hr />
+        <p class="card-text-wrapper">
+          <b>নাম:</b>
+          <small> <i>সাবিকুন নাজাত সিফ্রা</i></small
+          ><br />
+          <b>Name:</b>
+          <small><i>Sabikun Nazat Sifra</i></small>
+          <br />
+          <strong>অর্থ:</strong>
+          <small
+            ><i
+              >যে সুন্দর ও আলোকিত সত্তা মুক্তি ও কল্যানের পথে অগ্রগামী।</i
+            ></small
+          >
+        </p>
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box full-screen-mode">
+        <button class="fullscreen-close-btn">×</button>
+        <h3 class="bangla">দেখতে এসেছিলো কে কে?</h3>
+        <hr />
+        <p class="card-text-wrapper">
+          <small
+            >তানজিল, ইশতিয়াক, নানা, নানী, বড় মা, বড় বাবা, চাচতো বড় মা, জান্নাত,
+            আরিয়ান, আলো, তুষার, আয়েশা, সাগরিকা, জুবায়ের, জাকারিয়া, আকলিমা,
+            রাজিব, জুনায়েদ, সুরিয়া, লতা, আয়রা, আবরার, শাহানাজ, নাসরিন, বিথী,
+            পারুল, দাদী (মৃদুল), জান্নাতি, চাচি (প্রভা)</small
+          >
+        </p>
       </div>
       <!-- box end -->
     </div>

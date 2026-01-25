@@ -6,17 +6,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Configuration ---
   const AGE_COUNTER_CONFIG = {
     startDate: "2025-03-29T00:00:00",
+    endDate: "2025-12-28T00:00:00",
     weekElementId: "p-week",
     dayElementId: "p-day",
     updateInterval: 3600000, // 1 hour in milliseconds
   };
 
   const POPUP_TRIGGER_SELECTOR = ".img-trigger";
+  const VIDEO_POPUP_TRIGGER_SELECTOR = ".video-trigger";
   const FULLSCREEN_CONTENT_SELECTOR = ".full-screen-mode";
 
   // --- Initialization ---
   createAgeCounter(AGE_COUNTER_CONFIG);
   setupImagePopup(POPUP_TRIGGER_SELECTOR);
+  setupVideoPopup(VIDEO_POPUP_TRIGGER_SELECTOR);
   setupContentFullscreen(FULLSCREEN_CONTENT_SELECTOR);
 });
 
@@ -32,6 +35,7 @@ function createAgeCounter(config) {
   // Get DOM elements once for better performance
   const weekElement = document.getElementById(config.weekElementId);
   const dayElement = document.getElementById(config.dayElementId);
+  const ageElement = document.querySelector(".age b");
 
   // Check if elements exist before proceeding
   if (!weekElement || !dayElement) {
@@ -40,35 +44,34 @@ function createAgeCounter(config) {
   }
 
   const startDate = new Date(config.startDate);
+  const endDate = new Date(config.endDate);
   const MS_PER_DAY = 1000 * 60 * 60 * 24; // Milliseconds in a day
 
-  function updateDisplay() {
-    const now = new Date();
-    const differenceInMs = now - startDate;
+  // "just calculate start date to end date" -> This means calculate the total duration between them.
+  const differenceInMs = endDate - startDate;
 
-    if (differenceInMs < 0) {
-      weekElement.textContent = "0";
-      dayElement.textContent = "0";
-      return;
-    }
-
-    const totalDays = Math.floor(differenceInMs / MS_PER_DAY);
-    const weeks = Math.floor(totalDays / 7);
-    const days = totalDays % 7;
-
-    weekElement.textContent = weeks;
-    dayElement.textContent = days;
-    document.getElementById("ageInDays").innerText = `${totalDays} Days`;
-    document.getElementById("p-month").innerText = `${Math.floor(
-      totalDays / 30
-    )} Months ${totalDays % 30} Days`;
+  if (ageElement) {
+    ageElement.innerText = "Pregnancy Duration :";
   }
 
-  // Run once immediately on page load
-  updateDisplay();
+  if (differenceInMs < 0) {
+    weekElement.textContent = "0";
+    dayElement.textContent = "0";
+    document.getElementById("ageInDays").innerText = `0 Days`;
+    document.getElementById("p-month").innerText = `0 Months 0 Days`;
+    return;
+  }
 
-  // Then, set it to update periodically
-  setInterval(updateDisplay, config.updateInterval);
+  const totalDays = Math.floor(differenceInMs / MS_PER_DAY);
+  const weeks = Math.floor(totalDays / 7);
+  const days = totalDays % 7;
+
+  weekElement.textContent = weeks;
+  dayElement.textContent = days;
+  document.getElementById("ageInDays").innerText = `${totalDays} Days`;
+  document.getElementById("p-month").innerText = `${Math.floor(
+    totalDays / 30
+  )} Months ${totalDays % 30} Days`;
 }
 
 /**
@@ -86,7 +89,7 @@ function setupImagePopup(triggerSelector) {
   // Check if essential modal elements exist
   if (!modal || !modalImage || !closeButton) {
     console.error(
-      "Modal HTML structure is missing. Please add the #imageModal div."
+      "Modal HTML structure is missing. Please add the #imageModal div.",
     );
     return;
   }
@@ -122,6 +125,57 @@ function setupImagePopup(triggerSelector) {
   modal.addEventListener("click", (event) => {
     if (event.target === modal) {
       // Close only if the dark overlay is clicked
+      closeModal();
+    }
+  });
+}
+
+/**
+ * Initializes a modal popup for any video matching the provided selector.
+ * @param {string} triggerSelector - The CSS selector for the clickable video element.
+ */
+function setupVideoPopup(triggerSelector) {
+  // Get modal elements
+  const modal = document.getElementById("videoModal");
+  if (!modal) return; // Exit if modal not found
+
+  const modalVideo = document.getElementById("modalVideo");
+  const closeButton = modal.querySelector(".modal-close-btn");
+  const triggerVideos = document.querySelectorAll(triggerSelector);
+
+  if (!modalVideo || !closeButton || triggerVideos.length === 0) {
+    return; // Exit if essential elements aren't found
+  }
+
+  const handleEscKey = (event) => {
+    if (event.key === "Escape") {
+      closeModal();
+    }
+  };
+
+  const openModal = (event) => {
+    // Prevent the video from playing/pausing in the card
+    event.preventDefault();
+    const clickedVideo = event.currentTarget;
+    modalVideo.src = clickedVideo.src;
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    modalVideo.play();
+    document.addEventListener("keydown", handleEscKey);
+  };
+
+  const closeModal = () => {
+    modal.style.display = "none";
+    document.body.style.overflow = "auto";
+    modalVideo.pause();
+    document.removeEventListener("keydown", handleEscKey);
+  };
+
+  triggerVideos.forEach((vid) => vid.addEventListener("click", openModal));
+
+  closeButton.addEventListener("click", closeModal);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
       closeModal();
     }
   });
