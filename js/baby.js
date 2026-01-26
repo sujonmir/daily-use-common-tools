@@ -247,3 +247,65 @@ function setupContentFullscreen(selector) {
     element.addEventListener("click", openFullscreen);
   });
 }
+
+
+// daughter age calculator
+function updateDaughterAge() {
+    // Birth date: December 28, 2025 at 5:47 PM
+    const birthDate = new Date(2025, 11, 28, 17, 47, 0); // Month is 0-indexed (11 = December)
+    const now = new Date();
+    
+    // Calculate the difference
+    let years = now.getFullYear() - birthDate.getFullYear();
+    let months = now.getMonth() - birthDate.getMonth();
+    let days = now.getDate() - birthDate.getDate();
+    let hours = now.getHours() - birthDate.getHours();
+    let minutes = now.getMinutes() - birthDate.getMinutes();
+    
+    // Adjust for negative minutes
+    if (minutes < 0) {
+        minutes += 60;
+        hours--;
+    }
+    
+    // Adjust for negative hours
+    if (hours < 0) {
+        hours += 24;
+        days--;
+    }
+    
+    // Adjust for negative days
+    if (days < 0) {
+        months--;
+        // Get the number of days in the previous month
+        const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+        days += prevMonth.getDate();
+    }
+    
+    // Adjust for negative months
+    if (months < 0) {
+        months += 12;
+        years--;
+    }
+    
+    // Format hours and minutes with leading zeros
+    const formattedHours = String(hours).padStart(2, '0');
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    
+    // Create the age string
+    const ageString = `${years} Years, ${months} Months and ${days} Days ${formattedHours}:${formattedMinutes} hours`;
+    
+    // Update the element
+    const element = document.getElementById('daughter-age');
+    if (element) {
+        element.textContent = ageString;
+    }
+    
+    return ageString;
+}
+
+// Call the function initially
+updateDaughterAge();
+
+// Optional: Update every minute to keep the time current
+setInterval(updateDaughterAge, 60000);
