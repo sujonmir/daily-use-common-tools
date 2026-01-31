@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -47,7 +47,9 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        transition: background-color 0.2s, box-shadow 0.2s;
+        transition:
+          background-color 0.2s,
+          box-shadow 0.2s;
       }
       button:hover {
         background: #a00;
@@ -96,7 +98,9 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         /* overflow: hidden; */
         cursor: pointer; /* NEW: Show it's clickable */
-        transition: transform 0.2s, box-shadow 0.2s;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
       }
       /* NEW: Hover effect for better user feedback */
       .video-item:hover {
@@ -128,7 +132,9 @@
         border-radius: 50%;
         cursor: pointer;
         opacity: 0.5;
-        transition: opacity 0.2s, background-color 0.2s;
+        transition:
+          opacity 0.2s,
+          background-color 0.2s;
         z-index: 10; /* NEW: Make sure it's on top */
       }
       .video-item .remove:hover {
@@ -180,6 +186,10 @@
     </div>
 
     <script>
+      /**
+       * YouTube Video Keeper - Refactored for performance and state management.
+       */
+
       // --- DOM Elements ---
       const urlInput = document.getElementById("urlInput");
       const submitBtn = document.getElementById("submitBtn");
@@ -189,9 +199,13 @@
 
       // --- State ---
       let videoKeeper = [];
+      let currentVideoId = localStorage.getItem("lastVideoId") || null;
 
-      // --- Functions ---
+      // --- Utility Functions ---
 
+      /**
+       * Extracts YouTube ID from various URL formats.
+       */
       function getVideoId(url) {
         const regExp =
           /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -199,12 +213,29 @@
         return match && match[2].length === 11 ? match[2] : null;
       }
 
+      /**
+       * Persists the video list to localStorage.
+       */
       function saveVideos() {
         localStorage.setItem("videoKeeper", JSON.stringify(videoKeeper));
       }
 
       /**
-       * MODIFIED: Renders the saved videos as non-playable thumbnails.
+       * Updates the visual "active" state of thumbnails without re-rendering the list.
+       */
+      function highlightActiveThumbnail(videoId) {
+        const items = videoList.querySelectorAll(".video-item");
+        items.forEach((item) => {
+          if (item.dataset.id === videoId) {
+            item.style.boxShadow = "0 0 0 4px red";
+          } else {
+            item.style.boxShadow = "none";
+          }
+        });
+      }
+
+      /**
+       * Renders the saved videos list.
        */
       function renderSavedVideos() {
         videoList.innerHTML = "";
@@ -213,107 +244,127 @@
         videoKeeper.forEach((videoId) => {
           const videoItem = document.createElement("div");
           videoItem.className = "video-item";
-          // NEW: Add a data attribute to easily identify the video
           videoItem.dataset.id = videoId;
 
-          // MODIFIED: Use an <img> for the thumbnail instead of an <iframe>
+          // Apply shadow if this is the currently playing video
+          if (videoId === currentVideoId) {
+            videoItem.style.boxShadow = "0 0 0 4px red";
+          }
+
           videoItem.innerHTML = `
-            <img src="https://img.youtube.com/vi/${videoId}/mqdefault.jpg" alt="Video thumbnail">
-            <button class="remove" data-id="${videoId}">X</button>
-          `;
+      <img src="https://img.youtube.com/vi/${videoId}/mqdefault.jpg" alt="Video thumbnail" loading="lazy">
+      <button class="remove" data-id="${videoId}">X</button>
+    `;
           videoList.appendChild(videoItem);
         });
       }
 
+      /**
+       * Updates the main player and manages active state.
+       */
       function updateMainPlayer(videoId) {
+        currentVideoId = videoId;
+
         if (!videoId) {
           mainPlayer.innerHTML =
             '<p style="color: #777;">Saved videos will be played here.</p>';
           localStorage.removeItem("lastVideoId");
           return;
         }
-        const embedHtml = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=0" frameborder="0" width="700" height="450" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="v-controller"></iframe>`;
+
+        const embedHtml = `
+    <iframe 
+      src="https://www.youtube.com/embed/${videoId}?autoplay=0" 
+      frameborder="0" 
+      width="700" 
+      height="450" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+      allowfullscreen 
+      class="v-controller">
+    </iframe>`;
+
         mainPlayer.innerHTML = embedHtml;
         localStorage.setItem("lastVideoId", videoId);
+
+        // Update UI highlight without full list re-render
+        highlightActiveThumbnail(videoId);
       }
 
+      /**
+       * Logic for adding a new video.
+       */
       function handleAddVideo() {
         const url = urlInput.value.trim();
-        if (url === "") {
-          alert("Please enter a YouTube URL.");
-          return;
-        }
+        if (!url) return alert("Please enter a YouTube URL.");
+
         const videoId = getVideoId(url);
-        if (!videoId) {
-          alert("Invalid YouTube URL. Please check and try again.");
-          return;
-        }
+        if (!videoId) return alert("Invalid YouTube URL.");
+
         if (videoKeeper.includes(videoId)) {
-          alert("This video is already in your list.");
           updateMainPlayer(videoId);
           urlInput.value = "";
           return;
         }
+
         videoKeeper.unshift(videoId);
         saveVideos();
+        renderSavedVideos(); // Re-render list to include new item
         updateMainPlayer(videoId);
-        renderSavedVideos();
         urlInput.value = "";
       }
 
+      /**
+       * Initial application setup.
+       */
       function initialize() {
         const savedVideos = localStorage.getItem("videoKeeper");
         if (savedVideos) {
           videoKeeper = JSON.parse(savedVideos);
         }
-        const lastVideoId = localStorage.getItem("lastVideoId");
-        if (lastVideoId) {
-          updateMainPlayer(lastVideoId);
-        }
+
+        // Render list first so elements exist to be highlighted
         renderSavedVideos();
+
+        if (currentVideoId) {
+          updateMainPlayer(currentVideoId);
+        }
       }
 
       // --- Event Listeners ---
+
       submitBtn.addEventListener("click", handleAddVideo);
+
       urlInput.addEventListener("keypress", (e) => {
         if (e.key === "Enter") handleAddVideo();
       });
 
-      /**
-       * MODIFIED: Event listener now handles clicks on both the remove button
-       * AND the video thumbnail itself.
-       */
-      videoList.addEventListener("click", function (e) {
-        // Find the remove button that was clicked, if any
+      videoList.addEventListener("click", (e) => {
         const removeButton = e.target.closest(".remove");
-        // Find the video item that was clicked, if any
         const videoItem = e.target.closest(".video-item");
 
         if (removeButton) {
-          // --- Logic for REMOVING a video ---
+          e.stopPropagation();
           const idToRemove = removeButton.dataset.id;
           videoKeeper = videoKeeper.filter((id) => id !== idToRemove);
           saveVideos();
-          renderSavedVideos();
 
-          const lastVideoId = localStorage.getItem("lastVideoId");
-          if (idToRemove === lastVideoId) {
+          if (idToRemove === currentVideoId) {
             updateMainPlayer(videoKeeper[0] || null);
           }
-        } else if (videoItem) {
-          // --- NEW: Logic for PLAYING a video in the main player ---
-          document.querySelectorAll(".video-item").forEach((item) => {
-            item.style.boxShadow = "none"; // Reset all items
-          });
-          videoItem.style.boxShadow = "0 0 0 4px red";
+          renderSavedVideos();
+          return;
+        }
+
+        if (videoItem) {
           const idToPlay = videoItem.dataset.id;
-          updateMainPlayer(idToPlay);
-          // Optional: scroll to the top to see the player
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          if (idToPlay !== currentVideoId) {
+            updateMainPlayer(idToPlay);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
         }
       });
 
-      // --- Initial Load ---
+      // --- Run ---
       initialize();
     </script>
   </body>
