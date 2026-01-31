@@ -42,7 +42,6 @@
         text-transform: uppercase;
         letter-spacing: 2px;
         font-weight: bold;
-        background: #c00;
         color: #fff;
         border: none;
         border-radius: 5px;
@@ -51,10 +50,13 @@
           background-color 0.2s,
           box-shadow 0.2s;
       }
-      button:hover {
+      .submit-btn {
+        background: #c00;
+      }
+      .submit-btn:hover {
         background: #a00;
       }
-      button:active {
+      .submit-btn:active {
         background: #800;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
       }
@@ -66,7 +68,7 @@
         padding: 10px;
         border-radius: 5px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        min-height: 470px; /* NEW: Reserve space for the player */
+        min-height: 470px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -81,33 +83,61 @@
         border-top: 1px solid #ddd;
         margin: 40px 0;
       }
-      h2 {
+
+      /* NEW: Flex header for title and actions */
+      .list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         border-bottom: 2px solid #c00;
         padding-bottom: 10px;
+        margin-bottom: 20px;
       }
+      .list-header h2 {
+        margin: 0;
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+      }
+      .btn-secondary {
+        color: #fff;
+        font-size: 12px;
+        padding: 8px 15px;
+        text-transform: uppercase;
+        opacity: 0.8;
+      }
+      .btn-secondary:hover {
+        opacity: 1;
+      }
+      .export-btn {
+        background: #266601;
+      }
+      .import-btn {
+        background: #720303;
+      }
+
       .videoList {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
         gap: 20px;
       }
-      /* MODIFIED: Styling for the new thumbnail item */
       .video-item {
         position: relative;
         background: #fff;
         border-radius: 5px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        /* overflow: hidden; */
-        cursor: pointer; /* NEW: Show it's clickable */
+        cursor: pointer;
         transition:
           transform 0.2s,
           box-shadow 0.2s;
       }
-      /* NEW: Hover effect for better user feedback */
       .video-item:hover {
         transform: scale(1.03);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       }
-      /* NEW: Styling for the thumbnail image */
       .video-item img {
         width: 100%;
         height: auto;
@@ -135,7 +165,7 @@
         transition:
           opacity 0.2s,
           background-color 0.2s;
-        z-index: 10; /* NEW: Make sure it's on top */
+        z-index: 10;
       }
       .video-item .remove:hover {
         background-color: #c00;
@@ -145,7 +175,7 @@
       }
       @media screen and (max-width: 650px) {
         .shower {
-          min-height: 180px; /* Adjusted for smaller screens */
+          min-height: 180px;
         }
         button {
           font-size: 12px;
@@ -160,6 +190,11 @@
         .inputer {
           margin-top: 20px;
         }
+        .list-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
       }
     </style>
   </head>
@@ -172,14 +207,34 @@
           id="urlInput"
           autocomplete="off"
         />
-        <button id="submitBtn">Save</button>
+        <button id="submitBtn" class="submit-btn">Save</button>
       </div>
 
       <div id="mainPlayer" class="shower">
         <p style="color: #777">Saved videos will be played here.</p>
       </div>
       <hr />
-      <h2>Saved Videos (<span id="videoCount">0</span>)</h2>
+
+      <!-- MODIFIED: Header with actions -->
+      <div class="list-header">
+        <h2>Saved Videos (<span id="videoCount">0</span>)</h2>
+        <div class="action-buttons">
+          <button id="exportBtn" class="btn-secondary export-btn">
+            Export Backup
+          </button>
+          <button id="importBtn" class="btn-secondary import-btn">
+            Import Backup
+          </button>
+          <!-- Hidden file input for import -->
+          <input
+            type="file"
+            id="importInput"
+            accept=".json"
+            style="display: none"
+          />
+        </div>
+      </div>
+
       <div id="videoList" class="videoList">
         <!-- The list of saved video thumbnails will go here -->
       </div>
@@ -196,6 +251,9 @@
       const mainPlayer = document.getElementById("mainPlayer");
       const videoList = document.getElementById("videoList");
       const videoCount = document.getElementById("videoCount");
+      const exportBtn = document.getElementById("exportBtn");
+      const importBtn = document.getElementById("importBtn");
+      const importInput = document.getElementById("importInput");
 
       // --- State ---
       let videoKeeper = [];
@@ -203,9 +261,6 @@
 
       // --- Utility Functions ---
 
-      /**
-       * Extracts YouTube ID from various URL formats.
-       */
       function getVideoId(url) {
         const regExp =
           /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -213,16 +268,10 @@
         return match && match[2].length === 11 ? match[2] : null;
       }
 
-      /**
-       * Persists the video list to localStorage.
-       */
       function saveVideos() {
         localStorage.setItem("videoKeeper", JSON.stringify(videoKeeper));
       }
 
-      /**
-       * Updates the visual "active" state of thumbnails without re-rendering the list.
-       */
       function highlightActiveThumbnail(videoId) {
         const items = videoList.querySelectorAll(".video-item");
         items.forEach((item) => {
@@ -234,9 +283,6 @@
         });
       }
 
-      /**
-       * Renders the saved videos list.
-       */
       function renderSavedVideos() {
         videoList.innerHTML = "";
         videoCount.textContent = videoKeeper.length;
@@ -246,7 +292,6 @@
           videoItem.className = "video-item";
           videoItem.dataset.id = videoId;
 
-          // Apply shadow if this is the currently playing video
           if (videoId === currentVideoId) {
             videoItem.style.boxShadow = "0 0 0 4px red";
           }
@@ -259,9 +304,6 @@
         });
       }
 
-      /**
-       * Updates the main player and manages active state.
-       */
       function updateMainPlayer(videoId) {
         currentVideoId = videoId;
 
@@ -285,14 +327,9 @@
 
         mainPlayer.innerHTML = embedHtml;
         localStorage.setItem("lastVideoId", videoId);
-
-        // Update UI highlight without full list re-render
         highlightActiveThumbnail(videoId);
       }
 
-      /**
-       * Logic for adding a new video.
-       */
       function handleAddVideo() {
         const url = urlInput.value.trim();
         if (!url) return alert("Please enter a YouTube URL.");
@@ -308,21 +345,85 @@
 
         videoKeeper.unshift(videoId);
         saveVideos();
-        renderSavedVideos(); // Re-render list to include new item
+        renderSavedVideos();
         updateMainPlayer(videoId);
         urlInput.value = "";
       }
 
-      /**
-       * Initial application setup.
-       */
+      // --- NEW: Export/Import Logic ---
+
+      function handleExport() {
+        if (videoKeeper.length === 0) {
+          return alert("No videos to export.");
+        }
+
+        const now = new Date();
+        // Format: YYYY-MM-DD_HH-mm-ss
+        const datePart = now.toISOString().split("T")[0];
+        const timePart = now.toTimeString().split(" ")[0].replace(/:/g, "-");
+        const fileName = `yt-video-keeper-backup-${datePart}_${timePart}.json`;
+
+        const dataStr = JSON.stringify(videoKeeper, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function handleImportClick() {
+        importInput.click();
+      }
+
+      function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          try {
+            const importedData = JSON.parse(e.target.result);
+            if (Array.isArray(importedData)) {
+              // Merge strategy: Add only IDs that don't exist yet
+              const newIds = importedData.filter(
+                (id) => !videoKeeper.includes(id),
+              );
+
+              if (newIds.length === 0) {
+                alert("No new videos found in this backup.");
+              } else {
+                videoKeeper = [...newIds, ...videoKeeper];
+                saveVideos();
+                renderSavedVideos();
+                alert(`Successfully imported ${newIds.length} videos.`);
+              }
+            } else {
+              alert(
+                "Invalid backup file. content must be a list of video IDs.",
+              );
+            }
+          } catch (err) {
+            console.error(err);
+            alert("Error parsing the backup file.");
+          }
+          // Reset the input so the same file can be selected again if needed
+          importInput.value = "";
+        };
+        reader.readAsText(file);
+      }
+
+      // --- Initialization ---
       function initialize() {
         const savedVideos = localStorage.getItem("videoKeeper");
         if (savedVideos) {
           videoKeeper = JSON.parse(savedVideos);
         }
 
-        // Render list first so elements exist to be highlighted
         renderSavedVideos();
 
         if (currentVideoId) {
@@ -337,6 +438,11 @@
       urlInput.addEventListener("keypress", (e) => {
         if (e.key === "Enter") handleAddVideo();
       });
+
+      // NEW: Export/Import Listeners
+      exportBtn.addEventListener("click", handleExport);
+      importBtn.addEventListener("click", handleImportClick);
+      importInput.addEventListener("change", handleFileSelect);
 
       videoList.addEventListener("click", (e) => {
         const removeButton = e.target.closest(".remove");
