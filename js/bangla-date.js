@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
       { month: 11, day: 16 }, // অগ্রহায়ণ starts November 16
       { month: 12, day: 16 }, // পৌষ starts December 16
       { month: 1, day: 15 }, // মাঘ starts January 15
-      { month: 2, day: 13 }, // ফাল্গুন starts February 13
+      { month: 2, day: 14 }, // ফাল্গুন starts February 14
       { month: 3, day: 15 }, // চৈত্র starts March 15
     ];
 
@@ -64,12 +64,12 @@ document.addEventListener("DOMContentLoaded", function () {
       let endDate = new Date(
         start.month > end.month ? gregorianDate.year + 1 : gregorianDate.year,
         end.month - 1,
-        end.day
+        end.day,
       );
       let current = new Date(
         gregorianDate.year,
         gregorianDate.month - 1,
-        gregorianDate.date
+        gregorianDate.date,
       );
       if (current >= startDate && current < endDate) {
         bMonth = i;
