@@ -78,15 +78,32 @@
     <script>
       const totalAyahs = 6236; // কুরআনের মোট আয়াত সংখ্যা
 
-      function getDailyRandomAyah() {
-        const today = new Date();
-        const dateSeed =
-          today.getFullYear() * 1000 + today.getMonth() * 100 + today.getDate();
-        return ((dateSeed * 2654435761) % totalAyahs) + 1; // এলোমেলো আয়াত শুরু হবে
+      function getDailySequentialAyah() {
+        const today = new Date().toDateString();
+        let lastVisit = localStorage.getItem("quranAyahVisit");
+        let lastAyahIndex = localStorage.getItem("quranAyahIndex");
+
+        let currentAyahIndex;
+
+        if (lastVisit === today && lastAyahIndex) {
+          // It's the same day, use the same index
+          currentAyahIndex = parseInt(lastAyahIndex, 10);
+        } else {
+          // It's a new day or the first visit
+          if (lastAyahIndex) {
+            let nextIndex = parseInt(lastAyahIndex, 10) + 5; // Move to the next 5 ayahs
+            currentAyahIndex = nextIndex > totalAyahs ? 1 : nextIndex; // Loop back if exceeds total
+          } else {
+            currentAyahIndex = 1; // First time visit
+          }
+          localStorage.setItem("quranAyahVisit", today);
+          localStorage.setItem("quranAyahIndex", currentAyahIndex.toString());
+        }
+        return currentAyahIndex;
       }
 
       let currentDate = new Date().getDate(); // Store the current date
-      let startAyah = getDailyRandomAyah();
+      let startAyah = getDailySequentialAyah();
       let endAyah = Math.min(startAyah + 4, totalAyahs); // পরবর্তী ৪টি আয়াত
       document.getElementById("start_ayat").innerText = startAyah;
       document.getElementById("end_ayat").innerText = endAyah;
@@ -138,8 +155,11 @@
         let newDate = new Date().getDate();
         if (newDate !== currentDate) {
           currentDate = newDate;
-          startAyah = getDailyRandomAyah();
+          startAyah = getDailySequentialAyah();
           endAyah = Math.min(startAyah + 4, totalAyahs);
+          // Update verse number display
+          document.getElementById("start_ayat").innerText = startAyah;
+          document.getElementById("end_ayat").innerText = endAyah;
           fetchAyahs(startAyah, endAyah);
         }
       }, 60000); // Check every 1 minute (60,000 ms)
