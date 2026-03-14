@@ -229,12 +229,16 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!document.fullscreenElement) {
         if (stopwatchSection.requestFullscreen) {
           stopwatchSection.requestFullscreen();
+          screen.orientation.lock("landscape");
         } else if (stopwatchSection.mozRequestFullScreen) {
           stopwatchSection.mozRequestFullScreen();
+          screen.orientation.lock("landscape");
         } else if (stopwatchSection.webkitRequestFullscreen) {
           stopwatchSection.webkitRequestFullscreen();
+          screen.orientation.lock("landscape");
         } else if (stopwatchSection.msRequestFullscreen) {
           stopwatchSection.msRequestFullscreen();
+          screen.orientation.lock("landscape");
         }
       } else {
         if (document.exitFullscreen) {
