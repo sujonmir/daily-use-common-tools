@@ -127,12 +127,16 @@ function toggleTimerFullscreen() {
   if (!document.fullscreenElement) {
     if (timer.requestFullscreen) {
       timer.requestFullscreen();
+      screen.orientation.lock("landscape");
     } else if (timer.mozRequestFullScreen) {
       timer.mozRequestFullScreen();
+      screen.orientation.lock("landscape");
     } else if (timer.webkitRequestFullscreen) {
       timer.webkitRequestFullscreen();
+      screen.orientation.lock("landscape");
     } else if (timer.msRequestFullscreen) {
       timer.msRequestFullscreen();
+      screen.orientation.lock("landscape");
     }
     timer.classList.add("timer-fullscreen");
   } else {
