@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     let bangladeshDate = new Date(bangladeshTime).toLocaleDateString(
       "bn-BD",
-      options
+      options,
     );
 
     const dateElement = document.getElementById("date");
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let bangladeshWeekday = new Date(bangladeshTime).toLocaleDateString(
       "bn-BD",
-      { weekday: "long" }
+      { weekday: "long" },
     );
     const weekDateElement = document.getElementById("WeekDate");
     if (weekDateElement) {
@@ -101,12 +101,15 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!document.fullscreenElement) {
       if (clock.requestFullscreen) {
         clock.requestFullscreen();
+        screen.orientation.lock("landscape");
       } else if (clock.mozRequestFullScreen) {
         clock.mozRequestFullScreen();
+        screen.orientation.lock("landscape");
       } else if (clock.webkitRequestFullscreen) {
         clock.webkitRequestFullscreen();
       } else if (clock.msRequestFullscreen) {
         clock.msRequestFullscreen();
+        screen.orientation.lock("landscape");
       }
     } else {
       if (document.exitFullscreen) {
