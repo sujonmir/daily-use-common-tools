@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -22,7 +22,8 @@
         height: 32px;
       }
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           "Helvetica Neue", Arial, sans-serif;
         /* font-family: "Anek Bangla", sans-serif; */
         margin: 0;
@@ -379,19 +380,52 @@
       }
 
       /* Grid definitions for calculator rows */
-      .grid-income, .grid-loan, .grid-lend-donate, .grid-electricity-bill { grid-template-columns: 1fr 1fr; }
-      .grid-home-rent, .grid-gas-bill, .grid-wifi-bill, .grid-phone-bill, .grid-edu-academic { grid-template-columns: 1fr 1fr 1fr; }
-      .grid-others, .grid-doctor-test, .grid-gift { grid-template-columns: 1fr 1fr auto; }
-      .grid-shopping { grid-template-columns: 3fr 1fr 1fr auto; }
-      .grid-doctor-fee { grid-template-columns: 1fr 1fr 1fr 1fr; }
-      .grid-medicines, .grid-edu-goods { grid-template-columns: 3fr 1fr 1fr 1fr auto; }
-      .grid-transport { grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto; }
-      .grid-tour { grid-template-columns: 1fr 3fr 1fr 1fr auto; }
-      .grid-groccery { grid-template-columns: 3fr 1fr 1fr 1fr 1fr auto; }
-      .grid-gardening { grid-template-columns: 3fr 1fr 1fr auto; }
-      .grid-sweets { grid-template-columns: 3fr 1fr 1fr 1fr auto; }
-      .grid-subscription { grid-template-columns: 2fr 1fr 1fr auto; }
-      
+      .grid-income,
+      .grid-loan,
+      .grid-lend-donate,
+      .grid-electricity-bill {
+        grid-template-columns: 1fr 1fr;
+      }
+      .grid-home-rent,
+      .grid-gas-bill,
+      .grid-wifi-bill,
+      .grid-phone-bill,
+      .grid-edu-academic {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .grid-others,
+      .grid-doctor-test,
+      .grid-gift {
+        grid-template-columns: 1fr 1fr auto;
+      }
+      .grid-shopping {
+        grid-template-columns: 3fr 1fr 1fr auto;
+      }
+      .grid-doctor-fee {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+      .grid-medicines,
+      .grid-edu-goods {
+        grid-template-columns: 3fr 1fr 1fr 1fr auto;
+      }
+      .grid-transport {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto;
+      }
+      .grid-tour {
+        grid-template-columns: 1fr 3fr 1fr 1fr auto;
+      }
+      .grid-groccery {
+        grid-template-columns: 3fr 1fr 1fr 1fr 1fr auto;
+      }
+      .grid-gardening {
+        grid-template-columns: 3fr 1fr 1fr auto;
+      }
+      .grid-sweets {
+        grid-template-columns: 3fr 1fr 1fr 1fr auto;
+      }
+      .grid-subscription {
+        grid-template-columns: 2fr 1fr 1fr auto;
+      }
 
       /* Mobile Responsiveness */
       @media (max-width: 768px) {
@@ -461,7 +495,7 @@
           margin: 30px 0;
         }
         .data-management-section {
-           margin-bottom: 30px;
+          margin-bottom: 30px;
         }
         .data-buttons {
           flex-direction: column;
@@ -477,21 +511,21 @@
           gap: 30px;
         }
         .delete-btn {
-          right: 5px;
-          top: 5px;
-          font-size: 1.3rem;
+          right: -25px;
+          top: -22px;
+          font-size: 2rem;
           opacity: 0.6;
         }
         .entry {
           padding-bottom: 50px; /* ensure space for edit button */
         }
         #keyword-popup {
-            bottom: 20px;
-            right: 15px;
-            left: 15px;
-            width: auto;
-            max-width: 400px;
-            margin: 0 auto;
+          bottom: 20px;
+          right: 15px;
+          left: 15px;
+          width: auto;
+          max-width: 400px;
+          margin: 0 auto;
         }
         /* Form section */
         .form-section {
@@ -584,7 +618,12 @@
         display: flex;
         position: fixed;
         inset: 0;
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
         z-index: 9999;
         align-items: center;
         justify-content: center;
@@ -657,7 +696,11 @@
         border-radius: 50%;
         animation: loginSpin 0.8s linear infinite;
       }
-      @keyframes loginSpin { to { transform: rotate(360deg); } }
+      @keyframes loginSpin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
       #sync-status-msg {
         color: var(--light-text);
         font-size: 0.95em;
@@ -667,7 +710,10 @@
       #export-modal-overlay {
         display: none;
         position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         background: rgba(0, 0, 0, 0.5);
         z-index: 3000;
         align-items: center;
@@ -803,10 +849,20 @@
         <p class="login-sub">Sign in to access your dashboard</p>
 
         <form id="login-form" autocomplete="off">
-          <input type="email" class="login-input" id="login-gmail"
-            placeholder="Gmail address" required />
-          <input type="password" class="login-input" id="login-secret"
-            placeholder="Secret Key" required />
+          <input
+            type="email"
+            class="login-input"
+            id="login-gmail"
+            placeholder="Gmail address"
+            required
+          />
+          <input
+            type="password"
+            class="login-input"
+            id="login-secret"
+            placeholder="Secret Key"
+            required
+          />
           <div id="login-error">Invalid credentials. Please try again.</div>
           <button type="submit" id="login-submit-btn">Login</button>
         </form>
@@ -842,6 +898,36 @@
       }
       #floating-keyword-btn:hover {
         background: #3576b8;
+      }
+      #scroll-top-btn {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        width: 44px;
+        height: 44px;
+        background: #555;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px);
+        transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s;
+        z-index: 1000;
+      }
+      #scroll-top-btn.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      #scroll-top-btn:hover {
+        background: #333;
       }
       #keyword-popup {
         display: none;
@@ -900,6 +986,7 @@
       }
     </style>
     <button id="floating-keyword-btn" title="Keyword Sum">🔍</button>
+    <button id="scroll-top-btn" title="Back to top">&#8679;</button>
     <div id="keyword-popup">
       <button class="close-popup" title="Close">&times;</button>
       <h3>
@@ -933,47 +1020,92 @@
     <!-- Export Report Modal -->
     <div id="export-modal-overlay">
       <div id="export-modal">
-        <button class="export-modal-close" id="export-modal-close-btn">&times;</button>
+        <button class="export-modal-close" id="export-modal-close-btn">
+          &times;
+        </button>
         <h2 id="export-modal-title">Export Report</h2>
 
         <!-- Monthly date picker -->
-        <div class="export-modal-group" id="modal-monthly-group" style="display:none;">
+        <div
+          class="export-modal-group"
+          id="modal-monthly-group"
+          style="display: none"
+        >
           <label class="group-label">Select Month:</label>
           <input type="month" id="modal-month-input" />
         </div>
 
         <!-- Yearly year picker -->
-        <div class="export-modal-group" id="modal-yearly-group" style="display:none;">
+        <div
+          class="export-modal-group"
+          id="modal-yearly-group"
+          style="display: none"
+        >
           <label class="group-label">Select Year:</label>
-          <input type="number" id="modal-year-input" min="2000" max="2099" placeholder="e.g. 2025" />
+          <input
+            type="number"
+            id="modal-year-input"
+            min="2000"
+            max="2099"
+            placeholder="e.g. 2025"
+          />
         </div>
 
         <!-- Custom range options -->
-        <div class="export-modal-group" id="modal-custom-group" style="display:none;">
+        <div
+          class="export-modal-group"
+          id="modal-custom-group"
+          style="display: none"
+        >
           <label class="group-label">Choose Range Type:</label>
           <div class="radio-group">
             <label>
-              <input type="radio" name="custom-range-type" value="year-from-date" checked />
+              <input
+                type="radio"
+                name="custom-range-type"
+                value="year-from-date"
+                checked
+              />
               From start date (1 year range)
             </label>
             <label>
-              <input type="radio" name="custom-range-type" value="year-to-date" />
+              <input
+                type="radio"
+                name="custom-range-type"
+                value="year-to-date"
+              />
               To end date (1 year range)
             </label>
             <label>
-              <input type="radio" name="custom-range-type" value="custom-range" />
+              <input
+                type="radio"
+                name="custom-range-type"
+                value="custom-range"
+              />
               Custom start &amp; end date
             </label>
           </div>
-          <div class="date-range-subgroup" id="modal-year-from-date" style="display:none;">
+          <div
+            class="date-range-subgroup"
+            id="modal-year-from-date"
+            style="display: none"
+          >
             <label>Start Date:</label>
             <input type="date" id="modal-custom-start-date" />
           </div>
-          <div class="date-range-subgroup" id="modal-year-to-date" style="display:none;">
+          <div
+            class="date-range-subgroup"
+            id="modal-year-to-date"
+            style="display: none"
+          >
             <label>End Date:</label>
             <input type="date" id="modal-custom-end-date" />
           </div>
-          <div class="date-range-subgroup" id="modal-custom-range-inputs" style="display:none;">
+          <div
+            class="date-range-subgroup"
+            id="modal-custom-range-inputs"
+            style="display: none"
+          >
             <label>Start Date:</label>
             <input type="date" id="modal-custom-from" />
             <label>End Date:</label>
@@ -996,7 +1128,9 @@
       <div class="header-center">
         <button id="export-monthly-btn">Export Monthly Report</button>
         <button id="export-yearly-btn">Export Yearly Report</button>
-        <button id="export-custom-range-btn" style="background-color:#7c3aed;">Custom Range Export</button>
+        <button id="export-custom-range-btn" style="background-color: #7c3aed">
+          Custom Range Export
+        </button>
       </div>
       <div class="balance">
         Current Balance: <span id="current-balance">0 BDT</span>
@@ -1044,13 +1178,17 @@
                 <option value="Phone and WIFI bills">
                   Phone and WIFI bills
                 </option>
-                <option value="Lend, Donate & Gift">Lend, Donate &amp; Gift</option>
+                <option value="Lend, Donate & Gift">
+                  Lend, Donate &amp; Gift
+                </option>
                 <option value="Loan repayment">Loan repayment</option>
                 <option value="Professional Expense">
                   Professional Expense
                 </option>
                 <option value="Personal Snacks">Personal Snacks</option>
-                <option value="Salon and Beauty Parlor">Salon and Beauty Parlor</option>
+                <option value="Salon and Beauty Parlor">
+                  Salon and Beauty Parlor
+                </option>
                 <option value="Gardening">Gardening</option>
                 <option value="Sweets and Bakery">Sweets and Bakery</option>
                 <option value="Educational Expense">Educational Expense</option>
@@ -1117,10 +1255,17 @@
       <!-- Loan Overview Section -->
       <section class="data-management-section" id="loans-overview-section">
         <h3>Loan Overview</h3>
-        <p>Active loans (remaining balance). Click below for the full history.</p>
+        <p>
+          Active loans (remaining balance). Click below for the full history.
+        </p>
         <div id="active-loans-section"></div>
-        <div style="margin-top:15px;text-align:center;">
-          <button id="loans-full-details-btn" style="background-color:#e67e22;color:#fff;">⬇ Download Full Report</button>
+        <div style="margin-top: 15px; text-align: center">
+          <button
+            id="loans-full-details-btn"
+            style="background-color: #e67e22; color: #fff"
+          >
+            ⬇ Download Full Report
+          </button>
         </div>
       </section>
     </main>
@@ -1135,10 +1280,10 @@
     <script>
       // ---- Auth Guard ----
       (function () {
-        const VALID_GMAIL  = "sujonmhk786@gmail.com";
+        const VALID_GMAIL = "sujonmhk786@gmail.com";
         const VALID_SECRET = "$ahal$ara";
-        const AUTH_KEY     = "ft_auth_v1";
-        const AUTH_VAL     = btoa(VALID_GMAIL + ":" + VALID_SECRET);
+        const AUTH_KEY = "ft_auth_v1";
+        const AUTH_VAL = btoa(VALID_GMAIL + ":" + VALID_SECRET);
 
         function isAuthenticated() {
           return localStorage.getItem(AUTH_KEY) === AUTH_VAL;
@@ -1154,10 +1299,10 @@
         window.setSyncStatus = function (msg) {
           var wrap = document.getElementById("sync-status-wrap");
           var msgEl = document.getElementById("sync-status-msg");
-          var form  = document.getElementById("login-form");
-          if (form)  form.style.display  = "none";
-          if (wrap)  wrap.style.display  = "flex";
-          if (msgEl) msgEl.textContent   = msg || "Loading...";
+          var form = document.getElementById("login-form");
+          if (form) form.style.display = "none";
+          if (wrap) wrap.style.display = "flex";
+          if (msgEl) msgEl.textContent = msg || "Loading...";
         };
 
         // Called by main script when sync is done — hides overlay
@@ -1174,13 +1319,19 @@
             return;
           }
 
-          var form    = document.getElementById("login-form");
+          var form = document.getElementById("login-form");
           var errorEl = document.getElementById("login-error");
-          if (!form) { _resolveAuth(); return; }
+          if (!form) {
+            _resolveAuth();
+            return;
+          }
 
           form.addEventListener("submit", function (e) {
             e.preventDefault();
-            var gmail  = document.getElementById("login-gmail").value.trim().toLowerCase();
+            var gmail = document
+              .getElementById("login-gmail")
+              .value.trim()
+              .toLowerCase();
             var secret = document.getElementById("login-secret").value;
 
             if (gmail === VALID_GMAIL && secret === VALID_SECRET) {
@@ -1249,22 +1400,44 @@
 
           // Helper to extract searchable text from a transaction detail
           const getDetailText = (detail) => {
-            return [detail.title, detail.vehicle, detail.from, detail.to,
-              detail.patientName, detail.doctorName, detail.doctorType,
-              detail.person, detail.number, detail.feeType, detail.type, detail.subType]
-              .filter(Boolean).join(" ").toLowerCase();
+            return [
+              detail.title,
+              detail.vehicle,
+              detail.from,
+              detail.to,
+              detail.patientName,
+              detail.doctorName,
+              detail.doctorType,
+              detail.person,
+              detail.number,
+              detail.feeType,
+              detail.type,
+              detail.subType,
+            ]
+              .filter(Boolean)
+              .join(" ")
+              .toLowerCase();
           };
 
           // Helper to get amount from a detail
           const getDetailAmount = (detail) => {
-            return parseFloat(
-              detail.amount != null ? detail.amount :
-              detail.itemTotal != null ? detail.itemTotal :
-              detail.fare != null ? detail.fare :
-              detail.fee != null ? detail.fee :
-              detail.total != null ? detail.total :
-              detail.payableTests != null ? detail.payableTests : 0
-            ) || 0;
+            return (
+              parseFloat(
+                detail.amount != null
+                  ? detail.amount
+                  : detail.itemTotal != null
+                    ? detail.itemTotal
+                    : detail.fare != null
+                      ? detail.fare
+                      : detail.fee != null
+                        ? detail.fee
+                        : detail.total != null
+                          ? detail.total
+                          : detail.payableTests != null
+                            ? detail.payableTests
+                            : 0,
+              ) || 0
+            );
           };
 
           // Calculate sums for each keyword
@@ -1277,7 +1450,9 @@
               // Loop through all transactions
               window.transactions.forEach((tx) => {
                 if (!Array.isArray(tx.details)) return;
-                const categoryMatch = (tx.category || "").toLowerCase().includes(kw);
+                const categoryMatch = (tx.category || "")
+                  .toLowerCase()
+                  .includes(kw);
                 tx.details.forEach((detail) => {
                   const textMatch = getDetailText(detail).includes(kw);
                   if (textMatch || categoryMatch) {
@@ -1346,6 +1521,22 @@
           init();
         }
       })();
+
+      // Scroll-to-top button
+      (function () {
+        const scrollBtn = document.getElementById("scroll-top-btn");
+        window.addEventListener("scroll", function () {
+          if (window.scrollY > 300) {
+            scrollBtn.classList.add("visible");
+          } else {
+            scrollBtn.classList.remove("visible");
+          }
+        });
+        scrollBtn.addEventListener("click", function () {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      })();
+
       document.addEventListener("DOMContentLoaded", async () => {
         // Wait for the user to authenticate before running anything
         await window.authReady;
@@ -1353,8 +1544,9 @@
         // ---- Google Sheets Config ----
         // After deploying Code.gs as a Web App, paste the URL below.
         // Leave empty ("") to use IndexedDB only (offline mode).
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyu2hNOFwwE4fQ1CZHb5_mf3ddZ1IB4l2Pk1d1psg1jAlGmAcJAKc7J2uqi-RYz6byk/exec";
-        const SHEETS_TOKEN    = "$ahal$ara";
+        const APPS_SCRIPT_URL =
+          "https://script.google.com/macros/s/AKfycbyu2hNOFwwE4fQ1CZHb5_mf3ddZ1IB4l2Pk1d1psg1jAlGmAcJAKc7J2uqi-RYz6byk/exec";
+        const SHEETS_TOKEN = "$ahal$ara";
 
         // ---- Sheets Sync Helpers ----
         const fetchFromSheets = async () => {
@@ -1387,7 +1579,11 @@
           await fetch(APPS_SCRIPT_URL, {
             method: "POST",
             headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify({ token: SHEETS_TOKEN, action: "bulkAdd", data: txList }),
+            body: JSON.stringify({
+              token: SHEETS_TOKEN,
+              action: "bulkAdd",
+              data: txList,
+            }),
           });
         };
 
@@ -1397,7 +1593,11 @@
           const res = await fetch(APPS_SCRIPT_URL, {
             method: "POST",
             headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify({ token: SHEETS_TOKEN, action: "replaceAll", data: txList }),
+            body: JSON.stringify({
+              token: SHEETS_TOKEN,
+              action: "replaceAll",
+              data: txList,
+            }),
           });
           const json = await res.json();
           if (json.error) throw new Error(json.error);
@@ -1414,10 +1614,13 @@
               "z-index:5000;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.3);";
             document.body.appendChild(el);
           }
-          el.textContent = "⚠️ Could not sync with Google Sheets. Data saved locally.";
+          el.textContent =
+            "⚠️ Could not sync with Google Sheets. Data saved locally.";
           el.style.display = "block";
           clearTimeout(el._timer);
-          el._timer = setTimeout(() => { el.style.display = "none"; }, 5000);
+          el._timer = setTimeout(() => {
+            el.style.display = "none";
+          }, 5000);
         };
 
         // --- DOM Elements ---
@@ -1426,7 +1629,7 @@
         const categoryGroup = document.getElementById("category-group");
         const categorySelect = document.getElementById("expense-category");
         const calculatorContainer = document.getElementById(
-          "calculator-container"
+          "calculator-container",
         );
         const transactionForm = document.getElementById("transaction-form");
         const transactionDateInput =
@@ -1434,20 +1637,20 @@
         const entriesContainer = document.getElementById("entries-container");
         const currentBalanceEl = document.getElementById("current-balance");
         const currentMonthHeader = document.getElementById(
-          "current-month-header"
+          "current-month-header",
         );
 
         const monthlySummaryTitle = document.getElementById(
-          "monthly-summary-title"
+          "monthly-summary-title",
         );
         const monthlySummaryTable = document.getElementById(
-          "monthly-summary-table"
+          "monthly-summary-table",
         );
         const yearlySummaryTitle = document.getElementById(
-          "yearly-summary-title"
+          "yearly-summary-title",
         );
         const yearlySummaryTable = document.getElementById(
-          "yearly-summary-table"
+          "yearly-summary-table",
         );
         const footerSummary = document.getElementById("footer-summary");
 
@@ -1461,7 +1664,7 @@
         let transactions = []; // This is now a cache of the DB data
         window.transactions = transactions; // Make it globally accessible for the keyword feature
         const EXPENSE_CATEGORIES = Array.from(categorySelect.options).map(
-          (opt) => opt.value
+          (opt) => opt.value,
         );
         let db; // To hold the IndexedDB connection
 
@@ -1530,13 +1733,17 @@
         // --- Initialization ---
         const CATEGORY_RENAMES = {
           "General Transport Cost": "Transport Cost",
-          "Lend, Donate & Gifts": "Lend, Donate & Gift"
+          "Lend, Donate & Gifts": "Lend, Donate & Gift",
         };
 
         const migrateCategories = async () => {
-          const toMigrate = transactions.filter(t => CATEGORY_RENAMES[t.category]);
+          const toMigrate = transactions.filter(
+            (t) => CATEGORY_RENAMES[t.category],
+          );
           if (toMigrate.length === 0) return;
-          console.log(`Migrating ${toMigrate.length} transaction(s) to updated category names...`);
+          console.log(
+            `Migrating ${toMigrate.length} transaction(s) to updated category names...`,
+          );
           for (const tx of toMigrate) {
             tx.category = CATEGORY_RENAMES[tx.category];
             // Update in IndexedDB: delete old + re-add with new category
@@ -1560,11 +1767,13 @@
               try {
                 window.setSyncStatus("☁️ Loading data from Google Sheets...");
                 const sheetsData = await fetchFromSheets();
-                const localData  = await getAllTransactions();
+                const localData = await getAllTransactions();
 
                 if (sheetsData.length === 0 && localData.length > 0) {
                   // First-time setup: migrate existing local data → Sheets
-                  window.setSyncStatus("📤 Migrating local data to Google Sheets...");
+                  window.setSyncStatus(
+                    "📤 Migrating local data to Google Sheets...",
+                  );
                   await bulkSyncToSheets(localData);
                   window.transactions = transactions = localData;
                 } else {
@@ -1577,9 +1786,14 @@
                   window.transactions = transactions = sheetsData;
                 }
               } catch (sheetsErr) {
-                console.warn("Sheets sync failed on load, using local cache:", sheetsErr);
-                window.setSyncStatus("⚠️ Sheets unavailable — using local data...");
-                await new Promise(r => setTimeout(r, 1500));
+                console.warn(
+                  "Sheets sync failed on load, using local cache:",
+                  sheetsErr,
+                );
+                window.setSyncStatus(
+                  "⚠️ Sheets unavailable — using local data...",
+                );
+                await new Promise((r) => setTimeout(r, 1500));
                 window.transactions = transactions = await getAllTransactions();
               }
             } else {
@@ -1598,38 +1812,61 @@
           transactionForm.addEventListener("submit", handleFormSubmit);
           entriesContainer.addEventListener("click", handleEntryAction);
 
-          exportMonthlyBtn.addEventListener("click", () => openExportModal("monthly"));
-          exportYearlyBtn.addEventListener("click", () => openExportModal("yearly"));
-          document.getElementById("export-custom-range-btn").addEventListener("click", () => openExportModal("custom"));
-          document.getElementById("export-modal-close-btn").addEventListener("click", closeExportModal);
-          document.getElementById("export-modal-overlay").addEventListener("click", (e) => {
-            if (e.target.id === "export-modal-overlay") closeExportModal();
-          });
-          document.getElementById("modal-download-btn").addEventListener("click", handleModalDownload);
-          document.querySelectorAll('input[name="custom-range-type"]').forEach((radio) => {
-            radio.addEventListener("change", updateCustomRangeInputs);
-          });
+          exportMonthlyBtn.addEventListener("click", () =>
+            openExportModal("monthly"),
+          );
+          exportYearlyBtn.addEventListener("click", () =>
+            openExportModal("yearly"),
+          );
+          document
+            .getElementById("export-custom-range-btn")
+            .addEventListener("click", () => openExportModal("custom"));
+          document
+            .getElementById("export-modal-close-btn")
+            .addEventListener("click", closeExportModal);
+          document
+            .getElementById("export-modal-overlay")
+            .addEventListener("click", (e) => {
+              if (e.target.id === "export-modal-overlay") closeExportModal();
+            });
+          document
+            .getElementById("modal-download-btn")
+            .addEventListener("click", handleModalDownload);
+          document
+            .querySelectorAll('input[name="custom-range-type"]')
+            .forEach((radio) => {
+              radio.addEventListener("change", updateCustomRangeInputs);
+            });
           importBtn.addEventListener("click", () => fileImporter.click());
           fileImporter.addEventListener("change", handleImport);
           exportBtn.addEventListener("click", handleExport);
-          document.getElementById("loans-full-details-btn").addEventListener("click", () => {
-            const allLoans = getAllLoansWithRepayments();
-            if (allLoans.length === 0) { alert("No loan records found."); return; }
-            let bodyHtml = "";
-            allLoans.forEach(l => {
-              const totalRepaid = l.repayments.reduce((s, r) => s + r.amount, 0);
-              const remaining = l.amount - totalRepaid;
-              const status = remaining <= 0 ? "Done" : "Active";
-              const statusColor = status === "Done" ? "#28a745" : "#dc3545";
-              bodyHtml += `<div style="border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:20px;">
+          document
+            .getElementById("loans-full-details-btn")
+            .addEventListener("click", () => {
+              const allLoans = getAllLoansWithRepayments();
+              if (allLoans.length === 0) {
+                alert("No loan records found.");
+                return;
+              }
+              let bodyHtml = "";
+              allLoans.forEach((l) => {
+                const totalRepaid = l.repayments.reduce(
+                  (s, r) => s + r.amount,
+                  0,
+                );
+                const remaining = l.amount - totalRepaid;
+                const status = remaining <= 0 ? "Done" : "Active";
+                const statusColor = status === "Done" ? "#28a745" : "#dc3545";
+                bodyHtml += `<div style="border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:20px;">
                 <h3 style="margin:0 0 10px;">${l.loanPerson} <span style="color:${statusColor};font-size:0.85em;">[${status}]</span></h3>
                 <p>Loan Date: ${l.date} &nbsp;|&nbsp; Total Loan: ${formatToIndianCurrency(l.amount)}</p>
                 <p>Total Repaid: ${formatToIndianCurrency(totalRepaid)} &nbsp;|&nbsp; Remaining: ${formatToIndianCurrency(Math.max(0, remaining))}</p>
-                ${l.repayments.length > 0 ? `<h4>Repayments:</h4><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="text-align:left;padding:6px;border-bottom:1px solid #ddd;">Date</th><th style="text-align:right;padding:6px;border-bottom:1px solid #ddd;">Amount</th></tr></thead><tbody>${l.repayments.map(r => `<tr><td style="padding:6px;">${r.date}</td><td style="text-align:right;padding:6px;">${formatToIndianCurrency(r.amount)}</td></tr>`).join('')}</tbody></table>` : '<p>No repayments yet.</p>'}
+                ${l.repayments.length > 0 ? `<h4>Repayments:</h4><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="text-align:left;padding:6px;border-bottom:1px solid #ddd;">Date</th><th style="text-align:right;padding:6px;border-bottom:1px solid #ddd;">Amount</th></tr></thead><tbody>${l.repayments.map((r) => `<tr><td style="padding:6px;">${r.date}</td><td style="text-align:right;padding:6px;">${formatToIndianCurrency(r.amount)}</td></tr>`).join("")}</tbody></table>` : "<p>No repayments yet.</p>"}
               </div>`;
-            });
-            const win = window.open("", "_blank");
-            win.document.write(`<!DOCTYPE html><html><head><title>Loan Full Report</title><style>
+              });
+              const win = window.open("", "_blank");
+              win.document
+                .write(`<!DOCTYPE html><html><head><title>Loan Full Report</title><style>
               body{font-family:sans-serif;max-width:900px;margin:0 auto;padding:20px;line-height:1.6;}
               h1{color:#333;border-bottom:2px solid #4a90e2;padding-bottom:10px;}
               h3{color:#333;margin:0 0 8px;}h4{color:#555;margin:8px 0 4px;}
@@ -1643,8 +1880,8 @@
             </style></head><body>
             <div class="no-print"><button onclick="window.print()" style="padding:10px 28px;font-size:15px;background:#4a90e2;color:#fff;border:none;border-radius:6px;cursor:pointer;">🖨 Print / Save as PDF</button></div>
             <h1>Loan &amp; Repayment Records</h1>${bodyHtml}</body></html>`);
-            win.document.close();
-          });
+              win.document.close();
+            });
 
           await migrateCategories();
           renderCalculator();
@@ -1654,7 +1891,9 @@
 
         // --- Core Rendering Functions ---
         const updateLoanRepaymentVisibility = () => {
-          const opt = categorySelect.querySelector('option[value="Loan repayment"]');
+          const opt = categorySelect.querySelector(
+            'option[value="Loan repayment"]',
+          );
           if (!opt) return;
           const hasActive = getActiveLoans().length > 0;
           opt.disabled = !hasActive;
@@ -1679,22 +1918,34 @@
           if (!container) return;
           const allLoans = [];
           const loans = {};
-          transactions.filter(t => t.type === "income" && t.details[0]?.isLoan).forEach(t => {
-            const d = t.details[0];
-            loans[t.id] = { id: t.id, loanPerson: d.title, amount: t.total, date: t.date, repaid: 0 };
-          });
-          transactions.filter(t => t.category === "Loan repayment").forEach(t => {
-            const d = t.details[0];
-            if (d?.loanId && loans[d.loanId]) loans[d.loanId].repaid += d.amount;
-          });
-          const loanList = Object.values(loans).map(l => {
+          transactions
+            .filter((t) => t.type === "income" && t.details[0]?.isLoan)
+            .forEach((t) => {
+              const d = t.details[0];
+              loans[t.id] = {
+                id: t.id,
+                loanPerson: d.title,
+                amount: t.total,
+                date: t.date,
+                repaid: 0,
+              };
+            });
+          transactions
+            .filter((t) => t.category === "Loan repayment")
+            .forEach((t) => {
+              const d = t.details[0];
+              if (d?.loanId && loans[d.loanId])
+                loans[d.loanId].repaid += d.amount;
+            });
+          const loanList = Object.values(loans).map((l) => {
             l.remaining = l.amount - l.repaid;
             l.status = l.remaining <= 0 ? "Done" : "Active";
             return l;
           });
-          const activeLoansOnly = loanList.filter(l => l.status === "Active");
+          const activeLoansOnly = loanList.filter((l) => l.status === "Active");
           if (activeLoansOnly.length === 0) {
-            container.innerHTML = "<p style='color:var(--light-text);text-align:center;'>No active loans.</p>";
+            container.innerHTML =
+              "<p style='color:var(--light-text);text-align:center;'>No active loans.</p>";
             return;
           }
           let html = `<table class="summary-table" style="width:100%;"><thead><tr>
@@ -1704,7 +1955,7 @@
             <th style="text-align:right;">Repaid</th>
             <th style="text-align:right;">Remaining</th>
           </tr></thead><tbody>`;
-          activeLoansOnly.forEach(l => {
+          activeLoansOnly.forEach((l) => {
             html += `<tr>
               <td>${l.loanPerson}</td>
               <td>${l.date}</td>
@@ -1720,7 +1971,7 @@
           const e = transactionTypeSelect.value,
             t = categorySelect.value;
           let n;
-          (categoryGroup.style.display = "expense" === e ? "flex" : "none"),
+          ((categoryGroup.style.display = "expense" === e ? "flex" : "none"),
             (n =
               "income" === e
                 ? '\n                    <h4>Income Details</h4>\n                    <div style="margin-bottom:10px;">\n                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">\n                            <input type="checkbox" id="income-is-loan" class="income-is-loan-cb">\n                            <span>This is a Loan</span>\n                        </label>\n                    </div>\n                    <div class="item-row grid-income">\n                         <input type="text" placeholder="Income from (title)" class="item-title" required>\n                         <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                    </div>'
@@ -1775,10 +2026,16 @@
                       case "Loan repayment": {
                         const activeLoans = getActiveLoans();
                         if (activeLoans.length > 0) {
-                          const opts = activeLoans.map(l => `<option value="${l.id}">${l.loanPerson} (remaining: ${l.remaining.toFixed(2)})</option>`).join('');
+                          const opts = activeLoans
+                            .map(
+                              (l) =>
+                                `<option value="${l.id}">${l.loanPerson} (remaining: ${l.remaining.toFixed(2)})</option>`,
+                            )
+                            .join("");
                           n += `<div class="item-row grid-loan"><select class="item-loan-select" style="flex:1;padding:10px;border:1px solid var(--border-color);border-radius:4px;">${opts}</select><input type="number" step="0.01" placeholder="Amount" class="item-amount" required></div>`;
                         } else {
-                          n += '<div class="item-row grid-loan">\n                                    <input type="text" placeholder="Paying whom (name)" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                </div>';
+                          n +=
+                            '<div class="item-row grid-loan">\n                                    <input type="text" placeholder="Paying whom (name)" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                </div>';
                         }
                         break;
                       }
@@ -1809,12 +2066,12 @@
                   })(),
                   n)),
             (calculatorContainer.innerHTML = n),
-            attachDynamicHandlers();
+            attachDynamicHandlers());
         };
         const renderEntries = (year, month) => {
             currentMonthHeader.textContent = `${new Date(
               year,
-              month
+              month,
             ).toLocaleString("en-US", { month: "long", year: "numeric" })}`;
 
             if (transactions.length === 0) {
@@ -1854,7 +2111,7 @@
               const totalHtml =
                 dailyTotalExpense > 0
                   ? `<span class="daily-total">Expense: -${formatToIndianCurrency(
-                      dailyTotalExpense
+                      dailyTotalExpense,
                     )} BDT</span>`
                   : "";
 
@@ -1878,7 +2135,7 @@
                                 } ${formatToIndianCurrency(t.total)} BDT</span>
                             </div>
                             <div class="entry-details">${formatEntryDetails(
-                              t
+                              t,
                             )}</div>
                             <button class="edit-btn" title="Edit Entry">Edit</button>
                         </div>`;
@@ -1890,18 +2147,18 @@
           renderSummaries = (e, t) => {
             monthlySummaryTitle.textContent = `Summary for ${new Date(
               e,
-              t
+              t,
             ).toLocaleString("en-US", { month: "long", year: "numeric" })}`;
             const n = getSummaryData(
               transactions.filter((n) => {
                 const o = new Date(n.date);
                 return o.getFullYear() === e && o.getMonth() === t;
-              })
+              }),
             );
-            (monthlySummaryTable.innerHTML = generateSummaryTableHTML(n)),
-              (yearlySummaryTitle.textContent = `Summary for ${e}`);
+            ((monthlySummaryTable.innerHTML = generateSummaryTableHTML(n)),
+              (yearlySummaryTitle.textContent = `Summary for ${e}`));
             const o = getSummaryData(
-              transactions.filter((t) => new Date(t.date).getFullYear() === e)
+              transactions.filter((t) => new Date(t.date).getFullYear() === e),
             );
             yearlySummaryTable.innerHTML = generateSummaryTableHTML(o);
           },
@@ -1924,15 +2181,15 @@
                   .reduce((e, t) => e + t.total, 0),
                 c = `<p>\n                    <strong>${o.toLocaleString(
                   "en-US",
-                  { month: "short", year: "2-digit" }
+                  { month: "short", year: "2-digit" },
                 )}:</strong> \n                    <span>\n                        <span class="income-amount">${new Intl.NumberFormat(
-                  "en-IN"
+                  "en-IN",
                 ).format(
-                  l.toFixed(0)
+                  l.toFixed(0),
                 )}</span> | \n                        <span class="expense-amount">${new Intl.NumberFormat(
-                  "en-IN"
+                  "en-IN",
                 ).format(
-                  s.toFixed(0)
+                  s.toFixed(0),
                 )}</span>\n                    </span>\n                   </p>`;
               n < 4 ? t[0].push(c) : n < 8 ? t[1].push(c) : t[2].push(c);
             }
@@ -1942,7 +2199,7 @@
               o += `<div class="footer-column">\n                            <h4>${
                 n[e]
               }</h4>\n                            ${t[e].join(
-                ""
+                "",
               )}\n                         </div>`;
             footerSummary.innerHTML = o;
           };
@@ -1964,9 +2221,10 @@
             const title =
               calculatorContainer.querySelector(".item-title").value;
             const amount = parseFloat(
-              calculatorContainer.querySelector(".item-amount").value
+              calculatorContainer.querySelector(".item-amount").value,
             );
-            const isLoan = document.getElementById("income-is-loan")?.checked || false;
+            const isLoan =
+              document.getElementById("income-is-loan")?.checked || false;
             newTransaction.details.push({ title, amount, isLoan });
             newTransaction.total = amount;
           } else {
@@ -1999,7 +2257,7 @@
           if (e.target.classList.contains("delete-btn")) {
             if (
               confirm(
-                "Are you sure you want to delete this entry? This action is permanent."
+                "Are you sure you want to delete this entry? This action is permanent.",
               )
             ) {
               const entryEl = e.target.closest(".entry");
@@ -2007,7 +2265,7 @@
               try {
                 await deleteTransaction(id);
                 window.transactions = transactions = transactions.filter(
-                  (t) => t.id !== id
+                  (t) => t.id !== id,
                 );
                 syncToSheets("delete", { id }); // fire-and-forget to Sheets
                 renderApp();
@@ -2016,7 +2274,7 @@
               } catch (error) {
                 console.error("Failed to delete transaction:", error);
                 alert(
-                  "Error: Could not delete the transaction from the database."
+                  "Error: Could not delete the transaction from the database.",
                 );
               }
             }
@@ -2052,7 +2310,7 @@
             try {
               await deleteTransaction(id);
               window.transactions = transactions = transactions.filter(
-                (t) => t.id !== id
+                (t) => t.id !== id,
               );
               syncToSheets("delete", { id }); // fire-and-forget to Sheets (new version synced on submit)
               // Re-render immediately to show the item has been removed and is now being edited
@@ -2071,24 +2329,29 @@
             n = Array.from(calculatorContainer.querySelectorAll(".item-row"));
           switch (e) {
             case "Medicines":
-              Array.from(calculatorContainer.querySelectorAll(".items-list .item-row")).forEach((e) => {
+              Array.from(
+                calculatorContainer.querySelectorAll(".items-list .item-row"),
+              ).forEach((e) => {
                 const n = e.querySelector(".item-title").value,
                   o = parseFloat(e.querySelector(".item-price").value),
                   r = parseFloat(e.querySelector(".item-quantity").value),
                   a = parseFloat(e.querySelector(".item-discount").value),
                   i = o * r * (1 - a / 100);
-                t.details.push({
+                (t.details.push({
                   title: n,
                   price: o,
                   quantity: r,
                   discount: a,
                   itemTotal: i,
                 }),
-                  (t.total += i);
+                  (t.total += i));
               });
               {
-                const roundingEl = calculatorContainer.querySelector(".medicine-rounding");
-                const rounding = roundingEl ? (parseFloat(roundingEl.value) || 0) : 0;
+                const roundingEl =
+                  calculatorContainer.querySelector(".medicine-rounding");
+                const rounding = roundingEl
+                  ? parseFloat(roundingEl.value) || 0
+                  : 0;
                 if (rounding !== 0) {
                   t.total += rounding;
                   t.details.push({ type: "Rounding", amount: rounding });
@@ -2106,7 +2369,7 @@
                   a = parseFloat(e.querySelector(".item-quantity").value),
                   i = parseFloat(e.querySelector(".item-discount").value),
                   s = r * a - i;
-                t.details.push({
+                (t.details.push({
                   title: n,
                   type: o,
                   price: r,
@@ -2114,7 +2377,7 @@
                   discount: i,
                   itemTotal: s,
                 }),
-                  (t.total += s);
+                  (t.total += s));
               });
               break;
             case "Doctors fee & Medical Test":
@@ -2123,19 +2386,19 @@
                 r = calculatorContainer.querySelector(".doctor-name").value,
                 a = calculatorContainer.querySelector(".doctor-type").value,
                 i = parseFloat(
-                  calculatorContainer.querySelector(".doctor-fee").value
+                  calculatorContainer.querySelector(".doctor-fee").value,
                 );
-              t.details.push({
+              (t.details.push({
                 type: "Doctor Fee",
                 patientName: o,
                 doctorName: r,
                 doctorType: a,
                 fee: i,
               }),
-                (t.total += i);
+                (t.total += i));
               let s = 0;
               const l = calculatorContainer.querySelectorAll(
-                  ".items-list .item-row"
+                  ".items-list .item-row",
                 ),
                 c = [];
               l.forEach((e) => {
@@ -2145,17 +2408,17 @@
               });
               const d = parseFloat(
                   calculatorContainer.querySelector(".total-test-discount")
-                    .value
+                    .value,
                 ),
                 u = s - d;
-              t.details.push({
+              (t.details.push({
                 type: "Medical Tests",
                 items: c,
                 testsTotal: s,
                 testDiscount: d,
                 payableTests: u,
               }),
-                (t.total += u);
+                (t.total += u));
               break;
             case "Shopping":
             case "Personal Snacks":
@@ -2165,13 +2428,13 @@
                   o = parseFloat(e.querySelector(".item-price").value),
                   r = parseFloat(e.querySelector(".item-quantity").value),
                   a = o * r;
-                t.details.push({
+                (t.details.push({
                   title: n,
                   price: o,
                   quantity: r,
                   itemTotal: a,
                 }),
-                  (t.total += a);
+                  (t.total += a));
               });
               break;
             case "Transport Cost":
@@ -2180,10 +2443,18 @@
                   from = e.querySelector(".item-from").value,
                   to = e.querySelector(".item-to").value,
                   fare = parseFloat(e.querySelector(".item-fare").value),
-                  qty = parseFloat(e.querySelector(".item-quantity").value) || 1,
+                  qty =
+                    parseFloat(e.querySelector(".item-quantity").value) || 1,
                   itemTotal = fare * qty;
-                t.details.push({ vehicle, from, to, fare, quantity: qty, itemTotal }),
-                  (t.total += itemTotal);
+                (t.details.push({
+                  vehicle,
+                  from,
+                  to,
+                  fare,
+                  quantity: qty,
+                  itemTotal,
+                }),
+                  (t.total += itemTotal));
               });
               break;
             case "Tour & Hangouts":
@@ -2193,56 +2464,56 @@
                   r = parseFloat(e.querySelector(".item-price").value),
                   a = parseFloat(e.querySelector(".item-quantity").value),
                   i = r * a;
-                t.details.push({
+                (t.details.push({
                   type: n,
                   title: o,
                   price: r,
                   quantity: a,
                   itemTotal: i,
                 }),
-                  (t.total += i);
+                  (t.total += i));
               });
               break;
             case "Home Rent":
               const m = n[0].querySelector(".item-title").value,
                 p = parseFloat(n[0].querySelector(".item-rent").value),
                 y = parseFloat(n[0].querySelector(".item-months").value);
-              (t.total = p * y),
+              ((t.total = p * y),
                 t.details.push({
                   title: m,
                   rent: p,
                   months: y,
                   total: t.total,
-                });
+                }));
               break;
             case "Gas & Electricity bills":
               "gas" === document.getElementById("bill-type-select").value
                 ? (() => {
                     const e = parseFloat(
-                        n[0].querySelector(".item-price").value
+                        n[0].querySelector(".item-price").value,
                       ),
                       o = parseFloat(
-                        n[0].querySelector(".item-quantity").value
+                        n[0].querySelector(".item-quantity").value,
                       ),
                       r = parseFloat(n[0].querySelector(".item-labour").value);
-                    (t.total = e * o + r),
+                    ((t.total = e * o + r),
                       t.details.push({
                         type: "Gas",
                         price: e,
                         quantity: o,
                         labour: r,
                         total: t.total,
-                      });
+                      }));
                   })()
                 : (() => {
                     const e = n[0].querySelector(".item-title").value,
                       o = parseFloat(n[0].querySelector(".item-amount").value);
-                    (t.total = o),
+                    ((t.total = o),
                       t.details.push({
                         type: "Electricity",
                         title: e,
                         amount: o,
-                      });
+                      }));
                   })();
               break;
             case "Phone and WIFI bills":
@@ -2251,31 +2522,31 @@
                     const e = n[0].querySelector(".item-title").value,
                       o = parseFloat(n[0].querySelector(".item-price").value),
                       r = parseFloat(
-                        n[0].querySelector(".item-quantity").value
+                        n[0].querySelector(".item-quantity").value,
                       );
-                    (t.total = o * r),
+                    ((t.total = o * r),
                       t.details.push({
                         type: "WIFI",
                         title: e,
                         price: o,
                         quantity: r,
                         total: t.total,
-                      });
+                      }));
                   })()
                 : (() => {
                     const e = n[0].querySelector(".item-number").value,
                       o = parseFloat(n[0].querySelector(".item-price").value),
                       r = parseFloat(
-                        n[0].querySelector(".item-discount").value
+                        n[0].querySelector(".item-discount").value,
                       );
-                    (t.total = o - r),
+                    ((t.total = o - r),
                       t.details.push({
                         type: "Phone",
                         number: e,
                         amount: o,
                         discount: r,
                         total: t.total,
-                      });
+                      }));
                   })();
               break;
             case "Lend, Donate & Gift":
@@ -2283,39 +2554,49 @@
                 ? (() => {
                     const e = n[0].querySelector(".item-person").value,
                       o = parseFloat(n[0].querySelector(".item-amount").value);
-                    (t.total = o),
-                      t.details.push({ type: "Lend", person: e, amount: o });
+                    ((t.total = o),
+                      t.details.push({ type: "Lend", person: e, amount: o }));
                   })()
                 : "donate" ===
-                  document.getElementById("lend-gift-type-select").value
-                ? (() => {
-                    const e = n[0].querySelector(".item-person").value,
-                      o = parseFloat(n[0].querySelector(".item-amount").value);
-                    (t.total = o),
-                      t.details.push({ type: "Donate", person: e, amount: o });
-                  })()
-                : n.forEach((e) => {
-                    const n = e.querySelector(".item-title").value,
-                      o = parseFloat(e.querySelector(".item-price").value),
-                      r = parseFloat(e.querySelector(".item-quantity").value),
-                      a = o * r;
-                    t.details.push({
-                      type: "Gift",
-                      title: n,
-                      price: o,
-                      quantity: r,
-                      itemTotal: a,
-                    }),
-                      (t.total += a);
-                  });
+                    document.getElementById("lend-gift-type-select").value
+                  ? (() => {
+                      const e = n[0].querySelector(".item-person").value,
+                        o = parseFloat(
+                          n[0].querySelector(".item-amount").value,
+                        );
+                      ((t.total = o),
+                        t.details.push({
+                          type: "Donate",
+                          person: e,
+                          amount: o,
+                        }));
+                    })()
+                  : n.forEach((e) => {
+                      const n = e.querySelector(".item-title").value,
+                        o = parseFloat(e.querySelector(".item-price").value),
+                        r = parseFloat(e.querySelector(".item-quantity").value),
+                        a = o * r;
+                      (t.details.push({
+                        type: "Gift",
+                        title: n,
+                        price: o,
+                        quantity: r,
+                        itemTotal: a,
+                      }),
+                        (t.total += a));
+                    });
               break;
             case "Loan repayment": {
               const loanSelect = n[0].querySelector(".item-loan-select");
               const loanTo = loanSelect
-                ? loanSelect.options[loanSelect.selectedIndex]?.text.split(' (')[0] || ""
-                : (n[0].querySelector(".item-to")?.value || "");
+                ? loanSelect.options[loanSelect.selectedIndex]?.text.split(
+                    " (",
+                  )[0] || ""
+                : n[0].querySelector(".item-to")?.value || "";
               const loanId = loanSelect ? loanSelect.value : null;
-              const repayAmt = parseFloat(n[0].querySelector(".item-amount").value);
+              const repayAmt = parseFloat(
+                n[0].querySelector(".item-amount").value,
+              );
               t.total = repayAmt;
               const repayDetail = { to: loanTo, amount: repayAmt };
               if (loanId) repayDetail.loanId = loanId;
@@ -2324,13 +2605,13 @@
             }
             case "Educational Expense":
               const subType = document.getElementById(
-                "educational-expense-type-select"
+                "educational-expense-type-select",
               ).value;
               if (subType === "academic") {
                 const person = n[0].querySelector(".item-person").value;
                 const feeType = n[0].querySelector(".item-fee-type").value;
                 const amount = parseFloat(
-                  n[0].querySelector(".item-amount").value
+                  n[0].querySelector(".item-amount").value,
                 );
                 t.total = amount;
                 t.details.push({
@@ -2344,13 +2625,13 @@
                 n.forEach((row) => {
                   const title = row.querySelector(".item-title").value;
                   const price = parseFloat(
-                    row.querySelector(".item-price").value
+                    row.querySelector(".item-price").value,
                   );
                   const quantity = parseFloat(
-                    row.querySelector(".item-quantity").value
+                    row.querySelector(".item-quantity").value,
                   );
                   const discount = parseFloat(
-                    row.querySelector(".item-discount").value
+                    row.querySelector(".item-discount").value,
                   );
                   const itemTotal = price * quantity - discount;
                   t.details.push({
@@ -2366,34 +2647,56 @@
               }
               break;
             case "Gardening":
-              Array.from(calculatorContainer.querySelectorAll(".items-list .item-row")).forEach((e) => {
+              Array.from(
+                calculatorContainer.querySelectorAll(".items-list .item-row"),
+              ).forEach((e) => {
                 const title = e.querySelector(".item-title").value,
                   price = parseFloat(e.querySelector(".item-price").value),
-                  qty = parseFloat(e.querySelector(".item-quantity").value) || 1,
+                  qty =
+                    parseFloat(e.querySelector(".item-quantity").value) || 1,
                   itemTotal = price * qty;
                 t.details.push({ title, price, quantity: qty, itemTotal });
                 t.total += itemTotal;
               });
               {
-                const discEl = calculatorContainer.querySelector(".total-flat-discount");
-                const disc = discEl ? (parseFloat(discEl.value) || 0) : 0;
-                if (disc > 0) { t.total -= disc; t.details.push({ type: "Flat Discount", discount: disc }); }
+                const discEl = calculatorContainer.querySelector(
+                  ".total-flat-discount",
+                );
+                const disc = discEl ? parseFloat(discEl.value) || 0 : 0;
+                if (disc > 0) {
+                  t.total -= disc;
+                  t.details.push({ type: "Flat Discount", discount: disc });
+                }
               }
               break;
             case "Sweets and Bakery":
-              Array.from(calculatorContainer.querySelectorAll(".items-list .item-row")).forEach((e) => {
+              Array.from(
+                calculatorContainer.querySelectorAll(".items-list .item-row"),
+              ).forEach((e) => {
                 const title = e.querySelector(".item-title").value,
                   unit = e.querySelector(".item-unit-select")?.value || "item",
                   price = parseFloat(e.querySelector(".item-price").value),
-                  qty = parseFloat(e.querySelector(".item-quantity").value) || 1,
+                  qty =
+                    parseFloat(e.querySelector(".item-quantity").value) || 1,
                   itemTotal = price * qty;
-                t.details.push({ title, unit, price, quantity: qty, itemTotal });
+                t.details.push({
+                  title,
+                  unit,
+                  price,
+                  quantity: qty,
+                  itemTotal,
+                });
                 t.total += itemTotal;
               });
               {
-                const discEl = calculatorContainer.querySelector(".total-flat-discount");
-                const disc = discEl ? (parseFloat(discEl.value) || 0) : 0;
-                if (disc > 0) { t.total -= disc; t.details.push({ type: "Flat Discount", discount: disc }); }
+                const discEl = calculatorContainer.querySelector(
+                  ".total-flat-discount",
+                );
+                const disc = discEl ? parseFloat(discEl.value) || 0 : 0;
+                if (disc > 0) {
+                  t.total -= disc;
+                  t.details.push({ type: "Flat Discount", discount: disc });
+                }
               }
               break;
             case "Others Subscription":
@@ -2410,7 +2713,7 @@
               n.forEach((e) => {
                 const n = e.querySelector(".item-title").value,
                   o = parseFloat(e.querySelector(".item-amount").value);
-                t.details.push({ title: n, amount: o }), (t.total += o);
+                (t.details.push({ title: n, amount: o }), (t.total += o));
               });
           }
           return t;
@@ -2477,7 +2780,7 @@
             case "Doctors fee & Medical Test": {
               const feeDetail = details.find((d) => d.type === "Doctor Fee");
               const testDetail = details.find(
-                (d) => d.type === "Medical Tests"
+                (d) => d.type === "Medical Tests",
               );
               if (feeDetail) {
                 calculatorContainer.querySelector(".patient-name").value =
@@ -2495,22 +2798,30 @@
                   row.querySelector(".item-price").value = detail.price;
                 });
                 calculatorContainer.querySelector(
-                  ".total-test-discount"
+                  ".total-test-discount",
                 ).value = testDetail.testDiscount;
               }
               break;
             }
             case "Medicines":
-              populateList(".items-list", details.filter(d => !d.type), (row, detail) => {
-                row.querySelector(".item-title").value = detail.title;
-                row.querySelector(".item-price").value = detail.price;
-                row.querySelector(".item-quantity").value = detail.quantity;
-                row.querySelector(".item-discount").value = detail.discount;
-              });
+              populateList(
+                ".items-list",
+                details.filter((d) => !d.type),
+                (row, detail) => {
+                  row.querySelector(".item-title").value = detail.title;
+                  row.querySelector(".item-price").value = detail.price;
+                  row.querySelector(".item-quantity").value = detail.quantity;
+                  row.querySelector(".item-discount").value = detail.discount;
+                },
+              );
               {
-                const roundingDetail = details.find(d => d.type === "Rounding");
-                const roundEl = calculatorContainer.querySelector(".medicine-rounding");
-                if (roundEl && roundingDetail) roundEl.value = roundingDetail.amount;
+                const roundingDetail = details.find(
+                  (d) => d.type === "Rounding",
+                );
+                const roundEl =
+                  calculatorContainer.querySelector(".medicine-rounding");
+                if (roundEl && roundingDetail)
+                  roundEl.value = roundingDetail.amount;
               }
               break;
             case "Shopping":
@@ -2528,7 +2839,9 @@
                 row.querySelector(".item-from").value = detail.from;
                 row.querySelector(".item-to").value = detail.to;
                 row.querySelector(".item-fare").value = detail.fare;
-                if (row.querySelector(".item-quantity")) row.querySelector(".item-quantity").value = detail.quantity || 1;
+                if (row.querySelector(".item-quantity"))
+                  row.querySelector(".item-quantity").value =
+                    detail.quantity || 1;
               });
               break;
             case "Tour & Hangouts":
@@ -2607,7 +2920,7 @@
                       row.querySelector(".item-price").value = detail.price;
                       row.querySelector(".item-quantity").value =
                         detail.quantity;
-                    }
+                    },
                   );
                 }
               }, 50);
@@ -2629,7 +2942,7 @@
               const detailType = details[0]?.subType;
               if (!detailType) break;
               const select = document.getElementById(
-                "educational-expense-type-select"
+                "educational-expense-type-select",
               );
               select.value =
                 detailType === "Academic" ? "academic" : "educational_goods";
@@ -2653,32 +2966,47 @@
               break;
             }
             case "Gardening": {
-              populateList(".items-list", details.filter(d => !d.type), (row, detail) => {
-                row.querySelector(".item-title").value = detail.title;
-                row.querySelector(".item-price").value = detail.price;
-                row.querySelector(".item-quantity").value = detail.quantity;
-              });
-              const gDisc = details.find(d => d.type === "Flat Discount");
-              const gDiscEl = calculatorContainer.querySelector(".total-flat-discount");
+              populateList(
+                ".items-list",
+                details.filter((d) => !d.type),
+                (row, detail) => {
+                  row.querySelector(".item-title").value = detail.title;
+                  row.querySelector(".item-price").value = detail.price;
+                  row.querySelector(".item-quantity").value = detail.quantity;
+                },
+              );
+              const gDisc = details.find((d) => d.type === "Flat Discount");
+              const gDiscEl = calculatorContainer.querySelector(
+                ".total-flat-discount",
+              );
               if (gDiscEl && gDisc) gDiscEl.value = gDisc.discount;
               break;
             }
             case "Sweets and Bakery": {
-              populateList(".items-list", details.filter(d => !d.type), (row, detail) => {
-                row.querySelector(".item-title").value = detail.title;
-                if (row.querySelector(".item-unit-select")) row.querySelector(".item-unit-select").value = detail.unit || "item";
-                row.querySelector(".item-price").value = detail.price;
-                row.querySelector(".item-quantity").value = detail.quantity;
-              });
-              const sDisc = details.find(d => d.type === "Flat Discount");
-              const sDiscEl = calculatorContainer.querySelector(".total-flat-discount");
+              populateList(
+                ".items-list",
+                details.filter((d) => !d.type),
+                (row, detail) => {
+                  row.querySelector(".item-title").value = detail.title;
+                  if (row.querySelector(".item-unit-select"))
+                    row.querySelector(".item-unit-select").value =
+                      detail.unit || "item";
+                  row.querySelector(".item-price").value = detail.price;
+                  row.querySelector(".item-quantity").value = detail.quantity;
+                },
+              );
+              const sDisc = details.find((d) => d.type === "Flat Discount");
+              const sDiscEl = calculatorContainer.querySelector(
+                ".total-flat-discount",
+              );
               if (sDiscEl && sDisc) sDiscEl.value = sDisc.discount;
               break;
             }
             case "Others Subscription":
               populateList(".items-list", details, (row, detail) => {
                 row.querySelector(".item-title").value = detail.title;
-                if (row.querySelector(".item-month")) row.querySelector(".item-month").value = detail.month;
+                if (row.querySelector(".item-month"))
+                  row.querySelector(".item-month").value = detail.month;
                 row.querySelector(".item-amount").value = detail.amount;
               });
               break;
@@ -2716,7 +3044,8 @@
           const isLoanCb = document.getElementById("income-is-loan");
           if (isLoanCb) {
             isLoanCb.addEventListener("change", () => {
-              const titleInput = calculatorContainer.querySelector(".item-title");
+              const titleInput =
+                calculatorContainer.querySelector(".item-title");
               if (titleInput) {
                 titleInput.placeholder = isLoanCb.checked
                   ? "Person / Organization Name (Lender)"
@@ -2762,7 +3091,7 @@
           }
 
           const lendGiftTypeSelect = document.getElementById(
-            "lend-gift-type-select"
+            "lend-gift-type-select",
           );
           if (lendGiftTypeSelect) {
             const renderLendGiftDetails = () => {
@@ -2812,18 +3141,18 @@
             };
             lendGiftTypeSelect.addEventListener(
               "change",
-              renderLendGiftDetails
+              renderLendGiftDetails,
             );
             renderLendGiftDetails();
           }
 
           const educationalExpenseTypeSelect = document.getElementById(
-            "educational-expense-type-select"
+            "educational-expense-type-select",
           );
           if (educationalExpenseTypeSelect) {
             const renderEducationalExpenseDetails = () => {
               const detailsContainer = document.getElementById(
-                "educational-expense-details"
+                "educational-expense-details",
               );
               let html = "";
               if (educationalExpenseTypeSelect.value === "academic") {
@@ -2871,7 +3200,7 @@
             };
             educationalExpenseTypeSelect.addEventListener(
               "change",
-              renderEducationalExpenseDetails
+              renderEducationalExpenseDetails,
             );
             renderEducationalExpenseDetails();
           }
@@ -2886,121 +3215,151 @@
                 .filter((e) => "expense" === e.type)
                 .reduce((e, t) => e + t.total, 0),
               n = e - t;
-            (currentBalanceEl.textContent = `${formatToIndianCurrency(n)} BDT`),
+            ((currentBalanceEl.textContent = `${formatToIndianCurrency(n)} BDT`),
               (currentBalanceEl.style.color =
-                n >= 0 ? "var(--success-color)" : "var(--danger-color)");
+                n >= 0 ? "var(--success-color)" : "var(--danger-color)"));
           },
           formatEntryDetails = (e) => {
             let t = "<ul>";
             return (
               e.details.forEach((n) => {
                 let o = "";
-                (o =
+                ((o =
                   e.category === "Educational Expense" &&
                   n.subType === "Academic"
                     ? `<li>${n.feeType} for ${
                         n.person
                       }: ${formatToIndianCurrency(n.amount)}</li>`
                     : e.category === "Educational Expense" &&
-                      n.subType === "Educational Good"
-                    ? `<li>${n.title} (x${
-                        n.quantity
-                      }): ${formatToIndianCurrency(n.itemTotal)}</li>`
-                    : n.title && n.amount
-                    ? `<li>${n.title}: ${formatToIndianCurrency(n.amount)}</li>`
-                    : n.title && n.itemTotal
-                    ? `<li>${n.title} (x${
-                        n.quantity || 1
-                      }): ${formatToIndianCurrency(n.itemTotal)}</li>`
-                    : n.vehicle
-                    ? `<li>${n.vehicle} (${n.from} → ${n.to}) x${n.quantity||1}: ${formatToIndianCurrency(n.itemTotal || n.fare)}</li>`
-                    : "Doctor Fee" === n.type
-                    ? `<li>Doctor Fee (${
-                        n.doctorName
-                      }): ${formatToIndianCurrency(n.fee)}</li>`
-                    : "Medical Tests" === n.type
-                    ? `<li>Tests: ${formatToIndianCurrency(
-                        n.payableTests
-                      )} (Total: ${n.testsTotal} - Discount: ${
-                        n.testDiscount
-                      })</li>`
-                    : "Tour & Hangouts" === e.category && n.itemTotal
-                    ? `<li>${n.type}: ${n.title} (x${
-                        n.quantity
-                      }) - ${formatToIndianCurrency(n.itemTotal)}</li>`
-                    : "Home Rent" === e.category && n.total
-                    ? `<li>${n.title} (x${n.months}): ${formatToIndianCurrency(
-                        n.total
-                      )}</li>`
-                    : "Gas & Electricity bills" === e.category &&
-                      n.type === "Gas"
-                    ? `<li>Gas Bill (x${n.quantity}): ${formatToIndianCurrency(
-                        n.total
-                      )}</li>`
-                    : "Gas & Electricity bills" === e.category &&
-                      n.type === "Electricity"
-                    ? `<li>${n.title}: ${formatToIndianCurrency(n.amount)}</li>`
-                    : "Phone and WIFI bills" === e.category && n.type === "WIFI"
-                    ? `<li>${n.title} (x${
-                        n.quantity
-                      }): ${formatToIndianCurrency(n.total)}</li>`
-                    : "Phone and WIFI bills" === e.category &&
-                      n.type === "Phone"
-                    ? `<li>Phone Recharge (${n.number}): ${formatToIndianCurrency(
-                        n.total
-                      )}</li>`
-                    : n.to && n.amount
-                    ? `<li>Paid to ${n.to}: ${formatToIndianCurrency(
-                        n.amount
-                      )}</li>`
-                    : "Lend" === n.type
-                    ? `<li>Lent to ${n.person}: ${formatToIndianCurrency(
-                        n.amount
-                      )}</li>`
-                    : "Donate" === n.type
-                    ? `<li>Donated to ${n.person}: ${formatToIndianCurrency(
-                        n.amount
-                      )}</li>`
-                    : n.type === "Flat Discount"
-                    ? `<li>Flat Discount: -${formatToIndianCurrency(n.discount)}</li>`
-                    : n.type === "Rounding"
-                    ? `<li>Rounding: ${n.amount >= 0 ? '+' : ''}${formatToIndianCurrency(n.amount)}</li>`
-                    : n.month
-                    ? `<li>${n.title} (${n.month}): ${formatToIndianCurrency(n.amount)}</li>`
-                    : n.unit
-                    ? `<li>${n.title} (${n.unit}) x${n.quantity}: ${formatToIndianCurrency(n.itemTotal)}</li>`
-                    : `<li>${JSON.stringify(n)}</li>`),
-                  (t += o);
+                        n.subType === "Educational Good"
+                      ? `<li>${n.title} (x${
+                          n.quantity
+                        }): ${formatToIndianCurrency(n.itemTotal)}</li>`
+                      : n.title && n.amount
+                        ? `<li>${n.title}: ${formatToIndianCurrency(n.amount)}</li>`
+                        : n.title && n.itemTotal
+                          ? `<li>${n.title} (x${
+                              n.quantity || 1
+                            }): ${formatToIndianCurrency(n.itemTotal)}</li>`
+                          : n.vehicle
+                            ? `<li>${n.vehicle} (${n.from} → ${n.to}) x${n.quantity || 1}: ${formatToIndianCurrency(n.itemTotal || n.fare)}</li>`
+                            : "Doctor Fee" === n.type
+                              ? `<li>Doctor Fee (${
+                                  n.doctorName
+                                }): ${formatToIndianCurrency(n.fee)}</li>`
+                              : "Medical Tests" === n.type
+                                ? `<li>Tests: ${formatToIndianCurrency(
+                                    n.payableTests,
+                                  )} (Total: ${n.testsTotal} - Discount: ${
+                                    n.testDiscount
+                                  })</li>`
+                                : "Tour & Hangouts" === e.category &&
+                                    n.itemTotal
+                                  ? `<li>${n.type}: ${n.title} (x${
+                                      n.quantity
+                                    }) - ${formatToIndianCurrency(n.itemTotal)}</li>`
+                                  : "Home Rent" === e.category && n.total
+                                    ? `<li>${n.title} (x${n.months}): ${formatToIndianCurrency(
+                                        n.total,
+                                      )}</li>`
+                                    : "Gas & Electricity bills" ===
+                                          e.category && n.type === "Gas"
+                                      ? `<li>Gas Bill (x${n.quantity}): ${formatToIndianCurrency(
+                                          n.total,
+                                        )}</li>`
+                                      : "Gas & Electricity bills" ===
+                                            e.category &&
+                                          n.type === "Electricity"
+                                        ? `<li>${n.title}: ${formatToIndianCurrency(n.amount)}</li>`
+                                        : "Phone and WIFI bills" ===
+                                              e.category && n.type === "WIFI"
+                                          ? `<li>${n.title} (x${
+                                              n.quantity
+                                            }): ${formatToIndianCurrency(n.total)}</li>`
+                                          : "Phone and WIFI bills" ===
+                                                e.category && n.type === "Phone"
+                                            ? `<li>Phone Recharge (${n.number}): ${formatToIndianCurrency(
+                                                n.total,
+                                              )}</li>`
+                                            : n.to && n.amount
+                                              ? `<li>Paid to ${n.to}: ${formatToIndianCurrency(
+                                                  n.amount,
+                                                )}</li>`
+                                              : "Lend" === n.type
+                                                ? `<li>Lent to ${n.person}: ${formatToIndianCurrency(
+                                                    n.amount,
+                                                  )}</li>`
+                                                : "Donate" === n.type
+                                                  ? `<li>Donated to ${n.person}: ${formatToIndianCurrency(
+                                                      n.amount,
+                                                    )}</li>`
+                                                  : n.type === "Flat Discount"
+                                                    ? `<li>Flat Discount: -${formatToIndianCurrency(n.discount)}</li>`
+                                                    : n.type === "Rounding"
+                                                      ? `<li>Rounding: ${n.amount >= 0 ? "+" : ""}${formatToIndianCurrency(n.amount)}</li>`
+                                                      : n.month
+                                                        ? `<li>${n.title} (${n.month}): ${formatToIndianCurrency(n.amount)}</li>`
+                                                        : n.unit
+                                                          ? `<li>${n.title} (${n.unit}) x${n.quantity}: ${formatToIndianCurrency(n.itemTotal)}</li>`
+                                                          : `<li>${JSON.stringify(n)}</li>`),
+                  (t += o));
               }),
               t + "</ul>"
             );
           },
           getActiveLoans = () => {
             const loans = {};
-            transactions.filter(t => t.type === "income" && t.details[0]?.isLoan).forEach(t => {
-              const d = t.details[0];
-              loans[t.id] = { id: t.id, loanPerson: d.title, amount: t.total, date: t.date, repaid: 0 };
-            });
-            transactions.filter(t => t.category === "Loan repayment").forEach(t => {
-              const d = t.details[0];
-              if (d?.loanId && loans[d.loanId]) loans[d.loanId].repaid += d.amount;
-            });
-            return Object.values(loans).map(l => {
-              l.remaining = l.amount - l.repaid;
-              l.status = l.remaining <= 0 ? "done" : "active";
-              return l;
-            }).filter(l => l.status === "active");
+            transactions
+              .filter((t) => t.type === "income" && t.details[0]?.isLoan)
+              .forEach((t) => {
+                const d = t.details[0];
+                loans[t.id] = {
+                  id: t.id,
+                  loanPerson: d.title,
+                  amount: t.total,
+                  date: t.date,
+                  repaid: 0,
+                };
+              });
+            transactions
+              .filter((t) => t.category === "Loan repayment")
+              .forEach((t) => {
+                const d = t.details[0];
+                if (d?.loanId && loans[d.loanId])
+                  loans[d.loanId].repaid += d.amount;
+              });
+            return Object.values(loans)
+              .map((l) => {
+                l.remaining = l.amount - l.repaid;
+                l.status = l.remaining <= 0 ? "done" : "active";
+                return l;
+              })
+              .filter((l) => l.status === "active");
           },
           getAllLoansWithRepayments = () => {
             const loans = {};
-            transactions.filter(t => t.type === "income" && t.details[0]?.isLoan).forEach(t => {
-              const d = t.details[0];
-              loans[t.id] = { id: t.id, loanPerson: d.title, amount: t.total, date: t.date, repayments: [] };
-            });
-            transactions.filter(t => t.category === "Loan repayment").forEach(t => {
-              const d = t.details[0];
-              if (d?.loanId && loans[d.loanId]) loans[d.loanId].repayments.push({ date: t.date, amount: d.amount });
-            });
+            transactions
+              .filter((t) => t.type === "income" && t.details[0]?.isLoan)
+              .forEach((t) => {
+                const d = t.details[0];
+                loans[t.id] = {
+                  id: t.id,
+                  loanPerson: d.title,
+                  amount: t.total,
+                  date: t.date,
+                  repayments: [],
+                };
+              });
+            transactions
+              .filter((t) => t.category === "Loan repayment")
+              .forEach((t) => {
+                const d = t.details[0];
+                if (d?.loanId && loans[d.loanId])
+                  loans[d.loanId].repayments.push({
+                    date: t.date,
+                    amount: d.amount,
+                  });
+              });
             return Object.values(loans);
           },
           getSummaryData = (e) => {
@@ -3020,21 +3379,21 @@
           },
           generateSummaryTableHTML = (e) => {
             let t = `<tbody>\n                <tr>\n                    <td class="label">♥ Total Income</td>\n                    <td class="amount income">+ ${formatToIndianCurrency(
-              e.income
+              e.income,
             )}</td>\n                </tr>`;
             for (const n in e.categories)
               e.categories[n] > 0 &&
                 (t += `<tr>\n                        <td class="label">→ ${n}</td>\n                        <td class="amount expense">- ${formatToIndianCurrency(
-                  e.categories[n]
+                  e.categories[n],
                 )}</td>\n                     </tr>`);
             const balanceColorStyle =
               e.balance < 0
                 ? `style="color: var(--danger-color);"`
                 : `style="color: var(--primary-color);"`;
             return (t += `<tr class="balance">\n                        <td class="label">Balance</td>\n                        <td class="amount"><span ${balanceColorStyle}>${formatToIndianCurrency(
-              e.balance
+              e.balance,
             )}</span> | <span class="expense">${formatToIndianCurrency(
-              e.expense
+              e.expense,
             )}</span></td>\n                    </tr>\n             </tbody>`);
           };
 
@@ -3048,17 +3407,24 @@
           document.getElementById("modal-custom-group").style.display = "none";
           const today = new Date();
           if (type === "monthly") {
-            document.getElementById("export-modal-title").textContent = "Monthly Report Export";
-            document.getElementById("modal-monthly-group").style.display = "block";
+            document.getElementById("export-modal-title").textContent =
+              "Monthly Report Export";
+            document.getElementById("modal-monthly-group").style.display =
+              "block";
             document.getElementById("modal-month-input").value =
               `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
           } else if (type === "yearly") {
-            document.getElementById("export-modal-title").textContent = "Yearly Report Export";
-            document.getElementById("modal-yearly-group").style.display = "block";
-            document.getElementById("modal-year-input").value = today.getFullYear();
+            document.getElementById("export-modal-title").textContent =
+              "Yearly Report Export";
+            document.getElementById("modal-yearly-group").style.display =
+              "block";
+            document.getElementById("modal-year-input").value =
+              today.getFullYear();
           } else if (type === "custom") {
-            document.getElementById("export-modal-title").textContent = "Custom Range Export";
-            document.getElementById("modal-custom-group").style.display = "block";
+            document.getElementById("export-modal-title").textContent =
+              "Custom Range Export";
+            document.getElementById("modal-custom-group").style.display =
+              "block";
             const todayStr = today.toISOString().split("T")[0];
             document.getElementById("modal-custom-start-date").value = todayStr;
             document.getElementById("modal-custom-end-date").value = todayStr;
@@ -3066,15 +3432,21 @@
             document.getElementById("modal-custom-to").value = todayStr;
             updateCustomRangeInputs();
           }
-          document.getElementById("export-modal-overlay").classList.add("active");
+          document
+            .getElementById("export-modal-overlay")
+            .classList.add("active");
         };
 
         const closeExportModal = () => {
-          document.getElementById("export-modal-overlay").classList.remove("active");
+          document
+            .getElementById("export-modal-overlay")
+            .classList.remove("active");
         };
 
         const updateCustomRangeInputs = () => {
-          const checked = document.querySelector('input[name="custom-range-type"]:checked');
+          const checked = document.querySelector(
+            'input[name="custom-range-type"]:checked',
+          );
           const rangeType = checked ? checked.value : "year-from-date";
           document.getElementById("modal-year-from-date").style.display =
             rangeType === "year-from-date" ? "block" : "none";
@@ -3085,14 +3457,20 @@
         };
 
         const handleModalDownload = () => {
-          const formatRadio = document.querySelector('input[name="report-format"]:checked');
+          const formatRadio = document.querySelector(
+            'input[name="report-format"]:checked',
+          );
           const format = formatRadio ? formatRadio.value : "pdf";
           let data = [];
           let title = "";
 
           if (currentModalType === "monthly") {
-            const monthInput = document.getElementById("modal-month-input").value;
-            if (!monthInput) { alert("Please select a month."); return; }
+            const monthInput =
+              document.getElementById("modal-month-input").value;
+            if (!monthInput) {
+              alert("Please select a month.");
+              return;
+            }
             const [yearStr, monthStr] = monthInput.split("-");
             const yearNum = parseInt(yearStr);
             const monthObj = parseInt(monthStr) - 1;
@@ -3101,44 +3479,83 @@
               return d.getFullYear() === yearNum && d.getMonth() === monthObj;
             });
             title = `Monthly Report - ${new Date(yearNum, monthObj).toLocaleString("en-US", { month: "long", year: "numeric" })}`;
-            if (data.length === 0) { alert("No data found for the selected month."); return; }
-
+            if (data.length === 0) {
+              alert("No data found for the selected month.");
+              return;
+            }
           } else if (currentModalType === "yearly") {
-            const yearNum = parseInt(document.getElementById("modal-year-input").value);
-            if (isNaN(yearNum)) { alert("Please enter a valid year."); return; }
-            data = transactions.filter((t) => new Date(t.date).getFullYear() === yearNum);
+            const yearNum = parseInt(
+              document.getElementById("modal-year-input").value,
+            );
+            if (isNaN(yearNum)) {
+              alert("Please enter a valid year.");
+              return;
+            }
+            data = transactions.filter(
+              (t) => new Date(t.date).getFullYear() === yearNum,
+            );
             title = `Summary for ${yearNum}`;
-            if (data.length === 0) { alert("No data found for the selected year."); return; }
-
+            if (data.length === 0) {
+              alert("No data found for the selected year.");
+              return;
+            }
           } else if (currentModalType === "custom") {
-            const checked = document.querySelector('input[name="custom-range-type"]:checked');
+            const checked = document.querySelector(
+              'input[name="custom-range-type"]:checked',
+            );
             const rangeType = checked ? checked.value : "year-from-date";
             if (rangeType === "year-from-date") {
-              const startDateStr = document.getElementById("modal-custom-start-date").value;
-              if (!startDateStr) { alert("Please select a start date."); return; }
+              const startDateStr = document.getElementById(
+                "modal-custom-start-date",
+              ).value;
+              if (!startDateStr) {
+                alert("Please select a start date.");
+                return;
+              }
               const endDateObj = new Date(startDateStr);
               endDateObj.setFullYear(endDateObj.getFullYear() + 1);
               const endDateStr = endDateObj.toISOString().split("T")[0];
-              data = transactions.filter((t) => t.date >= startDateStr && t.date < endDateStr);
+              data = transactions.filter(
+                (t) => t.date >= startDateStr && t.date < endDateStr,
+              );
               title = `Report - ${startDateStr} to ${endDateStr}`;
             } else if (rangeType === "year-to-date") {
-              const endDateStr = document.getElementById("modal-custom-end-date").value;
-              if (!endDateStr) { alert("Please select an end date."); return; }
+              const endDateStr = document.getElementById(
+                "modal-custom-end-date",
+              ).value;
+              if (!endDateStr) {
+                alert("Please select an end date.");
+                return;
+              }
               const startDateObj = new Date(endDateStr);
               startDateObj.setFullYear(startDateObj.getFullYear() - 1);
               startDateObj.setDate(startDateObj.getDate() + 1);
               const startDateStr = startDateObj.toISOString().split("T")[0];
-              data = transactions.filter((t) => t.date >= startDateStr && t.date <= endDateStr);
+              data = transactions.filter(
+                (t) => t.date >= startDateStr && t.date <= endDateStr,
+              );
               title = `Report - ${startDateStr} to ${endDateStr}`;
             } else {
-              const fromStr = document.getElementById("modal-custom-from").value;
+              const fromStr =
+                document.getElementById("modal-custom-from").value;
               const toStr = document.getElementById("modal-custom-to").value;
-              if (!fromStr || !toStr) { alert("Please select both start and end dates."); return; }
-              if (fromStr > toStr) { alert("Start date must be before end date."); return; }
-              data = transactions.filter((t) => t.date >= fromStr && t.date <= toStr);
+              if (!fromStr || !toStr) {
+                alert("Please select both start and end dates.");
+                return;
+              }
+              if (fromStr > toStr) {
+                alert("Start date must be before end date.");
+                return;
+              }
+              data = transactions.filter(
+                (t) => t.date >= fromStr && t.date <= toStr,
+              );
               title = `Report - ${fromStr} to ${toStr}`;
             }
-            if (data.length === 0) { alert("No data found for the selected range."); return; }
+            if (data.length === 0) {
+              alert("No data found for the selected range.");
+              return;
+            }
           }
 
           closeExportModal();
@@ -3152,7 +3569,11 @@
         };
 
         const generatePDFReport = (data, title) => {
-          const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          const esc = (s) =>
+            String(s)
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;");
 
           // Compute full summary (totals + per-category breakdown)
           const summaryData = getSummaryData(data);
@@ -3183,7 +3604,9 @@
             </tr>`;
 
           // Build transaction rows
-          const sorted = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
+          const sorted = [...data].sort(
+            (a, b) => new Date(a.date) - new Date(b.date),
+          );
           let rowsHTML = "";
           sorted.forEach((t) => {
             const detailsStr = esc(formatDetailsForCSV(t.details, t.category));
@@ -3244,7 +3667,7 @@
           printWindow.document.close();
         };
 
-                const formatDetailsForCSV = (details, category) => {
+        const formatDetailsForCSV = (details, category) => {
           if (!details || details.length === 0) {
             return "";
           }
@@ -3264,10 +3687,10 @@
                 return `${n.title}: ${n.amount.toFixed(2)}`;
               if (n.title && n.itemTotal)
                 return `${n.title} (x${n.quantity || 1}): ${n.itemTotal.toFixed(
-                  2
+                  2,
                 )}`;
               if (n.vehicle)
-                return `${n.vehicle} (${n.from} → ${n.to}) x${n.quantity||1}: ${(n.itemTotal || n.fare).toFixed(2)}`;
+                return `${n.vehicle} (${n.from} → ${n.to}) x${n.quantity || 1}: ${(n.itemTotal || n.fare).toFixed(2)}`;
               if (n.type === "Doctor Fee")
                 return `Doctor Fee (${n.doctorName}): ${n.fee.toFixed(2)}`;
               if (n.type === "Medical Tests")
@@ -3295,10 +3718,14 @@
                 return `Lent to ${n.person}: ${n.amount.toFixed(2)}`;
               if (n.type === "Donate")
                 return `Donated to ${n.person}: ${n.amount.toFixed(2)}`;
-              if (n.type === "Flat Discount") return `Flat Discount: -${n.discount.toFixed(2)}`;
-              if (n.type === "Rounding") return `Rounding: ${n.amount >= 0 ? '+' : ''}${n.amount.toFixed(2)}`;
-              if (n.month) return `${n.title} (${n.month}): ${n.amount.toFixed(2)}`;
-              if (n.unit) return `${n.title} (${n.unit}) x${n.quantity}: ${n.itemTotal.toFixed(2)}`;
+              if (n.type === "Flat Discount")
+                return `Flat Discount: -${n.discount.toFixed(2)}`;
+              if (n.type === "Rounding")
+                return `Rounding: ${n.amount >= 0 ? "+" : ""}${n.amount.toFixed(2)}`;
+              if (n.month)
+                return `${n.title} (${n.month}): ${n.amount.toFixed(2)}`;
+              if (n.unit)
+                return `${n.title} (${n.unit}) x${n.quantity}: ${n.itemTotal.toFixed(2)}`;
               return JSON.stringify(n);
             })
             .join("; ");
@@ -3342,7 +3769,9 @@
           csvRows.push(`"♥ Total Income",,,,+${summaryData.income.toFixed(2)}`);
           for (const cat in summaryData.categories) {
             if (summaryData.categories[cat] > 0) {
-              csvRows.push(`"→ ${cat}",,,,-${summaryData.categories[cat].toFixed(2)}`);
+              csvRows.push(
+                `"→ ${cat}",,,,-${summaryData.categories[cat].toFixed(2)}`,
+              );
             }
           }
           csvRows.push(`"Balance",,,,${summaryData.balance.toFixed(2)}`);
@@ -3357,7 +3786,7 @@
           reader.onload = async (e) => {
             if (
               !confirm(
-                "Are you sure you want to import this file? This will ERASE all current data."
+                "Are you sure you want to import this file? This will ERASE all current data.",
               )
             ) {
               fileImporter.value = "";
@@ -3386,10 +3815,14 @@
               if (APPS_SCRIPT_URL) {
                 try {
                   await syncReplaceAll(importedData);
-                  alert("Data successfully imported, overwritten locally and synced to Google Sheets!");
+                  alert(
+                    "Data successfully imported, overwritten locally and synced to Google Sheets!",
+                  );
                 } catch (sheetsErr) {
                   console.warn("Sheets sync after import failed:", sheetsErr);
-                  alert("Data imported locally but Google Sheets sync failed. Please check your connection and try importing again.");
+                  alert(
+                    "Data imported locally but Google Sheets sync failed. Please check your connection and try importing again.",
+                  );
                 }
               } else {
                 alert("Data successfully imported and overwritten!");
@@ -3397,7 +3830,7 @@
             } catch (error) {
               alert(
                 "Error importing file. Please ensure it is a valid backup file.\n\n" +
-                  error.message
+                  error.message,
               );
             }
           };
@@ -3415,12 +3848,12 @@
 
           const now = new Date();
           const timestamp = `${now.getFullYear()}-${String(
-            now.getMonth() + 1
+            now.getMonth() + 1,
           ).padStart(2, "0")}-${String(now.getDate()).padStart(
             2,
-            "0"
+            "0",
           )}_${String(now.getHours()).padStart(2, "0")}-${String(
-            now.getMinutes()
+            now.getMinutes(),
           ).padStart(2, "0")}-${String(now.getSeconds()).padStart(2, "0")}`;
           const fileName = `financetracker-backup_${timestamp}.json`;
 

@@ -29,6 +29,13 @@ let zikrCounts = {
   total: 0,
 };
 
+// --- Google Sheets Integration ---
+// After deploying rec/zikir-appscript.gs as a Web App, paste the URL below.
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQr7qvXCgzxvCowO3MtJCo_qR0nIlxvKgoYI1y1-DYfsl7uRYgyUrrNl5hVJuHe82tJg/exec";
+let sheetsUser = null;       // { email, tabName } when connected
+let sheetsSaveTimer = null;  // debounce handle for Sheets saves
+let sheetStatusEl;           // status indicator element
+
 // --- DOM Element Assignment ---
 let exportButton, importFile; // <-- Add export/import elements
 function assignElements() {
@@ -47,7 +54,8 @@ function assignElements() {
   // --- Assign Export/Import elements ---
   exportButton = document.getElementById("exportButton");
   importFile = document.getElementById("importFile");
-  // --- ---
+  // --- Assign Sheets status element (optional, no error if missing) ---
+  sheetStatusEl = document.getElementById("sheetStatus");
 
   if (
     !totalCount ||
@@ -169,6 +177,83 @@ async function saveCountsToDBWithIdb() {
   }
 }
 
+// --- Google Sheets Sync ---
+function isSheetsConfigured() {
+  return APPS_SCRIPT_URL && APPS_SCRIPT_URL !== "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+}
+
+function updateSheetsStatus(state) {
+  if (!sheetStatusEl) return;
+  const messages = {
+    loading: "Connecting to Google Sheets...",
+    connected: "Synced with Google Sheets: " + (sheetsUser ? sheetsUser.email : ""),
+    "auth-needed":
+      '<a href="' + APPS_SCRIPT_URL + '" target="_blank">Authorize Google Sheets access</a> (open once in browser)',
+    error: "Google Sheets unavailable (working offline)",
+    disabled: "",
+  };
+  sheetStatusEl.innerHTML = messages[state] ?? "";
+}
+
+async function loadFromSheets() {
+  if (!isSheetsConfigured()) { updateSheetsStatus("disabled"); return null; }
+  try {
+    updateSheetsStatus("loading");
+    const res = await fetch(APPS_SCRIPT_URL + "?action=load", {
+      credentials: "include",
+      redirect: "follow",
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const ct = res.headers.get("content-type") || "";
+    if (!ct.includes("application/json")) {
+      updateSheetsStatus("auth-needed");
+      return null;
+    }
+    const json = await res.json();
+    if (!json.success) throw new Error(json.error || "Load failed");
+    sheetsUser = { email: json.userEmail, tabName: json.tabName };
+    updateSheetsStatus("connected");
+    return json.data;
+  } catch (err) {
+    console.error("Sheets load error:", err);
+    updateSheetsStatus("error");
+    return null;
+  }
+}
+
+// Called after every counter click; debounced so rapid clicks batch into one save
+function scheduleSheetsave() {
+  if (!isSheetsConfigured()) return;
+  clearTimeout(sheetsSaveTimer);
+  sheetsSaveTimer = setTimeout(saveToSheets, 1500);
+}
+
+async function saveToSheets() {
+  if (!isSheetsConfigured()) return;
+  try {
+    const params = new URLSearchParams({ action: "save" });
+    for (const key in zikrCounts) {
+      if (Object.prototype.hasOwnProperty.call(zikrCounts, key)) {
+        params.append(key, zikrCounts[key]);
+      }
+    }
+    const res = await fetch(APPS_SCRIPT_URL + "?" + params.toString(), {
+      credentials: "include",
+      redirect: "follow",
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const ct = res.headers.get("content-type") || "";
+    if (!ct.includes("application/json")) { updateSheetsStatus("auth-needed"); return; }
+    const json = await res.json();
+    if (json.success) {
+      sheetsUser = { email: json.userEmail, tabName: json.tabName };
+      updateSheetsStatus("connected");
+    }
+  } catch (err) {
+    console.error("Sheets save error:", err);
+  }
+}
+
 // --- Core Logic ---
 function updateDisplay() {
   const els = {
@@ -260,8 +345,9 @@ function counter() {
   // Update display first for responsiveness
   updateDisplay();
 
-  // Save data (asynchronously)
+  // Save locally (IndexedDB) and schedule a Sheets sync
   saveCountsToDBWithIdb();
+  scheduleSheetsave();
 
   // Update status message
   if (msg)
@@ -386,9 +472,10 @@ function handleImport(event) {
       // Update global counts object
       zikrCounts = { ...validatedData }; // Replace entirely with validated data
 
-      // Save the newly imported counts to IndexedDB
+      // Save the newly imported counts to IndexedDB and Google Sheets
       await saveCountsToDBWithIdb();
-      console.log("Imported counts saved to DB.");
+      await saveToSheets(); // Push to Sheets immediately so all devices with the same Gmail sync
+      console.log("Imported counts saved to DB and Sheets.");
 
       // Update the display on the page
       updateDisplay();
@@ -615,7 +702,16 @@ async function initializeApp() {
     // Initialize DB, then load data
     await initDBWithIdb(); // Wait for DB setup
     await loadCountsFromDBWithIdb(); // Wait for data loading
-    updateDisplay(); // Show loaded counts
+    updateDisplay(); // Show locally cached counts immediately
+
+    // Try to load fresher data from Google Sheets (cross-device sync)
+    const sheetsData = await loadFromSheets();
+    if (sheetsData) {
+      // Sheets data is authoritative — merge it in and persist locally
+      zikrCounts = { ...zikrCounts, ...sheetsData };
+      await saveCountsToDBWithIdb();
+      updateDisplay();
+    }
 
     // Set initial state message and style selected radio (if any)
     const selectedRadio = document.querySelector("input[name='zikr']:checked");
