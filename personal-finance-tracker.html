@@ -360,17 +360,22 @@
         align-items: center;
       }
       #special-footer-note .keyword-sum {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         margin: 6px 12px 6px 0;
         padding: 6px 14px;
-        background: #d9534f;
+        background: #fff;
         border-radius: 16px;
-        color: #fff;
+        color: var(--text-color);
         font-weight: 400;
         text-transform: capitalize;
+        border: 1px solid #ddd;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
       }
-      #special-footer-note .keyword-sum span {
+      #special-footer-note .keyword-sum span:first-child {
         font-weight: 600;
+        color: #555;
       }
 
       /* Grid definitions for calculator rows */
@@ -380,9 +385,12 @@
       .grid-shopping { grid-template-columns: 3fr 1fr 1fr auto; }
       .grid-doctor-fee { grid-template-columns: 1fr 1fr 1fr 1fr; }
       .grid-medicines, .grid-edu-goods { grid-template-columns: 3fr 1fr 1fr 1fr auto; }
-      .grid-transport { grid-template-columns: 1fr 1fr 1fr 1fr auto; }
+      .grid-transport { grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto; }
       .grid-tour { grid-template-columns: 1fr 3fr 1fr 1fr auto; }
       .grid-groccery { grid-template-columns: 3fr 1fr 1fr 1fr 1fr auto; }
+      .grid-gardening { grid-template-columns: 3fr 1fr 1fr auto; }
+      .grid-sweets { grid-template-columns: 3fr 1fr 1fr 1fr auto; }
+      .grid-subscription { grid-template-columns: 2fr 1fr 1fr auto; }
       
 
       /* Mobile Responsiveness */
@@ -485,10 +493,332 @@
             max-width: 400px;
             margin: 0 auto;
         }
+        /* Form section */
+        .form-section {
+          padding: 15px;
+        }
+        .form-section h2 {
+          font-size: 1.3em;
+        }
+        .form-grid {
+          gap: 12px;
+        }
+        /* Entry cards */
+        .entry-total {
+          font-size: 1.2em;
+        }
+        .entry-category {
+          font-size: 1.05em;
+        }
+        .entry-header {
+          flex-wrap: wrap;
+          gap: 4px;
+        }
+        /* Loan table — horizontal scroll instead of overflow */
+        #active-loans-section {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        #active-loans-section .summary-table {
+          min-width: 380px;
+        }
+        /* Floating keyword button — slightly smaller */
+        #floating-keyword-btn {
+          width: 50px;
+          height: 50px;
+          font-size: 1.5rem;
+          bottom: 20px;
+          right: 20px;
+        }
+      }
+
+      /* Extra-small phones (≤480px) */
+      @media (max-width: 480px) {
+        .container {
+          padding: 0 10px;
+          margin-top: 10px;
+        }
+        .month-header {
+          font-size: 1.4em;
+          margin: 15px 0 8px;
+        }
+        .form-section {
+          padding: 12px;
+        }
+        .form-section h2 {
+          font-size: 1.1em;
+          padding-bottom: 8px;
+          margin-bottom: 12px;
+        }
+        .entry-category {
+          font-size: 0.95em;
+        }
+        .entry-total {
+          font-size: 1.05em;
+        }
+        .date-header {
+          font-size: 1.05em;
+        }
+        .summary-box,
+        .data-management-section {
+          padding: 12px;
+        }
+        header .logo a {
+          font-size: 1.1em;
+        }
+        header .balance {
+          font-size: 0.95em;
+        }
+        .footer-column {
+          padding: 0 8px;
+        }
+        .edit-btn {
+          font-size: 0.8em;
+          bottom: 8px;
+          right: 8px;
+        }
+      }
+
+      /* Login Overlay */
+      #login-overlay {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+      }
+      #login-box {
+        background: #fff;
+        border-radius: 16px;
+        padding: 40px 36px;
+        width: 90%;
+        max-width: 380px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        text-align: center;
+      }
+      #login-box .login-logo {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 4px;
+      }
+      #login-box .login-sub {
+        color: var(--light-text);
+        margin: 0 0 24px;
+        font-size: 0.9em;
+      }
+      .login-input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 1em;
+        margin-bottom: 12px;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+      }
+      .login-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+      }
+      #login-error {
+        display: none;
+        color: var(--danger-color);
+        font-size: 0.88em;
+        margin-bottom: 12px;
+        padding: 8px 12px;
+        background: #fff5f5;
+        border-radius: 4px;
+        border: 1px solid #ffd0d0;
+        text-align: left;
+      }
+      #login-submit-btn {
+        width: 100%;
+        padding: 13px;
+        font-size: 1.05em;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+      #sync-status-wrap {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 0;
+      }
+      .sync-spinner {
+        width: 36px;
+        height: 36px;
+        border: 4px solid #e0e0e0;
+        border-top-color: var(--primary-color);
+        border-radius: 50%;
+        animation: loginSpin 0.8s linear infinite;
+      }
+      @keyframes loginSpin { to { transform: rotate(360deg); } }
+      #sync-status-msg {
+        color: var(--light-text);
+        font-size: 0.95em;
+      }
+
+      /* Export Modal Styles */
+      #export-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 3000;
+        align-items: center;
+        justify-content: center;
+      }
+      #export-modal-overlay.active {
+        display: flex;
+      }
+      #export-modal {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px;
+        width: 90%;
+        max-width: 460px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
+        position: relative;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      #export-modal h2 {
+        margin: 0 0 20px;
+        color: var(--primary-color);
+        font-size: 1.3em;
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 10px;
+      }
+      .export-modal-close {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        background: none;
+        border: none;
+        color: #999;
+        font-size: 1.8rem;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+      }
+      .export-modal-close:hover {
+        color: var(--danger-color);
+        background: none;
+      }
+      .export-modal-group {
+        margin-bottom: 18px;
+      }
+      .export-modal-group .group-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--text-color);
+      }
+      .export-modal-group input[type="date"],
+      .export-modal-group input[type="month"],
+      .export-modal-group input[type="number"] {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-size: 1em;
+        box-sizing: border-box;
+      }
+      .radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .radio-group label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-size: 0.95em;
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        transition: all 0.2s;
+        font-weight: normal;
+      }
+      .radio-group label:hover {
+        border-color: var(--primary-color);
+        background: #f0f7ff;
+      }
+      .radio-group input[type="radio"] {
+        accent-color: var(--primary-color);
+        width: auto;
+      }
+      #modal-download-btn {
+        width: 100%;
+        padding: 14px;
+        font-size: 1.1em;
+        font-weight: 700;
+        background: var(--success-color);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 6px;
+        letter-spacing: 0.5px;
+      }
+      #modal-download-btn:hover {
+        background: #218838;
+      }
+      .date-range-subgroup {
+        margin-top: 12px;
+        padding: 12px;
+        background: #f5f7fa;
+        border-radius: 6px;
+      }
+      .date-range-subgroup > label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 4px;
+        font-size: 0.9em;
+        padding: 0;
+        border: none;
+        background: none;
+        cursor: default;
+      }
+      .date-range-subgroup > label:hover {
+        background: none;
+        border: none;
+      }
+      .date-range-subgroup input {
+        margin-bottom: 8px;
       }
     </style>
   </head>
   <body>
+    <!-- Login / Sync Overlay -->
+    <div id="login-overlay">
+      <div id="login-box">
+        <div class="login-logo">FinanceTracker</div>
+        <p class="login-sub">Sign in to access your dashboard</p>
+
+        <form id="login-form" autocomplete="off">
+          <input type="email" class="login-input" id="login-gmail"
+            placeholder="Gmail address" required />
+          <input type="password" class="login-input" id="login-secret"
+            placeholder="Secret Key" required />
+          <div id="login-error">Invalid credentials. Please try again.</div>
+          <button type="submit" id="login-submit-btn">Login</button>
+        </form>
+
+        <div id="sync-status-wrap">
+          <div class="sync-spinner"></div>
+          <p id="sync-status-msg">Connecting...</p>
+        </div>
+      </div>
+    </div>
+    <!-- End Login / Sync Overlay -->
+
     <!-- Floating Keyword Sum Feature -->
     <style>
       #floating-keyword-btn {
@@ -573,8 +903,8 @@
     <div id="keyword-popup">
       <button class="close-popup" title="Close">&times;</button>
       <h3>
-        Sum Income by Keyword <br /><small
-          >(e.g. "Salary", "Bonus", "Project")</small
+        Search by Keyword <br /><small
+          >(e.g. "Salary", "Grocery", "Medicine")</small
         >
       </h3>
       <form id="keyword-form" autocomplete="off">
@@ -599,6 +929,65 @@
       </form>
     </div>
     <!-- End Floating Keyword Sum Feature -->
+
+    <!-- Export Report Modal -->
+    <div id="export-modal-overlay">
+      <div id="export-modal">
+        <button class="export-modal-close" id="export-modal-close-btn">&times;</button>
+        <h2 id="export-modal-title">Export Report</h2>
+
+        <!-- Monthly date picker -->
+        <div class="export-modal-group" id="modal-monthly-group" style="display:none;">
+          <label class="group-label">Select Month:</label>
+          <input type="month" id="modal-month-input" />
+        </div>
+
+        <!-- Yearly year picker -->
+        <div class="export-modal-group" id="modal-yearly-group" style="display:none;">
+          <label class="group-label">Select Year:</label>
+          <input type="number" id="modal-year-input" min="2000" max="2099" placeholder="e.g. 2025" />
+        </div>
+
+        <!-- Custom range options -->
+        <div class="export-modal-group" id="modal-custom-group" style="display:none;">
+          <label class="group-label">Choose Range Type:</label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="custom-range-type" value="year-from-date" checked />
+              From start date (1 year range)
+            </label>
+            <label>
+              <input type="radio" name="custom-range-type" value="year-to-date" />
+              To end date (1 year range)
+            </label>
+            <label>
+              <input type="radio" name="custom-range-type" value="custom-range" />
+              Custom start &amp; end date
+            </label>
+          </div>
+          <div class="date-range-subgroup" id="modal-year-from-date" style="display:none;">
+            <label>Start Date:</label>
+            <input type="date" id="modal-custom-start-date" />
+          </div>
+          <div class="date-range-subgroup" id="modal-year-to-date" style="display:none;">
+            <label>End Date:</label>
+            <input type="date" id="modal-custom-end-date" />
+          </div>
+          <div class="date-range-subgroup" id="modal-custom-range-inputs" style="display:none;">
+            <label>Start Date:</label>
+            <input type="date" id="modal-custom-from" />
+            <label>End Date:</label>
+            <input type="date" id="modal-custom-to" />
+          </div>
+        </div>
+
+        <!-- Report type: PDF only -->
+        <input type="hidden" name="report-format" value="pdf" />
+
+        <button id="modal-download-btn">&#11015; Download Report</button>
+      </div>
+    </div>
+
     <header>
       <div class="logo">
         <a href="index.html" class="back-to-home">← Back</a>
@@ -607,6 +996,7 @@
       <div class="header-center">
         <button id="export-monthly-btn">Export Monthly Report</button>
         <button id="export-yearly-btn">Export Yearly Report</button>
+        <button id="export-custom-range-btn" style="background-color:#7c3aed;">Custom Range Export</button>
       </div>
       <div class="balance">
         Current Balance: <span id="current-balance">0 BDT</span>
@@ -645,9 +1035,7 @@
                 <option value="Vegetabls">Vegetabls</option>
                 <option value="Fruits">Fruits</option>
                 <option value="Shopping">Shopping</option>
-                <option value="General Transport Cost">
-                  General Transport Cost
-                </option>
+                <option value="Transport Cost">Transport Cost</option>
                 <option value="Tour & Hangouts">Tour & Hangouts</option>
                 <option value="Home Rent">Home Rent</option>
                 <option value="Gas & Electricity bills">
@@ -656,16 +1044,18 @@
                 <option value="Phone and WIFI bills">
                   Phone and WIFI bills
                 </option>
-                <option value="Lend, Donate & Gifts">
-                  Lend, Donate & Gifts
-                </option>
+                <option value="Lend, Donate & Gift">Lend, Donate &amp; Gift</option>
                 <option value="Loan repayment">Loan repayment</option>
                 <option value="Professional Expense">
                   Professional Expense
                 </option>
                 <option value="Personal Snacks">Personal Snacks</option>
+                <option value="Salon and Beauty Parlor">Salon and Beauty Parlor</option>
+                <option value="Gardening">Gardening</option>
+                <option value="Sweets and Bakery">Sweets and Bakery</option>
                 <option value="Educational Expense">Educational Expense</option>
                 <option value="Others">Others</option>
+                <option value="Others Subscription">Others Subscription</option>
               </select>
             </div>
           </div>
@@ -723,6 +1113,16 @@
           />
         </div>
       </section>
+
+      <!-- Loan Overview Section -->
+      <section class="data-management-section" id="loans-overview-section">
+        <h3>Loan Overview</h3>
+        <p>Active loans (remaining balance). Click below for the full history.</p>
+        <div id="active-loans-section"></div>
+        <div style="margin-top:15px;text-align:center;">
+          <button id="loans-full-details-btn" style="background-color:#e67e22;color:#fff;">⬇ Download Full Report</button>
+        </div>
+      </section>
     </main>
 
     <div id="special-footer-note"></div>
@@ -733,6 +1133,74 @@
     </footer>
 
     <script>
+      // ---- Auth Guard ----
+      (function () {
+        const VALID_GMAIL  = "sujonmhk786@gmail.com";
+        const VALID_SECRET = "$ahal$ara";
+        const AUTH_KEY     = "ft_auth_v1";
+        const AUTH_VAL     = btoa(VALID_GMAIL + ":" + VALID_SECRET);
+
+        function isAuthenticated() {
+          return localStorage.getItem(AUTH_KEY) === AUTH_VAL;
+        }
+
+        // Promise that resolves when the user is authenticated
+        var _resolveAuth;
+        window.authReady = new Promise(function (resolve) {
+          _resolveAuth = resolve;
+        });
+
+        // Called by main script while syncing
+        window.setSyncStatus = function (msg) {
+          var wrap = document.getElementById("sync-status-wrap");
+          var msgEl = document.getElementById("sync-status-msg");
+          var form  = document.getElementById("login-form");
+          if (form)  form.style.display  = "none";
+          if (wrap)  wrap.style.display  = "flex";
+          if (msgEl) msgEl.textContent   = msg || "Loading...";
+        };
+
+        // Called by main script when sync is done — hides overlay
+        window.hideSyncOverlay = function () {
+          var overlay = document.getElementById("login-overlay");
+          if (overlay) overlay.style.display = "none";
+        };
+
+        function init() {
+          if (isAuthenticated()) {
+            // Already logged in — show spinner, let main script start immediately
+            window.setSyncStatus("Preparing your dashboard...");
+            _resolveAuth();
+            return;
+          }
+
+          var form    = document.getElementById("login-form");
+          var errorEl = document.getElementById("login-error");
+          if (!form) { _resolveAuth(); return; }
+
+          form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            var gmail  = document.getElementById("login-gmail").value.trim().toLowerCase();
+            var secret = document.getElementById("login-secret").value;
+
+            if (gmail === VALID_GMAIL && secret === VALID_SECRET) {
+              localStorage.setItem(AUTH_KEY, AUTH_VAL);
+              errorEl.style.display = "none";
+              window.setSyncStatus("Preparing your dashboard...");
+              _resolveAuth(); // Signal main script to continue
+            } else {
+              errorEl.style.display = "block";
+            }
+          });
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", init);
+        } else {
+          init();
+        }
+      })();
+
       // Keyword Income Tracking Feature
       (function () {
         "use strict";
@@ -779,35 +1247,50 @@
             formatToIndianCurrency = window.formatToIndianCurrency;
           }
 
+          // Helper to extract searchable text from a transaction detail
+          const getDetailText = (detail) => {
+            return [detail.title, detail.vehicle, detail.from, detail.to,
+              detail.patientName, detail.doctorName, detail.doctorType,
+              detail.person, detail.number, detail.feeType, detail.type, detail.subType]
+              .filter(Boolean).join(" ").toLowerCase();
+          };
+
+          // Helper to get amount from a detail
+          const getDetailAmount = (detail) => {
+            return parseFloat(
+              detail.amount != null ? detail.amount :
+              detail.itemTotal != null ? detail.itemTotal :
+              detail.fare != null ? detail.fare :
+              detail.fee != null ? detail.fee :
+              detail.total != null ? detail.total :
+              detail.payableTests != null ? detail.payableTests : 0
+            ) || 0;
+          };
+
           // Calculate sums for each keyword
           const results = keywords
             .map((keyword) => {
-              let sum = 0;
+              let incomeSum = 0;
+              let expenseSum = 0;
+              const kw = keyword.toLowerCase();
 
               // Loop through all transactions
               window.transactions.forEach((tx) => {
-                if (tx.type === "income" && Array.isArray(tx.details)) {
-                  // Check each detail in the transaction
-                  tx.details.forEach((detail) => {
-                    if (detail.title && detail.amount != null) {
-                      if (
-                        detail.title
-                          .toLowerCase()
-                          .includes(keyword.toLowerCase())
-                      ) {
-                        sum += parseFloat(detail.amount) || 0;
-                      }
-                    }
-                  });
-                }
+                if (!Array.isArray(tx.details)) return;
+                const categoryMatch = (tx.category || "").toLowerCase().includes(kw);
+                tx.details.forEach((detail) => {
+                  const textMatch = getDetailText(detail).includes(kw);
+                  if (textMatch || categoryMatch) {
+                    const amount = getDetailAmount(detail);
+                    if (tx.type === "income") incomeSum += amount;
+                    else expenseSum += amount;
+                  }
+                });
               });
 
-              // Return formatted HTML for keywords with matches, as per user's request
-              if (sum > 0) {
-                // The user requested a specific format: <span value="keyword">Keyword: sum</span>
-                return `<span class="keyword-sum" value="${keyword.toLowerCase()}"><span>${keyword}:</span> ${formatToIndianCurrency(
-                  sum
-                )} BDT</span>`;
+              // Return formatted HTML showing income | expense
+              if (incomeSum > 0 || expenseSum > 0) {
+                return `<span class="keyword-sum" value="${keyword.toLowerCase()}"><span>${keyword}:</span> <span style="color:var(--success-color);font-weight:600;">৳${formatToIndianCurrency(incomeSum)}</span> <span style="color:#888;margin:0 2px;">|</span> <span style="color:tomato;font-weight:600;">৳${formatToIndianCurrency(expenseSum)}</span></span>`;
               }
               return "";
             })
@@ -864,6 +1347,79 @@
         }
       })();
       document.addEventListener("DOMContentLoaded", async () => {
+        // Wait for the user to authenticate before running anything
+        await window.authReady;
+
+        // ---- Google Sheets Config ----
+        // After deploying Code.gs as a Web App, paste the URL below.
+        // Leave empty ("") to use IndexedDB only (offline mode).
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyu2hNOFwwE4fQ1CZHb5_mf3ddZ1IB4l2Pk1d1psg1jAlGmAcJAKc7J2uqi-RYz6byk/exec";
+        const SHEETS_TOKEN    = "$ahal$ara";
+
+        // ---- Sheets Sync Helpers ----
+        const fetchFromSheets = async () => {
+          const url = `${APPS_SCRIPT_URL}?action=getAll&token=${encodeURIComponent(SHEETS_TOKEN)}`;
+          const res = await fetch(url);
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const json = await res.json();
+          if (json.error) throw new Error(json.error);
+          return Array.isArray(json) ? json : [];
+        };
+
+        const syncToSheets = async (action, payload) => {
+          if (!APPS_SCRIPT_URL) return;
+          try {
+            const res = await fetch(APPS_SCRIPT_URL, {
+              method: "POST",
+              headers: { "Content-Type": "text/plain" },
+              body: JSON.stringify({ token: SHEETS_TOKEN, action, ...payload }),
+            });
+            const json = await res.json();
+            if (json.error) throw new Error(json.error);
+          } catch (err) {
+            console.warn("Sheets sync failed [" + action + "]:", err);
+            showSheetsSyncWarning();
+          }
+        };
+
+        const bulkSyncToSheets = async (txList) => {
+          if (!APPS_SCRIPT_URL || !txList.length) return;
+          await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain" },
+            body: JSON.stringify({ token: SHEETS_TOKEN, action: "bulkAdd", data: txList }),
+          });
+        };
+
+        // Replace all Sheets data in one atomic server-side call
+        const syncReplaceAll = async (txList) => {
+          if (!APPS_SCRIPT_URL) return;
+          const res = await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain" },
+            body: JSON.stringify({ token: SHEETS_TOKEN, action: "replaceAll", data: txList }),
+          });
+          const json = await res.json();
+          if (json.error) throw new Error(json.error);
+        };
+
+        const showSheetsSyncWarning = () => {
+          let el = document.getElementById("sheets-warn-toast");
+          if (!el) {
+            el = document.createElement("div");
+            el.id = "sheets-warn-toast";
+            el.style.cssText =
+              "position:fixed;bottom:110px;left:50%;transform:translateX(-50%);" +
+              "background:#dc3545;color:#fff;padding:10px 20px;border-radius:6px;" +
+              "z-index:5000;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.3);";
+            document.body.appendChild(el);
+          }
+          el.textContent = "⚠️ Could not sync with Google Sheets. Data saved locally.";
+          el.style.display = "block";
+          clearTimeout(el._timer);
+          el._timer = setTimeout(() => { el.style.display = "none"; }, 5000);
+        };
+
         // --- DOM Elements ---
         const transactionTypeSelect =
           document.getElementById("transaction-type");
@@ -972,10 +1528,63 @@
         window.formatToIndianCurrency = formatToIndianCurrency; // Make it globally available
 
         // --- Initialization ---
+        const CATEGORY_RENAMES = {
+          "General Transport Cost": "Transport Cost",
+          "Lend, Donate & Gifts": "Lend, Donate & Gift"
+        };
+
+        const migrateCategories = async () => {
+          const toMigrate = transactions.filter(t => CATEGORY_RENAMES[t.category]);
+          if (toMigrate.length === 0) return;
+          console.log(`Migrating ${toMigrate.length} transaction(s) to updated category names...`);
+          for (const tx of toMigrate) {
+            tx.category = CATEGORY_RENAMES[tx.category];
+            // Update in IndexedDB: delete old + re-add with new category
+            try {
+              await deleteTransaction(tx.id);
+              await addTransaction(tx);
+            } catch (e) {
+              console.warn("Migration IDB error:", e);
+            }
+            // Sync to Sheets (fire-and-forget)
+            syncToSheets("update", { data: tx });
+          }
+        };
+
         const init = async () => {
           try {
             await initDB();
-            window.transactions = transactions = await getAllTransactions();
+
+            if (APPS_SCRIPT_URL) {
+              // ---- Sync from Google Sheets ----
+              try {
+                window.setSyncStatus("☁️ Loading data from Google Sheets...");
+                const sheetsData = await fetchFromSheets();
+                const localData  = await getAllTransactions();
+
+                if (sheetsData.length === 0 && localData.length > 0) {
+                  // First-time setup: migrate existing local data → Sheets
+                  window.setSyncStatus("📤 Migrating local data to Google Sheets...");
+                  await bulkSyncToSheets(localData);
+                  window.transactions = transactions = localData;
+                } else {
+                  // Normal load: Sheets is source of truth → overwrite IndexedDB
+                  window.setSyncStatus("🔄 Updating local cache...");
+                  await clearTransactions();
+                  for (const tx of sheetsData) {
+                    await addTransaction(tx);
+                  }
+                  window.transactions = transactions = sheetsData;
+                }
+              } catch (sheetsErr) {
+                console.warn("Sheets sync failed on load, using local cache:", sheetsErr);
+                window.setSyncStatus("⚠️ Sheets unavailable — using local data...");
+                await new Promise(r => setTimeout(r, 1500));
+                window.transactions = transactions = await getAllTransactions();
+              }
+            } else {
+              window.transactions = transactions = await getAllTransactions();
+            }
           } catch (error) {
             console.error("Failed to initialize database:", error);
             alert("Could not initialize the database. Data will not be saved.");
@@ -989,23 +1598,123 @@
           transactionForm.addEventListener("submit", handleFormSubmit);
           entriesContainer.addEventListener("click", handleEntryAction);
 
-          exportMonthlyBtn.addEventListener("click", exportMonthlyReport);
-          exportYearlyBtn.addEventListener("click", exportYearlyReport);
+          exportMonthlyBtn.addEventListener("click", () => openExportModal("monthly"));
+          exportYearlyBtn.addEventListener("click", () => openExportModal("yearly"));
+          document.getElementById("export-custom-range-btn").addEventListener("click", () => openExportModal("custom"));
+          document.getElementById("export-modal-close-btn").addEventListener("click", closeExportModal);
+          document.getElementById("export-modal-overlay").addEventListener("click", (e) => {
+            if (e.target.id === "export-modal-overlay") closeExportModal();
+          });
+          document.getElementById("modal-download-btn").addEventListener("click", handleModalDownload);
+          document.querySelectorAll('input[name="custom-range-type"]').forEach((radio) => {
+            radio.addEventListener("change", updateCustomRangeInputs);
+          });
           importBtn.addEventListener("click", () => fileImporter.click());
           fileImporter.addEventListener("change", handleImport);
           exportBtn.addEventListener("click", handleExport);
+          document.getElementById("loans-full-details-btn").addEventListener("click", () => {
+            const allLoans = getAllLoansWithRepayments();
+            if (allLoans.length === 0) { alert("No loan records found."); return; }
+            let bodyHtml = "";
+            allLoans.forEach(l => {
+              const totalRepaid = l.repayments.reduce((s, r) => s + r.amount, 0);
+              const remaining = l.amount - totalRepaid;
+              const status = remaining <= 0 ? "Done" : "Active";
+              const statusColor = status === "Done" ? "#28a745" : "#dc3545";
+              bodyHtml += `<div style="border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:20px;">
+                <h3 style="margin:0 0 10px;">${l.loanPerson} <span style="color:${statusColor};font-size:0.85em;">[${status}]</span></h3>
+                <p>Loan Date: ${l.date} &nbsp;|&nbsp; Total Loan: ${formatToIndianCurrency(l.amount)}</p>
+                <p>Total Repaid: ${formatToIndianCurrency(totalRepaid)} &nbsp;|&nbsp; Remaining: ${formatToIndianCurrency(Math.max(0, remaining))}</p>
+                ${l.repayments.length > 0 ? `<h4>Repayments:</h4><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="text-align:left;padding:6px;border-bottom:1px solid #ddd;">Date</th><th style="text-align:right;padding:6px;border-bottom:1px solid #ddd;">Amount</th></tr></thead><tbody>${l.repayments.map(r => `<tr><td style="padding:6px;">${r.date}</td><td style="text-align:right;padding:6px;">${formatToIndianCurrency(r.amount)}</td></tr>`).join('')}</tbody></table>` : '<p>No repayments yet.</p>'}
+              </div>`;
+            });
+            const win = window.open("", "_blank");
+            win.document.write(`<!DOCTYPE html><html><head><title>Loan Full Report</title><style>
+              body{font-family:sans-serif;max-width:900px;margin:0 auto;padding:20px;line-height:1.6;}
+              h1{color:#333;border-bottom:2px solid #4a90e2;padding-bottom:10px;}
+              h3{color:#333;margin:0 0 8px;}h4{color:#555;margin:8px 0 4px;}
+              p{margin:4px 0;}
+              table{width:100%;border-collapse:collapse;}
+              th,td{padding:6px 8px;border-bottom:1px solid #ddd;}
+              th{text-align:left;background:#f5f5f5;}
+              .card{border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:20px;page-break-inside:avoid;}
+              .no-print{text-align:center;margin-bottom:20px;}
+              @media print{.no-print{display:none;}}
+            </style></head><body>
+            <div class="no-print"><button onclick="window.print()" style="padding:10px 28px;font-size:15px;background:#4a90e2;color:#fff;border:none;border-radius:6px;cursor:pointer;">🖨 Print / Save as PDF</button></div>
+            <h1>Loan &amp; Repayment Records</h1>${bodyHtml}</body></html>`);
+            win.document.close();
+          });
 
+          await migrateCategories();
           renderCalculator();
+          window.hideSyncOverlay();
           renderApp();
         };
 
         // --- Core Rendering Functions ---
+        const updateLoanRepaymentVisibility = () => {
+          const opt = categorySelect.querySelector('option[value="Loan repayment"]');
+          if (!opt) return;
+          const hasActive = getActiveLoans().length > 0;
+          opt.disabled = !hasActive;
+          opt.style.display = hasActive ? "" : "none";
+          // If currently selected and now hidden, switch to first available
+          if (!hasActive && categorySelect.value === "Loan repayment") {
+            categorySelect.value = categorySelect.options[0].value;
+            renderCalculator();
+          }
+        };
         const renderApp = () => {
           const today = new Date();
           renderEntries(today.getFullYear(), today.getMonth());
           updateCurrentBalance();
           renderSummaries(today.getFullYear(), today.getMonth());
           renderFooterSummary();
+          renderActiveLoans();
+          updateLoanRepaymentVisibility();
+        };
+        const renderActiveLoans = () => {
+          const container = document.getElementById("active-loans-section");
+          if (!container) return;
+          const allLoans = [];
+          const loans = {};
+          transactions.filter(t => t.type === "income" && t.details[0]?.isLoan).forEach(t => {
+            const d = t.details[0];
+            loans[t.id] = { id: t.id, loanPerson: d.title, amount: t.total, date: t.date, repaid: 0 };
+          });
+          transactions.filter(t => t.category === "Loan repayment").forEach(t => {
+            const d = t.details[0];
+            if (d?.loanId && loans[d.loanId]) loans[d.loanId].repaid += d.amount;
+          });
+          const loanList = Object.values(loans).map(l => {
+            l.remaining = l.amount - l.repaid;
+            l.status = l.remaining <= 0 ? "Done" : "Active";
+            return l;
+          });
+          const activeLoansOnly = loanList.filter(l => l.status === "Active");
+          if (activeLoansOnly.length === 0) {
+            container.innerHTML = "<p style='color:var(--light-text);text-align:center;'>No active loans.</p>";
+            return;
+          }
+          let html = `<table class="summary-table" style="width:100%;"><thead><tr>
+            <th style="text-align:left;">Person/Org</th>
+            <th style="text-align:left;">Date</th>
+            <th style="text-align:right;">Loan</th>
+            <th style="text-align:right;">Repaid</th>
+            <th style="text-align:right;">Remaining</th>
+          </tr></thead><tbody>`;
+          activeLoansOnly.forEach(l => {
+            html += `<tr>
+              <td>${l.loanPerson}</td>
+              <td>${l.date}</td>
+              <td style="text-align:right;">${formatToIndianCurrency(l.amount)}</td>
+              <td style="text-align:right;">${formatToIndianCurrency(l.repaid)}</td>
+              <td style="text-align:right;color:#dc3545;font-weight:bold;">${formatToIndianCurrency(Math.max(0, l.remaining))}</td>
+            </tr>`;
+          });
+          html += "</tbody></table>";
+          container.innerHTML = html;
         };
         const renderCalculator = () => {
           const e = transactionTypeSelect.value,
@@ -1014,13 +1723,13 @@
           (categoryGroup.style.display = "expense" === e ? "flex" : "none"),
             (n =
               "income" === e
-                ? '\n                    <h4>Income Details</h4>\n                    <div class="item-row grid-income">\n                         <input type="text" placeholder="Income from (title)" class="item-title" required>\n                         <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                    </div>'
+                ? '\n                    <h4>Income Details</h4>\n                    <div style="margin-bottom:10px;">\n                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">\n                            <input type="checkbox" id="income-is-loan" class="income-is-loan-cb">\n                            <span>This is a Loan</span>\n                        </label>\n                    </div>\n                    <div class="item-row grid-income">\n                         <input type="text" placeholder="Income from (title)" class="item-title" required>\n                         <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                    </div>'
                 : ((n = `<h4>${t} Details</h4>`),
                   (() => {
                     switch (t) {
                       case "Medicines":
                         n +=
-                          '\n                            <div class="items-list">\n                                <div class="item-row grid-medicines">\n                                    <input type="text" placeholder="Goods title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Price" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>\n                                    <input type="number" value="0" placeholder="Discount %" class="item-discount">\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
+                          '\n                            <div class="items-list">\n                                <div class="item-row grid-medicines">\n                                    <input type="text" placeholder="Goods title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Price" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>\n                                    <input type="number" value="0" placeholder="Discount %" class="item-discount">\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>\n                            <div class="item-row" style="margin-top:15px;">\n                                <input type="number" step="1" value="0" placeholder="Round total amount (e.g. +5 or -3)" class="medicine-rounding" style="width:100%;">\n                            </div>';
                         break;
                       case "Groccery":
                       case "Milk, Fishs & Meats":
@@ -1035,12 +1744,13 @@
                         break;
                       case "Shopping":
                       case "Personal Snacks":
+                      case "Salon and Beauty Parlor":
                         n +=
                           '\n                            <div class="items-list">\n                                <div class="item-row grid-shopping">\n                                    <input type="text" placeholder="Product title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Item price" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>';
                         break;
-                      case "General Transport Cost":
+                      case "Transport Cost":
                         n +=
-                          '\n                            <div class="items-list">\n                                <div class="item-row grid-transport">\n                                    <input type="text" placeholder="Vehicle Title" class="item-vehicle" required>\n                                    <input type="text" placeholder="From" class="item-from" required>\n                                    <input type="text" placeholder="To" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Fare" class="item-fare" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Trip</button>';
+                          '\n                            <div class="items-list">\n                                <div class="item-row grid-transport">\n                                    <input type="text" placeholder="Vehicle Title" class="item-vehicle" required>\n                                    <input type="text" placeholder="From" class="item-from" required>\n                                    <input type="text" placeholder="To" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Fare" class="item-fare" required>\n                                    <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Trip</button>';
                         break;
                       case "Tour & Hangouts":
                         n +=
@@ -1058,20 +1768,38 @@
                         n +=
                           '<select id="bill-type-select" class="form-group" style="margin-bottom:15px; padding:10px; border: 1px solid var(--border-color); border-radius: 4px;">\n                                    <option value="wifi">WIFI Bill</option>\n                                    <option value="phone">Phone Recharge</option>\n                                </select>\n                                <div id="bill-details"></div>';
                         break;
-                      case "Lend, Donate & Gifts":
+                      case "Lend, Donate & Gift":
                         n +=
                           '<select id="lend-gift-type-select" class="form-group" style="margin-bottom:15px; padding:10px; border: 1px solid var(--border-color); border-radius: 4px;">\n                                    <option value="lend">Lend</option>\n                                    <option value="donate">Donate</option>\n                                    <option value="gift">Gift</option>\n                                </select>\n                                <div id="lend-gift-details"></div>';
                         break;
-                      case "Loan repayment":
-                        n +=
-                          '<div class="item-row grid-loan">\n                                    <input type="text" placeholder="Paying whom (name)" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                </div>';
+                      case "Loan repayment": {
+                        const activeLoans = getActiveLoans();
+                        if (activeLoans.length > 0) {
+                          const opts = activeLoans.map(l => `<option value="${l.id}">${l.loanPerson} (remaining: ${l.remaining.toFixed(2)})</option>`).join('');
+                          n += `<div class="item-row grid-loan"><select class="item-loan-select" style="flex:1;padding:10px;border:1px solid var(--border-color);border-radius:4px;">${opts}</select><input type="number" step="0.01" placeholder="Amount" class="item-amount" required></div>`;
+                        } else {
+                          n += '<div class="item-row grid-loan">\n                                    <input type="text" placeholder="Paying whom (name)" class="item-to" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                </div>';
+                        }
                         break;
+                      }
                       case "Educational Expense":
                         n += `<select id="educational-expense-type-select" class="form-group" style="margin-bottom:15px; padding:10px; border: 1px solid var(--border-color); border-radius: 4px;">
                                     <option value="academic">Academic</option>
                                     <option value="educational_goods">Educational Goods</option>
                                 </select>
                                 <div id="educational-expense-details"></div>`;
+                        break;
+                      case "Gardening":
+                        n +=
+                          '\n                            <div class="items-list">\n                                <div class="item-row grid-gardening">\n                                    <input type="text" placeholder="Item Title" class="item-title" required>\n                                    <input type="number" step="0.01" placeholder="Item Price" class="item-price" required>\n                                    <input type="number" value="1" placeholder="Quantity" class="item-quantity" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>\n                            <div class="item-row" style="margin-top:15px;">\n                                <input type="number" step="0.01" value="0" placeholder="Flat Discount on All Products" class="total-flat-discount" style="width:100%;">\n                            </div>';
+                        break;
+                      case "Sweets and Bakery":
+                        n +=
+                          '\n                            <div class="items-list">\n                                <div class="item-row grid-sweets">\n                                    <input type="text" placeholder="Item Title" class="item-title" required>\n                                    <select class="item-unit-select" style="padding:8px;border:1px solid var(--border-color);border-radius:4px;"><option value="kg">per Kg</option><option value="liter">per Liter</option><option value="item">per Item</option></select>\n                                    <input type="number" step="0.01" placeholder="Item Price" class="item-price" required>\n                                    <input type="number" step="0.01" value="1" placeholder="Quantity" class="item-quantity" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Item</button>\n                            <div class="item-row" style="margin-top:15px;">\n                                <input type="number" step="0.01" value="0" placeholder="Flat Discount on All Products" class="total-flat-discount" style="width:100%;">\n                            </div>';
+                        break;
+                      case "Others Subscription":
+                        n +=
+                          '\n                            <div class="items-list">\n                                <div class="item-row grid-subscription">\n                                    <input type="text" placeholder="Title" class="item-title" required>\n                                    <input type="text" placeholder="Month Name" class="item-month" required>\n                                    <input type="number" step="0.01" placeholder="Amount" class="item-amount" required>\n                                    <button type="button" class="remove-item-btn" style="display:none;">X</button>\n                                </div>\n                            </div>\n                            <button type="button" class="add-item-btn">+ Add Subscription</button>';
                         break;
                       case "Professional Expense":
                       case "Others":
@@ -1238,7 +1966,8 @@
             const amount = parseFloat(
               calculatorContainer.querySelector(".item-amount").value
             );
-            newTransaction.details.push({ title, amount });
+            const isLoan = document.getElementById("income-is-loan")?.checked || false;
+            newTransaction.details.push({ title, amount, isLoan });
             newTransaction.total = amount;
           } else {
             newTransaction.category = categorySelect.value;
@@ -1253,6 +1982,7 @@
           try {
             await addTransaction(newTransaction);
             transactions.push(newTransaction); // Update local cache
+            syncToSheets("add", { data: newTransaction }); // fire-and-forget to Sheets
             renderApp();
             if (window.updateKeywordFooterNote)
               window.updateKeywordFooterNote();
@@ -1279,6 +2009,7 @@
                 window.transactions = transactions = transactions.filter(
                   (t) => t.id !== id
                 );
+                syncToSheets("delete", { id }); // fire-and-forget to Sheets
                 renderApp();
                 if (window.updateKeywordFooterNote)
                   window.updateKeywordFooterNote();
@@ -1323,6 +2054,7 @@
               window.transactions = transactions = transactions.filter(
                 (t) => t.id !== id
               );
+              syncToSheets("delete", { id }); // fire-and-forget to Sheets (new version synced on submit)
               // Re-render immediately to show the item has been removed and is now being edited
               renderApp();
               if (window.updateKeywordFooterNote)
@@ -1339,7 +2071,7 @@
             n = Array.from(calculatorContainer.querySelectorAll(".item-row"));
           switch (e) {
             case "Medicines":
-              n.forEach((e) => {
+              Array.from(calculatorContainer.querySelectorAll(".items-list .item-row")).forEach((e) => {
                 const n = e.querySelector(".item-title").value,
                   o = parseFloat(e.querySelector(".item-price").value),
                   r = parseFloat(e.querySelector(".item-quantity").value),
@@ -1354,6 +2086,14 @@
                 }),
                   (t.total += i);
               });
+              {
+                const roundingEl = calculatorContainer.querySelector(".medicine-rounding");
+                const rounding = roundingEl ? (parseFloat(roundingEl.value) || 0) : 0;
+                if (rounding !== 0) {
+                  t.total += rounding;
+                  t.details.push({ type: "Rounding", amount: rounding });
+                }
+              }
               break;
             case "Groccery":
             case "Milk, Fishs & Meats":
@@ -1419,6 +2159,7 @@
               break;
             case "Shopping":
             case "Personal Snacks":
+            case "Salon and Beauty Parlor":
               n.forEach((e) => {
                 const n = e.querySelector(".item-title").value,
                   o = parseFloat(e.querySelector(".item-price").value),
@@ -1433,14 +2174,16 @@
                   (t.total += a);
               });
               break;
-            case "General Transport Cost":
+            case "Transport Cost":
               n.forEach((e) => {
-                const n = e.querySelector(".item-vehicle").value,
-                  o = e.querySelector(".item-from").value,
-                  r = e.querySelector(".item-to").value,
-                  a = parseFloat(e.querySelector(".item-fare").value);
-                t.details.push({ vehicle: n, from: o, to: r, fare: a }),
-                  (t.total += a);
+                const vehicle = e.querySelector(".item-vehicle").value,
+                  from = e.querySelector(".item-from").value,
+                  to = e.querySelector(".item-to").value,
+                  fare = parseFloat(e.querySelector(".item-fare").value),
+                  qty = parseFloat(e.querySelector(".item-quantity").value) || 1,
+                  itemTotal = fare * qty;
+                t.details.push({ vehicle, from, to, fare, quantity: qty, itemTotal }),
+                  (t.total += itemTotal);
               });
               break;
             case "Tour & Hangouts":
@@ -1535,7 +2278,7 @@
                       });
                   })();
               break;
-            case "Lend, Donate & Gifts":
+            case "Lend, Donate & Gift":
               "lend" === document.getElementById("lend-gift-type-select").value
                 ? (() => {
                     const e = n[0].querySelector(".item-person").value,
@@ -1566,11 +2309,19 @@
                       (t.total += a);
                   });
               break;
-            case "Loan repayment":
-              const f = n[0].querySelector(".item-to").value,
-                g = parseFloat(n[0].querySelector(".item-amount").value);
-              (t.total = g), t.details.push({ to: f, amount: g });
+            case "Loan repayment": {
+              const loanSelect = n[0].querySelector(".item-loan-select");
+              const loanTo = loanSelect
+                ? loanSelect.options[loanSelect.selectedIndex]?.text.split(' (')[0] || ""
+                : (n[0].querySelector(".item-to")?.value || "");
+              const loanId = loanSelect ? loanSelect.value : null;
+              const repayAmt = parseFloat(n[0].querySelector(".item-amount").value);
+              t.total = repayAmt;
+              const repayDetail = { to: loanTo, amount: repayAmt };
+              if (loanId) repayDetail.loanId = loanId;
+              t.details.push(repayDetail);
               break;
+            }
             case "Educational Expense":
               const subType = document.getElementById(
                 "educational-expense-type-select"
@@ -1614,6 +2365,46 @@
                 });
               }
               break;
+            case "Gardening":
+              Array.from(calculatorContainer.querySelectorAll(".items-list .item-row")).forEach((e) => {
+                const title = e.querySelector(".item-title").value,
+                  price = parseFloat(e.querySelector(".item-price").value),
+                  qty = parseFloat(e.querySelector(".item-quantity").value) || 1,
+                  itemTotal = price * qty;
+                t.details.push({ title, price, quantity: qty, itemTotal });
+                t.total += itemTotal;
+              });
+              {
+                const discEl = calculatorContainer.querySelector(".total-flat-discount");
+                const disc = discEl ? (parseFloat(discEl.value) || 0) : 0;
+                if (disc > 0) { t.total -= disc; t.details.push({ type: "Flat Discount", discount: disc }); }
+              }
+              break;
+            case "Sweets and Bakery":
+              Array.from(calculatorContainer.querySelectorAll(".items-list .item-row")).forEach((e) => {
+                const title = e.querySelector(".item-title").value,
+                  unit = e.querySelector(".item-unit-select")?.value || "item",
+                  price = parseFloat(e.querySelector(".item-price").value),
+                  qty = parseFloat(e.querySelector(".item-quantity").value) || 1,
+                  itemTotal = price * qty;
+                t.details.push({ title, unit, price, quantity: qty, itemTotal });
+                t.total += itemTotal;
+              });
+              {
+                const discEl = calculatorContainer.querySelector(".total-flat-discount");
+                const disc = discEl ? (parseFloat(discEl.value) || 0) : 0;
+                if (disc > 0) { t.total -= disc; t.details.push({ type: "Flat Discount", discount: disc }); }
+              }
+              break;
+            case "Others Subscription":
+              n.forEach((e) => {
+                const title = e.querySelector(".item-title").value,
+                  month = e.querySelector(".item-month").value,
+                  amount = parseFloat(e.querySelector(".item-amount").value);
+                t.details.push({ title, month, amount });
+                t.total += amount;
+              });
+              break;
             case "Professional Expense":
             case "Others":
               n.forEach((e) => {
@@ -1634,6 +2425,8 @@
               details[0]?.title || "";
             calculatorContainer.querySelector(".item-amount").value =
               details[0]?.amount || "";
+            const isLoanCb = document.getElementById("income-is-loan");
+            if (isLoanCb) isLoanCb.checked = details[0]?.isLoan || false;
             return;
           }
 
@@ -1707,20 +2500,35 @@
               }
               break;
             }
+            case "Medicines":
+              populateList(".items-list", details.filter(d => !d.type), (row, detail) => {
+                row.querySelector(".item-title").value = detail.title;
+                row.querySelector(".item-price").value = detail.price;
+                row.querySelector(".item-quantity").value = detail.quantity;
+                row.querySelector(".item-discount").value = detail.discount;
+              });
+              {
+                const roundingDetail = details.find(d => d.type === "Rounding");
+                const roundEl = calculatorContainer.querySelector(".medicine-rounding");
+                if (roundEl && roundingDetail) roundEl.value = roundingDetail.amount;
+              }
+              break;
             case "Shopping":
             case "Personal Snacks":
+            case "Salon and Beauty Parlor":
               populateList(".items-list", details, (row, detail) => {
                 row.querySelector(".item-title").value = detail.title;
                 row.querySelector(".item-price").value = detail.price;
                 row.querySelector(".item-quantity").value = detail.quantity;
               });
               break;
-            case "General Transport Cost":
+            case "Transport Cost":
               populateList(".items-list", details, (row, detail) => {
                 row.querySelector(".item-vehicle").value = detail.vehicle;
                 row.querySelector(".item-from").value = detail.from;
                 row.querySelector(".item-to").value = detail.to;
                 row.querySelector(".item-fare").value = detail.fare;
+                if (row.querySelector(".item-quantity")) row.querySelector(".item-quantity").value = detail.quantity || 1;
               });
               break;
             case "Tour & Hangouts":
@@ -1779,7 +2587,7 @@
               }, 50);
               break;
             }
-            case "Lend, Donate & Gifts": {
+            case "Lend, Donate & Gift": {
               const detailType = details[0]?.type;
               if (!detailType) break;
               const select = document.getElementById("lend-gift-type-select");
@@ -1809,8 +2617,12 @@
               const detail = details[0];
               if (!detail) break;
               const row = calculatorContainer.querySelector(".item-row");
-              row.querySelector(".item-to").value = detail.to;
-              row.querySelector(".item-amount").value = detail.amount;
+              const toInput = row?.querySelector(".item-to");
+              const loanSelect = row?.querySelector(".item-loan-select");
+              if (toInput) toInput.value = detail.to || "";
+              if (loanSelect && detail.loanId) loanSelect.value = detail.loanId;
+              const amtEl = row?.querySelector(".item-amount");
+              if (amtEl) amtEl.value = detail.amount;
               break;
             }
             case "Educational Expense": {
@@ -1840,6 +2652,36 @@
               }, 50);
               break;
             }
+            case "Gardening": {
+              populateList(".items-list", details.filter(d => !d.type), (row, detail) => {
+                row.querySelector(".item-title").value = detail.title;
+                row.querySelector(".item-price").value = detail.price;
+                row.querySelector(".item-quantity").value = detail.quantity;
+              });
+              const gDisc = details.find(d => d.type === "Flat Discount");
+              const gDiscEl = calculatorContainer.querySelector(".total-flat-discount");
+              if (gDiscEl && gDisc) gDiscEl.value = gDisc.discount;
+              break;
+            }
+            case "Sweets and Bakery": {
+              populateList(".items-list", details.filter(d => !d.type), (row, detail) => {
+                row.querySelector(".item-title").value = detail.title;
+                if (row.querySelector(".item-unit-select")) row.querySelector(".item-unit-select").value = detail.unit || "item";
+                row.querySelector(".item-price").value = detail.price;
+                row.querySelector(".item-quantity").value = detail.quantity;
+              });
+              const sDisc = details.find(d => d.type === "Flat Discount");
+              const sDiscEl = calculatorContainer.querySelector(".total-flat-discount");
+              if (sDiscEl && sDisc) sDiscEl.value = sDisc.discount;
+              break;
+            }
+            case "Others Subscription":
+              populateList(".items-list", details, (row, detail) => {
+                row.querySelector(".item-title").value = detail.title;
+                if (row.querySelector(".item-month")) row.querySelector(".item-month").value = detail.month;
+                row.querySelector(".item-amount").value = detail.amount;
+              });
+              break;
             case "Professional Expense":
             case "Others":
               populateList(".items-list", details, (row, detail) => {
@@ -1869,6 +2711,18 @@
               removeBtn.onclick = () => newItem.remove();
               list.appendChild(newItem);
             };
+          }
+
+          const isLoanCb = document.getElementById("income-is-loan");
+          if (isLoanCb) {
+            isLoanCb.addEventListener("change", () => {
+              const titleInput = calculatorContainer.querySelector(".item-title");
+              if (titleInput) {
+                titleInput.placeholder = isLoanCb.checked
+                  ? "Person / Organization Name (Lender)"
+                  : "Income from (title)";
+              }
+            });
           }
 
           const billTypeSelect = document.getElementById("bill-type-select");
@@ -2059,9 +2913,7 @@
                         n.quantity || 1
                       }): ${formatToIndianCurrency(n.itemTotal)}</li>`
                     : n.vehicle
-                    ? `<li>${n.vehicle} (${n.from} → ${
-                        n.to
-                      }): ${formatToIndianCurrency(n.fare)}</li>`
+                    ? `<li>${n.vehicle} (${n.from} → ${n.to}) x${n.quantity||1}: ${formatToIndianCurrency(n.itemTotal || n.fare)}</li>`
                     : "Doctor Fee" === n.type
                     ? `<li>Doctor Fee (${
                         n.doctorName
@@ -2109,11 +2961,47 @@
                     ? `<li>Donated to ${n.person}: ${formatToIndianCurrency(
                         n.amount
                       )}</li>`
+                    : n.type === "Flat Discount"
+                    ? `<li>Flat Discount: -${formatToIndianCurrency(n.discount)}</li>`
+                    : n.type === "Rounding"
+                    ? `<li>Rounding: ${n.amount >= 0 ? '+' : ''}${formatToIndianCurrency(n.amount)}</li>`
+                    : n.month
+                    ? `<li>${n.title} (${n.month}): ${formatToIndianCurrency(n.amount)}</li>`
+                    : n.unit
+                    ? `<li>${n.title} (${n.unit}) x${n.quantity}: ${formatToIndianCurrency(n.itemTotal)}</li>`
                     : `<li>${JSON.stringify(n)}</li>`),
                   (t += o);
               }),
               t + "</ul>"
             );
+          },
+          getActiveLoans = () => {
+            const loans = {};
+            transactions.filter(t => t.type === "income" && t.details[0]?.isLoan).forEach(t => {
+              const d = t.details[0];
+              loans[t.id] = { id: t.id, loanPerson: d.title, amount: t.total, date: t.date, repaid: 0 };
+            });
+            transactions.filter(t => t.category === "Loan repayment").forEach(t => {
+              const d = t.details[0];
+              if (d?.loanId && loans[d.loanId]) loans[d.loanId].repaid += d.amount;
+            });
+            return Object.values(loans).map(l => {
+              l.remaining = l.amount - l.repaid;
+              l.status = l.remaining <= 0 ? "done" : "active";
+              return l;
+            }).filter(l => l.status === "active");
+          },
+          getAllLoansWithRepayments = () => {
+            const loans = {};
+            transactions.filter(t => t.type === "income" && t.details[0]?.isLoan).forEach(t => {
+              const d = t.details[0];
+              loans[t.id] = { id: t.id, loanPerson: d.title, amount: t.total, date: t.date, repayments: [] };
+            });
+            transactions.filter(t => t.category === "Loan repayment").forEach(t => {
+              const d = t.details[0];
+              if (d?.loanId && loans[d.loanId]) loans[d.loanId].repayments.push({ date: t.date, amount: d.amount });
+            });
+            return Object.values(loans);
           },
           getSummaryData = (e) => {
             const t = { income: 0, expense: 0, balance: 0, categories: {} };
@@ -2151,85 +3039,212 @@
           };
 
         // --- Report & Data Management ---
-        const exportMonthlyReport = () => {
-          const input = prompt(
-            "Enter month and year in M,YY format (e.g., 1,25 for Jan 2025)"
-          );
-          if (!input) return;
+        let currentModalType = "";
 
-          const parts = input.split(",");
-          if (parts.length !== 2) {
-            alert(
-              "Invalid format. Please use M,YY format with a comma (e.g., 1,25)."
-            );
-            return;
+        const openExportModal = (type) => {
+          currentModalType = type;
+          document.getElementById("modal-monthly-group").style.display = "none";
+          document.getElementById("modal-yearly-group").style.display = "none";
+          document.getElementById("modal-custom-group").style.display = "none";
+          const today = new Date();
+          if (type === "monthly") {
+            document.getElementById("export-modal-title").textContent = "Monthly Report Export";
+            document.getElementById("modal-monthly-group").style.display = "block";
+            document.getElementById("modal-month-input").value =
+              `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
+          } else if (type === "yearly") {
+            document.getElementById("export-modal-title").textContent = "Yearly Report Export";
+            document.getElementById("modal-yearly-group").style.display = "block";
+            document.getElementById("modal-year-input").value = today.getFullYear();
+          } else if (type === "custom") {
+            document.getElementById("export-modal-title").textContent = "Custom Range Export";
+            document.getElementById("modal-custom-group").style.display = "block";
+            const todayStr = today.toISOString().split("T")[0];
+            document.getElementById("modal-custom-start-date").value = todayStr;
+            document.getElementById("modal-custom-end-date").value = todayStr;
+            document.getElementById("modal-custom-from").value = todayStr;
+            document.getElementById("modal-custom-to").value = todayStr;
+            updateCustomRangeInputs();
+          }
+          document.getElementById("export-modal-overlay").classList.add("active");
+        };
+
+        const closeExportModal = () => {
+          document.getElementById("export-modal-overlay").classList.remove("active");
+        };
+
+        const updateCustomRangeInputs = () => {
+          const checked = document.querySelector('input[name="custom-range-type"]:checked');
+          const rangeType = checked ? checked.value : "year-from-date";
+          document.getElementById("modal-year-from-date").style.display =
+            rangeType === "year-from-date" ? "block" : "none";
+          document.getElementById("modal-year-to-date").style.display =
+            rangeType === "year-to-date" ? "block" : "none";
+          document.getElementById("modal-custom-range-inputs").style.display =
+            rangeType === "custom-range" ? "block" : "none";
+        };
+
+        const handleModalDownload = () => {
+          const formatRadio = document.querySelector('input[name="report-format"]:checked');
+          const format = formatRadio ? formatRadio.value : "pdf";
+          let data = [];
+          let title = "";
+
+          if (currentModalType === "monthly") {
+            const monthInput = document.getElementById("modal-month-input").value;
+            if (!monthInput) { alert("Please select a month."); return; }
+            const [yearStr, monthStr] = monthInput.split("-");
+            const yearNum = parseInt(yearStr);
+            const monthObj = parseInt(monthStr) - 1;
+            data = transactions.filter((t) => {
+              const d = new Date(t.date);
+              return d.getFullYear() === yearNum && d.getMonth() === monthObj;
+            });
+            title = `Monthly Report - ${new Date(yearNum, monthObj).toLocaleString("en-US", { month: "long", year: "numeric" })}`;
+            if (data.length === 0) { alert("No data found for the selected month."); return; }
+
+          } else if (currentModalType === "yearly") {
+            const yearNum = parseInt(document.getElementById("modal-year-input").value);
+            if (isNaN(yearNum)) { alert("Please enter a valid year."); return; }
+            data = transactions.filter((t) => new Date(t.date).getFullYear() === yearNum);
+            title = `Summary for ${yearNum}`;
+            if (data.length === 0) { alert("No data found for the selected year."); return; }
+
+          } else if (currentModalType === "custom") {
+            const checked = document.querySelector('input[name="custom-range-type"]:checked');
+            const rangeType = checked ? checked.value : "year-from-date";
+            if (rangeType === "year-from-date") {
+              const startDateStr = document.getElementById("modal-custom-start-date").value;
+              if (!startDateStr) { alert("Please select a start date."); return; }
+              const endDateObj = new Date(startDateStr);
+              endDateObj.setFullYear(endDateObj.getFullYear() + 1);
+              const endDateStr = endDateObj.toISOString().split("T")[0];
+              data = transactions.filter((t) => t.date >= startDateStr && t.date < endDateStr);
+              title = `Report - ${startDateStr} to ${endDateStr}`;
+            } else if (rangeType === "year-to-date") {
+              const endDateStr = document.getElementById("modal-custom-end-date").value;
+              if (!endDateStr) { alert("Please select an end date."); return; }
+              const startDateObj = new Date(endDateStr);
+              startDateObj.setFullYear(startDateObj.getFullYear() - 1);
+              startDateObj.setDate(startDateObj.getDate() + 1);
+              const startDateStr = startDateObj.toISOString().split("T")[0];
+              data = transactions.filter((t) => t.date >= startDateStr && t.date <= endDateStr);
+              title = `Report - ${startDateStr} to ${endDateStr}`;
+            } else {
+              const fromStr = document.getElementById("modal-custom-from").value;
+              const toStr = document.getElementById("modal-custom-to").value;
+              if (!fromStr || !toStr) { alert("Please select both start and end dates."); return; }
+              if (fromStr > toStr) { alert("Start date must be before end date."); return; }
+              data = transactions.filter((t) => t.date >= fromStr && t.date <= toStr);
+              title = `Report - ${fromStr} to ${toStr}`;
+            }
+            if (data.length === 0) { alert("No data found for the selected range."); return; }
           }
 
-          const monthNum = parseInt(parts[0].trim());
-          const yearShort = parseInt(parts[1].trim());
+          closeExportModal();
 
-          if (
-            isNaN(monthNum) ||
-            isNaN(yearShort) ||
-            monthNum < 1 ||
-            monthNum > 12 ||
-            yearShort < 0
-          ) {
-            alert("Invalid numbers for month or year. Month must be 1-12.");
-            return;
+          if (format === "pdf") {
+            generatePDFReport(data, title);
+          } else {
+            const safeFilename = `Finance_${title.replace(/[^a-zA-Z0-9\-]/g, "_")}.csv`;
+            exportToCSV(data, safeFilename, title);
           }
+        };
 
-          const month = monthNum - 1;
-          const year = 2000 + yearShort;
+        const generatePDFReport = (data, title) => {
+          const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-          const monthTransactions = transactions.filter((t) => {
-            const date = new Date(t.date);
-            return date.getFullYear() === year && date.getMonth() === month;
+          // Compute full summary (totals + per-category breakdown)
+          const summaryData = getSummaryData(data);
+          const balanceColor = summaryData.balance >= 0 ? "#28a745" : "#dc3545";
+
+          // Build summary table rows (matching the in-app summary box)
+          let summaryRowsHTML = `
+            <tr>
+              <td style="padding:5px 8px;">&#9829; Total Income</td>
+              <td style="padding:5px 8px;text-align:right;color:#28a745;font-weight:700;">+ ${formatToIndianCurrency(summaryData.income)}</td>
+            </tr>`;
+          for (const cat in summaryData.categories) {
+            if (summaryData.categories[cat] > 0) {
+              summaryRowsHTML += `
+            <tr>
+              <td style="padding:5px 8px;">&rarr; ${esc(cat)}</td>
+              <td style="padding:5px 8px;text-align:right;color:#dc3545;">- ${formatToIndianCurrency(summaryData.categories[cat])}</td>
+            </tr>`;
+            }
+          }
+          summaryRowsHTML += `
+            <tr style="border-top:2px solid #333;">
+              <td style="padding:8px 8px 5px;font-weight:700;">Balance</td>
+              <td style="padding:8px 8px 5px;text-align:right;font-weight:700;">
+                <span style="color:${balanceColor};">${formatToIndianCurrency(summaryData.balance)}</span>
+                &nbsp;|&nbsp;<span style="color:#dc3545;">${formatToIndianCurrency(summaryData.expense)}</span>
+              </td>
+            </tr>`;
+
+          // Build transaction rows
+          const sorted = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
+          let rowsHTML = "";
+          sorted.forEach((t) => {
+            const detailsStr = esc(formatDetailsForCSV(t.details, t.category));
+            const amtColor = t.type === "income" ? "#28a745" : "#dc3545";
+            rowsHTML += `<tr>
+              <td>${esc(t.date)}</td>
+              <td style="text-transform:capitalize;color:${amtColor}">${esc(t.type)}</td>
+              <td>${esc(t.category || "Income")}</td>
+              <td style="text-align:right;color:${amtColor};font-weight:600;">${t.type === "income" ? "+" : "-"}${formatToIndianCurrency(t.total)}</td>
+              <td style="font-size:10px;">${detailsStr}</td>
+            </tr>`;
           });
 
-          if (monthTransactions.length === 0) {
-            alert(
-              `No data found for ${new Date(year, month).toLocaleString(
-                "en-US",
-                { month: "long", year: "numeric" }
-              )}.`
-            );
+          const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>${esc(title)}</title>
+<style>
+  body{font-family:Arial,sans-serif;font-size:11px;margin:20px;color:#333}
+  h1{color:#4a90e2;font-size:18px;margin-bottom:4px}
+  .summary-title{text-align:center;font-size:15px;font-weight:700;margin:16px 0 8px;color:#333}
+  .summary-wrap{display:flex;justify-content:center;margin-bottom:24px}
+  .summary-table{border-collapse:collapse;min-width:300px;font-size:12px}
+  .summary-table td{border-bottom:1px solid #eee}
+  table.tx-table{width:100%;border-collapse:collapse}
+  thead th{background:#4a90e2;color:#fff;padding:8px 6px;text-align:left;font-size:11px}
+  tbody td{padding:5px 6px;border-bottom:1px solid #eee;vertical-align:top}
+  tbody tr:nth-child(even){background:#fafafa}
+  hr{border:0;border-top:1px solid #ddd;margin:20px 0}
+  @media print{.no-print{display:none}}
+</style>
+</head>
+<body>
+<button class="no-print" onclick="window.print()" style="margin-bottom:16px;padding:8px 20px;background:#4a90e2;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:14px;">&#128438; Print / Save as PDF</button>
+<h1>Finance Tracker</h1>
+<p class="summary-title">${esc(title)}</p>
+<div class="summary-wrap">
+  <table class="summary-table">
+    <tbody>${summaryRowsHTML}</tbody>
+  </table>
+</div>
+<hr>
+<p style="color:#555;font-size:12px;font-weight:600;margin-bottom:8px;">Transaction Details</p>
+<table class="tx-table">
+  <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Details</th></tr></thead>
+  <tbody>${rowsHTML}</tbody>
+</table>
+</body>
+</html>`;
+
+          const printWindow = window.open("", "_blank");
+          if (!printWindow) {
+            alert("Please allow popups for this site to generate PDF reports.");
             return;
           }
-
-          const filename = `Expense_Report_${year}_${String(month + 1).padStart(
-            2,
-            "0"
-          )}.csv`;
-          exportToCSV(monthTransactions, filename);
+          printWindow.document.write(htmlContent);
+          printWindow.document.close();
         };
 
-        const exportYearlyReport = () => {
-          const yearInput = prompt("Enter year to export (e.g., '2025')");
-          if (yearInput === null) {
-            return;
-          }
-
-          const year = parseInt(yearInput.trim());
-          if (isNaN(year)) {
-            alert("Please enter a valid year.");
-            return;
-          }
-
-          const yearTransactions = transactions.filter(
-            (t) => new Date(t.date).getFullYear() === year
-          );
-
-          if (yearTransactions.length === 0) {
-            alert(`No data found for the year ${year}.`);
-            return;
-          }
-
-          const filename = `Expense_Report_${year}.csv`;
-          exportToCSV(yearTransactions, filename);
-        };
-
-        const formatDetailsForCSV = (details, category) => {
+                const formatDetailsForCSV = (details, category) => {
           if (!details || details.length === 0) {
             return "";
           }
@@ -2252,9 +3267,7 @@
                   2
                 )}`;
               if (n.vehicle)
-                return `${n.vehicle} (${n.from} → ${n.to}): ${n.fare.toFixed(
-                  2
-                )}`;
+                return `${n.vehicle} (${n.from} → ${n.to}) x${n.quantity||1}: ${(n.itemTotal || n.fare).toFixed(2)}`;
               if (n.type === "Doctor Fee")
                 return `Doctor Fee (${n.doctorName}): ${n.fee.toFixed(2)}`;
               if (n.type === "Medical Tests")
@@ -2282,12 +3295,16 @@
                 return `Lent to ${n.person}: ${n.amount.toFixed(2)}`;
               if (n.type === "Donate")
                 return `Donated to ${n.person}: ${n.amount.toFixed(2)}`;
+              if (n.type === "Flat Discount") return `Flat Discount: -${n.discount.toFixed(2)}`;
+              if (n.type === "Rounding") return `Rounding: ${n.amount >= 0 ? '+' : ''}${n.amount.toFixed(2)}`;
+              if (n.month) return `${n.title} (${n.month}): ${n.amount.toFixed(2)}`;
+              if (n.unit) return `${n.title} (${n.unit}) x${n.quantity}: ${n.itemTotal.toFixed(2)}`;
               return JSON.stringify(n);
             })
             .join("; ");
         };
 
-        const exportToCSV = (data, filename) => {
+        const exportToCSV = (data, filename, title = "") => {
           const headers = [
             "ID",
             "Date",
@@ -2318,12 +3335,17 @@
             csvRows.push(row.join(","));
           });
 
+          // --- Summary section with per-category breakdown ---
+          const summaryData = getSummaryData(data);
           csvRows.push("");
-          csvRows.push(`"Total Income",,,,${totalIncome.toFixed(2)}`);
-          csvRows.push(`"Total Expense",,,,${totalExpense.toFixed(2)}`);
-          csvRows.push(
-            `"Balance",,,,${(totalIncome - totalExpense).toFixed(2)}`
-          );
+          if (title) csvRows.push(`"--- ${title} ---"`);
+          csvRows.push(`"♥ Total Income",,,,+${summaryData.income.toFixed(2)}`);
+          for (const cat in summaryData.categories) {
+            if (summaryData.categories[cat] > 0) {
+              csvRows.push(`"→ ${cat}",,,,-${summaryData.categories[cat].toFixed(2)}`);
+            }
+          }
+          csvRows.push(`"Balance",,,,${summaryData.balance.toFixed(2)}`);
 
           downloadFile(csvRows.join("\n"), filename, "text/csv;charset=utf-8;");
         };
@@ -2360,7 +3382,18 @@
               renderApp();
               if (window.updateKeywordFooterNote)
                 window.updateKeywordFooterNote();
-              alert("Data successfully imported and overwritten!");
+              // Sync restored data to Google Sheets
+              if (APPS_SCRIPT_URL) {
+                try {
+                  await syncReplaceAll(importedData);
+                  alert("Data successfully imported, overwritten locally and synced to Google Sheets!");
+                } catch (sheetsErr) {
+                  console.warn("Sheets sync after import failed:", sheetsErr);
+                  alert("Data imported locally but Google Sheets sync failed. Please check your connection and try importing again.");
+                }
+              } else {
+                alert("Data successfully imported and overwritten!");
+              }
             } catch (error) {
               alert(
                 "Error importing file. Please ensure it is a valid backup file.\n\n" +

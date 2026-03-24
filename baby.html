@@ -339,9 +339,103 @@
         margin: 10px 0 5px 0;
         color: yellowgreen;
       }
+
+      /* --- Secret Key Lock Overlay --- */
+      #baby-lock-overlay {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #1a0a2e 0%, #3d1a5e 50%, #1a1a3e 100%);
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #baby-lock-box {
+        background: #fff;
+        border-radius: 18px;
+        padding: 40px 36px;
+        width: 90%;
+        max-width: 360px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        text-align: center;
+      }
+      #baby-lock-box .lock-icon {
+        font-size: 3rem;
+        margin-bottom: 6px;
+      }
+      #baby-lock-box h2 {
+        margin: 0 0 4px;
+        color: #7c3aed;
+        font-family: "Bad Script", cursive;
+        font-size: 1.8rem;
+        font-weight: normal;
+      }
+      #baby-lock-box p {
+        color: #888;
+        font-size: 0.9em;
+        margin: 0 0 22px;
+        font-family: sans-serif;
+      }
+      #baby-lock-input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1em;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+        outline: none;
+      }
+      #baby-lock-input:focus {
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+      }
+      #baby-lock-error {
+        display: none;
+        color: #dc3545;
+        font-size: 0.85em;
+        margin-bottom: 10px;
+        padding: 8px 12px;
+        background: #fff5f5;
+        border-radius: 4px;
+        border: 1px solid #ffd0d0;
+        font-family: sans-serif;
+      }
+      #baby-lock-submit {
+        width: 100%;
+        padding: 13px;
+        background: #7c3aed;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.05em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s;
+        font-family: sans-serif;
+      }
+      #baby-lock-submit:hover {
+        background: #6d28d9;
+      }
     </style>
   </head>
   <body>
+    <!-- Secret Key Lock Overlay -->
+    <div id="baby-lock-overlay">
+      <div id="baby-lock-box">
+        <div class="lock-icon">👶🔒</div>
+        <h2>Parenthood</h2>
+        <p>Enter the secret key to continue</p>
+        <form id="baby-lock-form" autocomplete="off">
+          <input type="password" id="baby-lock-input" placeholder="Secret Key" />
+          <div id="baby-lock-error">Wrong key. Please try again.</div>
+          <button type="submit" id="baby-lock-submit">Unlock</button>
+        </form>
+      </div>
+    </div>
+    <!-- Lock overlay end -->
+
     <!-- The Modal Popup Structure (Hidden by default) -->
     <div id="imageModal" class="modal-overlay">
       <span class="modal-close-btn">×</span>
@@ -1677,5 +1771,31 @@
       <!-- box end -->
     </div>
     <script src="js/baby.js"></script>
+    <script>
+      (function () {
+        const SECRET = '$ahal$ara';
+        const KEY = 'baby_page_unlocked';
+        const overlay = document.getElementById('baby-lock-overlay');
+
+        // Already unlocked in this session — remove overlay immediately
+        if (sessionStorage.getItem(KEY) === '1') {
+          overlay.remove();
+          return;
+        }
+
+        document.getElementById('baby-lock-form').addEventListener('submit', function (e) {
+          e.preventDefault();
+          const input = document.getElementById('baby-lock-input');
+          if (input.value === SECRET) {
+            sessionStorage.setItem(KEY, '1');
+            overlay.remove();
+          } else {
+            document.getElementById('baby-lock-error').style.display = 'block';
+            input.value = '';
+            input.focus();
+          }
+        });
+      })();
+    </script>
   </body>
 </html>
