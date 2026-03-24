@@ -31,10 +31,11 @@ let zikrCounts = {
 
 // --- Google Sheets Integration ---
 // After deploying rec/zikir-appscript.gs as a Web App, paste the URL below.
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQr7qvXCgzxvCowO3MtJCo_qR0nIlxvKgoYI1y1-DYfsl7uRYgyUrrNl5hVJuHe82tJg/exec";
-let sheetsUser = null;       // { email, tabName } when connected
-let sheetsSaveTimer = null;  // debounce handle for Sheets saves
-let sheetStatusEl;           // status indicator element
+const APPS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbzh9uTBHvXAE4_oF2SjAbVOV9U4ymcbaFouxRd0CdXS8C8iG-p5DeAIAAUqYeVO96WBTQ/exec";
+let sheetsUser = null; // { email, tabName } when connected
+let sheetsSaveTimer = null; // debounce handle for Sheets saves
+let sheetStatusEl; // status indicator element
 
 // --- DOM Element Assignment ---
 let exportButton, importFile; // <-- Add export/import elements
@@ -135,7 +136,7 @@ async function loadCountsFromDBWithIdb() {
       for (const key of expectedKeys) {
         if (typeof storedData[key] !== "number") {
           console.warn(
-            `Loaded data missing or has invalid type for key: ${key}`
+            `Loaded data missing or has invalid type for key: ${key}`,
           );
           isValid = false;
           break;
@@ -179,16 +180,40 @@ async function saveCountsToDBWithIdb() {
 
 // --- Google Sheets Sync ---
 function isSheetsConfigured() {
-  return APPS_SCRIPT_URL && APPS_SCRIPT_URL !== "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+  return (
+    APPS_SCRIPT_URL && APPS_SCRIPT_URL !== "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE"
+  );
+}
+
+/**
+ * Returns the stored Gmail address used for Sheets sync.
+ * On first call (no stored value) it prompts the user once and saves to localStorage.
+ * Returns null if the user cancels or enters an invalid address.
+ */
+function getSheetsEmail() {
+  let email = localStorage.getItem("zikirSheetsEmail");
+  if (!email) {
+    email = prompt(
+      "Enter your Gmail address for cross-device sync\n(e.g. you@gmail.com)\n\nLeave blank to skip sync.",
+    );
+    if (email && email.includes("@")) {
+      email = email.trim().toLowerCase();
+      localStorage.setItem("zikirSheetsEmail", email);
+    } else {
+      email = null;
+    }
+  }
+  return email;
 }
 
 function updateSheetsStatus(state) {
   if (!sheetStatusEl) return;
+  const userLabel = sheetsUser ? sheetsUser.email : "";
   const messages = {
     loading: "Connecting to Google Sheets...",
-    connected: "Synced with Google Sheets: " + (sheetsUser ? sheetsUser.email : ""),
-    "auth-needed":
-      '<a href="' + APPS_SCRIPT_URL + '" target="_blank">Authorize Google Sheets access</a> (open once in browser)',
+    connected: "Synced \u2714 " + userLabel,
+    "no-email":
+      "Sheets sync disabled (no email set). <button onclick=\"localStorage.removeItem('zikirSheetsEmail');location.reload()\">Set email</button>",
     error: "Google Sheets unavailable (working offline)",
     disabled: "",
   };
@@ -196,19 +221,21 @@ function updateSheetsStatus(state) {
 }
 
 async function loadFromSheets() {
-  if (!isSheetsConfigured()) { updateSheetsStatus("disabled"); return null; }
+  if (!isSheetsConfigured()) {
+    updateSheetsStatus("disabled");
+    return null;
+  }
+  const email = getSheetsEmail();
+  if (!email) {
+    updateSheetsStatus("no-email");
+    return null;
+  }
   try {
     updateSheetsStatus("loading");
-    const res = await fetch(APPS_SCRIPT_URL + "?action=load", {
-      credentials: "include",
-      redirect: "follow",
-    });
+    const url =
+      APPS_SCRIPT_URL + "?action=load&email=" + encodeURIComponent(email);
+    const res = await fetch(url);
     if (!res.ok) throw new Error("HTTP " + res.status);
-    const ct = res.headers.get("content-type") || "";
-    if (!ct.includes("application/json")) {
-      updateSheetsStatus("auth-needed");
-      return null;
-    }
     const json = await res.json();
     if (!json.success) throw new Error(json.error || "Load failed");
     sheetsUser = { email: json.userEmail, tabName: json.tabName };
@@ -230,20 +257,17 @@ function scheduleSheetsave() {
 
 async function saveToSheets() {
   if (!isSheetsConfigured()) return;
+  const email = getSheetsEmail();
+  if (!email) return;
   try {
-    const params = new URLSearchParams({ action: "save" });
+    const params = new URLSearchParams({ action: "save", email: email });
     for (const key in zikrCounts) {
       if (Object.prototype.hasOwnProperty.call(zikrCounts, key)) {
         params.append(key, zikrCounts[key]);
       }
     }
-    const res = await fetch(APPS_SCRIPT_URL + "?" + params.toString(), {
-      credentials: "include",
-      redirect: "follow",
-    });
+    const res = await fetch(APPS_SCRIPT_URL + "?" + params.toString());
     if (!res.ok) throw new Error("HTTP " + res.status);
-    const ct = res.headers.get("content-type") || "";
-    if (!ct.includes("application/json")) { updateSheetsStatus("auth-needed"); return; }
     const json = await res.json();
     if (json.success) {
       sheetsUser = { email: json.userEmail, tabName: json.tabName };
@@ -271,7 +295,7 @@ function updateDisplay() {
   if (totalCount) {
     // Find the text node directly within totalCount to update only the number
     let textNode = Array.from(totalCount.childNodes).find(
-      (node) => node.nodeType === Node.TEXT_NODE
+      (node) => node.nodeType === Node.TEXT_NODE,
     );
     if (textNode) {
       textNode.nodeValue = ` ${zikrCounts.total}`; // Update existing text node
@@ -352,7 +376,7 @@ function counter() {
   // Update status message
   if (msg)
     msg.innerHTML = `<span style="color: green;">আপনি এই মুহুর্তে "<big>${keyText(
-      key
+      key,
     )}</big>" জিকিরটিতে মশগুল আছেন।</span>`;
 }
 
@@ -433,7 +457,7 @@ function handleImport(event) {
         } else {
           console.warn(
             `Invalid or missing data for key '${key}' in imported file. Found:`,
-            importedData[key]
+            importedData[key],
           );
           isValid = false;
           break; // Stop validation on first error
@@ -446,12 +470,12 @@ function handleImport(event) {
           (key) =>
             typeof importedData[key] !== "number" ||
             !Number.isInteger(importedData[key]) ||
-            importedData[key] < 0
+            importedData[key] < 0,
         );
         throw new Error(
           `Invalid data structure or non-integer/negative count for '${
             problematicKey || "unknown key"
-          }' in imported file.`
+          }' in imported file.`,
         );
       }
 
@@ -464,7 +488,7 @@ function handleImport(event) {
         validatedData.allahu;
       if (validatedData.total !== calculatedTotal) {
         console.warn(
-          `Imported total (${validatedData.total}) does not match calculated total (${calculatedTotal}). Using calculated total.`
+          `Imported total (${validatedData.total}) does not match calculated total (${calculatedTotal}). Using calculated total.`,
         );
         validatedData.total = calculatedTotal; // Use the recalculated total
       }
@@ -588,7 +612,7 @@ function handleDocumentClick(event) {
 // Helper function to apply styling based on the checked radio
 function applySelectionStyle() {
   const currentlyCheckedRadio = document.querySelector(
-    "input[name='zikr']:checked"
+    "input[name='zikr']:checked",
   );
   defaultColor(); // Reset all styles first
 
@@ -604,12 +628,12 @@ function applySelectionStyle() {
       const key = currentlyCheckedRadio.value;
       if (msg)
         msg.innerHTML = `<span style="color: green;">আপনি এই মুহুর্তে "<big>${keyText(
-          key
+          key,
         )}</big>" জিকিরটিতে মশগুল আছেন।</span>`;
     } else {
       console.warn(
         "Could not find the correct span to style for:",
-        currentlyCheckedRadio.id
+        currentlyCheckedRadio.id,
       );
     }
   } else {
@@ -689,14 +713,14 @@ async function initializeApp() {
     audio.addEventListener(
       "canplaythrough",
       () => console.log("Audio ready to play through."),
-      { once: true }
+      { once: true },
     );
     audio.addEventListener("error", (e) =>
-      console.error("Audio load error:", audio.error || e)
+      console.error("Audio load error:", audio.error || e),
     );
     // Optional: Handle stalled audio
     audio.addEventListener("stalled", () =>
-      console.warn("Audio loading stalled. Network issue?")
+      console.warn("Audio loading stalled. Network issue?"),
     );
 
     // Initialize DB, then load data
