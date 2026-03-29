@@ -57,25 +57,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let bangladeshIslamicDate = new Date();
     bangladeshIslamicDate.setDate(bangladeshIslamicDate.getDate() - 1);
-    let islamicDate = new Intl.DateTimeFormat("bn-TN-u-ca-islamic", {
+    // Use en-US with numeric month — supported on all devices including mobile.
+    // Mapping month number to Bengali Islamic month names avoids locale fallback issues.
+    const islamicMonthsBn = [
+      "মুহাররম", "সফর", "রবিউল আউয়াল", "রবিউস সানি",
+      "জমাদিউল আউয়াল", "জমাদিউস সানি", "রজব", "শাবান",
+      "রমজান", "শাওয়াল", "জিলকদ", "জিলহজ",
+    ];
+    const islamicParts = new Intl.DateTimeFormat("en-US-u-ca-islamic", {
       day: "numeric",
-      month: "long",
+      month: "numeric",
       year: "numeric",
-    }).format(bangladeshIslamicDate);
-    islamicDate = islamicDate
-      .replace(/যুগ|খ্রিস্টপূর্ব/g, "হিজরি")
-      .replace("জানুয়ারি", "মুহাররম")
-      .replace("ফেব্রুয়ারি", "সফর")
-      .replace("মার্চ", "রবিউল আউয়াল")
-      .replace("এপ্রিল", "রবিউস সানি")
-      .replace("মে", "জমাদিউল আউয়াল")
-      .replace("জুন", "জমাদিউস সানি")
-      .replace("জুলাই", "রজব")
-      .replace("অগাস্ট", "শাবান")
-      .replace("সেপ্টেম্বর", "রমজান")
-      .replace("অক্টোবর", "শাওয়াল")
-      .replace("নভেম্বর", "জিলকদ")
-      .replace("ডিসেম্বর", "জিলহজ");
+    }).formatToParts(bangladeshIslamicDate);
+    const ip = {};
+    islamicParts.forEach(function(p) { ip[p.type] = p.value; });
+    function tobn(n) { return String(n).replace(/\d/g, function(d) { return "০১২৩৪৫৬৭৮৯"[d]; }); }
+    const islamicDate =
+      tobn(parseInt(ip.day, 10)) + " " +
+      islamicMonthsBn[parseInt(ip.month, 10) - 1] + ", " +
+      tobn(parseInt(ip.year, 10)) + " হিজরি";
 
     const arabicDateElement = document.getElementById("arabicDateBangla");
     if (arabicDateElement) {
