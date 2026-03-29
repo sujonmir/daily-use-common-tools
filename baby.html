@@ -344,7 +344,12 @@
       #baby-lock-overlay {
         position: fixed;
         inset: 0;
-        background: linear-gradient(135deg, #1a0a2e 0%, #3d1a5e 50%, #1a1a3e 100%);
+        background: linear-gradient(
+          135deg,
+          #1a0a2e 0%,
+          #3d1a5e 50%,
+          #1a1a3e 100%
+        );
         z-index: 99999;
         display: flex;
         align-items: center;
@@ -428,7 +433,11 @@
         <h2>Parenthood</h2>
         <p>Enter the secret key to continue</p>
         <form id="baby-lock-form" autocomplete="off">
-          <input type="password" id="baby-lock-input" placeholder="Secret Key" />
+          <input
+            type="password"
+            id="baby-lock-input"
+            placeholder="Secret Key"
+          />
           <div id="baby-lock-error">Wrong key. Please try again.</div>
           <button type="submit" id="baby-lock-submit">Unlock</button>
         </form>
@@ -1769,32 +1778,128 @@
         />
       </div>
       <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          2nd Month Celebration:
+          <div class="f">28.2.26</div>
+        </h3>
+        <img
+          src="img/2nd_month_celebration_28_feb.webp"
+          alt="Celebrating: 2nd Month"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Chand Raat Celebration:
+          <div class="f">20.3.26</div>
+        </h3>
+        <video
+          src="media/Video/1st_eid_20-3-26.mp4"
+          alt="Chand Raat Celebration"
+          class="video video-trigger"
+          controls
+          controlsList="nofullscreen"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          First Eid with Ammu:
+          <div class="f">21.3.26</div>
+        </h3>
+        <img
+          src="img/eid_with_ammu.webp"
+          alt="First Eid with Ammu"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          First Eid with Abbu:
+          <div class="f">21.3.26</div>
+        </h3>
+        <img
+          src="img/eid_with_abbu.webp"
+          alt="First Eid with Abbu"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          First Eid with Dadi:
+          <div class="f">21.3.26</div>
+        </h3>
+        <img
+          src="img/eid_with_dadi.webp"
+          alt="First Eid with Dadi"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          First Eid with Fuppi:
+          <div class="f">21.3.26</div>
+        </h3>
+        <img
+          src="img/eid_with_fuppi.webp"
+          alt="First Eid with Fuppi"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
+      <!-- box start -->
+      <div class="box">
+        <h3>
+          Vaccine 3rd Dose:
+          <div class="f">24.3.26</div>
+        </h3>
+        <img
+          src="img/3rdDose_vaccine.webp"
+          alt="Vaccine: 3rd Dose"
+          class="img-trigger"
+        />
+      </div>
+      <!-- box end -->
     </div>
     <script src="js/baby.js"></script>
     <script>
       (function () {
-        const SECRET = '$ahal$ara';
-        const KEY = 'baby_page_unlocked';
-        const overlay = document.getElementById('baby-lock-overlay');
+        const SECRET = "$ahal$ara";
+        const KEY = "baby_page_unlocked";
+        const overlay = document.getElementById("baby-lock-overlay");
 
         // Already unlocked in this session — remove overlay immediately
-        if (sessionStorage.getItem(KEY) === '1') {
+        if (sessionStorage.getItem(KEY) === "1") {
           overlay.remove();
           return;
         }
 
-        document.getElementById('baby-lock-form').addEventListener('submit', function (e) {
-          e.preventDefault();
-          const input = document.getElementById('baby-lock-input');
-          if (input.value === SECRET) {
-            sessionStorage.setItem(KEY, '1');
-            overlay.remove();
-          } else {
-            document.getElementById('baby-lock-error').style.display = 'block';
-            input.value = '';
-            input.focus();
-          }
-        });
+        document
+          .getElementById("baby-lock-form")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+            const input = document.getElementById("baby-lock-input");
+            if (input.value === SECRET) {
+              sessionStorage.setItem(KEY, "1");
+              overlay.remove();
+            } else {
+              document.getElementById("baby-lock-error").style.display =
+                "block";
+              input.value = "";
+              input.focus();
+            }
+          });
       })();
     </script>
   </body>
