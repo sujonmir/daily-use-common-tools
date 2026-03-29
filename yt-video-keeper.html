@@ -119,6 +119,44 @@
         background: #720303;
       }
 
+      /* Sheets sync bar */
+      #sheetStatus {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        font-size: 11px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 5px 8px;
+        margin-bottom: 16px;
+      }
+      #sheetStatus input[type="email"] {
+        flex: 1;
+        min-width: 160px;
+        font-size: 11px;
+        padding: 5px 8px;
+        border: 1px solid #bbb;
+        border-radius: 4px;
+        box-shadow: none;
+      }
+      #sheetStatus .sync-btn {
+        font-size: 9px;
+        padding: 5px 12px;
+        letter-spacing: 0;
+        background: #1a73e8;
+        border-radius: 4px;
+        cursor: pointer;
+        text-transform: none;
+      }
+      #sheetStatus .sync-btn.danger {
+        background: #c00;
+      }
+      #sheetStatus .sync-label {
+        color: #555;
+      }
+
       .videoList {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -213,7 +251,8 @@
       <div id="mainPlayer" class="shower">
         <p style="color: #777">Saved videos will be played here.</p>
       </div>
-      <hr />
+      <!-- Google Sheets sync status bar -->
+      <div id="sheetStatus"></div>
 
       <!-- MODIFIED: Header with actions -->
       <div class="list-header">
@@ -245,6 +284,135 @@
        * YouTube Video Keeper - Refactored for performance and state management.
        */
 
+      // --- Google Sheets Config ---
+      // After deploying rec/yt-video-keeper-appscript.gs as a Web App, paste the URL below.
+      const YT_APPS_SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbyJfmRgeRCK1gnnM_p8Bi9YUIn_ZG-8_XCmC-RNJzG303SI0yeZjMvdTXaUopDRxYa5/exec";
+      let sheetsSaveTimer = null;
+
+      function isSheetsConfigured() {
+        return (
+          YT_APPS_SCRIPT_URL &&
+          YT_APPS_SCRIPT_URL !== "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE"
+        );
+      }
+
+      // Read email from localStorage only — no prompt()
+      function getSheetsEmail() {
+        return localStorage.getItem("ytKeeperSheetsEmail") || null;
+      }
+
+      // Visible sync status bar
+      function updateSheetsStatus(state, detail) {
+        const el = document.getElementById("sheetStatus");
+        if (!el) return;
+        const email = getSheetsEmail();
+        if (state === "no-email") {
+          el.innerHTML =
+            '<span class="sync-label">&#x1F4CB; Google Sheets sync:</span>' +
+            '<input type="email" id="emailInput" placeholder="your@gmail.com" autocomplete="email">' +
+            '<button class="sync-btn" onclick="connectEmail()">Connect</button>';
+        } else if (state === "loading") {
+          el.innerHTML =
+            '<span class="sync-label">&#x23F3; Connecting to Google Sheets&hellip;</span>';
+        } else if (state === "connected") {
+          el.innerHTML =
+            '<span style="color:green">&#x2714; Synced: <strong>' +
+            email +
+            "</strong></span>" +
+            '<button class="sync-btn danger" onclick="disconnectEmail()">Change</button>';
+        } else if (state === "error") {
+          el.innerHTML =
+            '<span style="color:#c00">&#x26A0; Sheets error: ' +
+            (detail || "check console") +
+            "</span>" +
+            '<button class="sync-btn" onclick="retrySync()">Retry</button>' +
+            '<button class="sync-btn danger" onclick="disconnectEmail()">Change Email</button>';
+        }
+      }
+
+      // Called when user clicks "Connect" in the status bar
+      async function connectEmail() {
+        const input = document.getElementById("emailInput");
+        const email = input ? input.value.trim().toLowerCase() : "";
+        if (!email || !email.includes("@")) {
+          input && (input.style.borderColor = "red");
+          return;
+        }
+        localStorage.setItem("ytKeeperSheetsEmail", email);
+        const sheetsVideos = await loadFromSheets();
+        if (sheetsVideos && Array.isArray(sheetsVideos)) {
+          videoKeeper = sheetsVideos;
+          localStorage.setItem("videoKeeper", JSON.stringify(videoKeeper));
+          renderSavedVideos();
+        }
+      }
+
+      function disconnectEmail() {
+        localStorage.removeItem("ytKeeperSheetsEmail");
+        updateSheetsStatus("no-email");
+      }
+
+      function retrySync() {
+        saveToSheets();
+      }
+
+      async function loadFromSheets() {
+        if (!isSheetsConfigured()) return null;
+        const email = getSheetsEmail();
+        if (!email) {
+          updateSheetsStatus("no-email");
+          return null;
+        }
+        try {
+          updateSheetsStatus("loading");
+          const res = await fetch(
+            YT_APPS_SCRIPT_URL +
+              "?action=load&email=" +
+              encodeURIComponent(email),
+          );
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const json = await res.json();
+          if (!json.success) throw new Error(json.error || "Load failed");
+          updateSheetsStatus("connected");
+          return json.videos;
+        } catch (err) {
+          console.error("Sheets load error:", err);
+          updateSheetsStatus("error", err.message);
+          return null;
+        }
+      }
+
+      function scheduleSheetsave() {
+        if (!isSheetsConfigured()) return;
+        clearTimeout(sheetsSaveTimer);
+        sheetsSaveTimer = setTimeout(saveToSheets, 1500);
+      }
+
+      async function saveToSheets() {
+        if (!isSheetsConfigured()) return;
+        const email = getSheetsEmail();
+        if (!email) {
+          updateSheetsStatus("no-email");
+          return;
+        }
+        try {
+          const params = new URLSearchParams({
+            action: "save",
+            email: email,
+            videos: JSON.stringify(videoKeeper),
+          });
+          const res = await fetch(YT_APPS_SCRIPT_URL + "?" + params.toString());
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const json = await res.json();
+          if (!json.success) throw new Error(json.error || "Save failed");
+          updateSheetsStatus("connected");
+        } catch (err) {
+          console.error("Sheets save error:", err);
+          updateSheetsStatus("error", err.message);
+        }
+      }
+
       // --- DOM Elements ---
       const urlInput = document.getElementById("urlInput");
       const submitBtn = document.getElementById("submitBtn");
@@ -270,6 +438,7 @@
 
       function saveVideos() {
         localStorage.setItem("videoKeeper", JSON.stringify(videoKeeper));
+        scheduleSheetsave();
       }
 
       function highlightActiveThumbnail(videoId) {
@@ -398,7 +567,11 @@
                 alert("No new videos found in this backup.");
               } else {
                 videoKeeper = [...newIds, ...videoKeeper];
-                saveVideos();
+                localStorage.setItem(
+                  "videoKeeper",
+                  JSON.stringify(videoKeeper),
+                );
+                saveToSheets(); // push to Sheets immediately on import
                 renderSavedVideos();
                 alert(`Successfully imported ${newIds.length} videos.`);
               }
@@ -418,16 +591,35 @@
       }
 
       // --- Initialization ---
-      function initialize() {
+      async function initialize() {
+        // Show localStorage data immediately for instant first render
         const savedVideos = localStorage.getItem("videoKeeper");
         if (savedVideos) {
-          videoKeeper = JSON.parse(savedVideos);
+          try {
+            videoKeeper = JSON.parse(savedVideos);
+          } catch (e) {
+            videoKeeper = [];
+          }
+        }
+        renderSavedVideos();
+        if (currentVideoId) updateMainPlayer(currentVideoId);
+
+        // Show sync bar state
+        if (!isSheetsConfigured()) return;
+        if (!getSheetsEmail()) {
+          updateSheetsStatus("no-email");
+          return;
         }
 
-        renderSavedVideos();
-
-        if (currentVideoId) {
-          updateMainPlayer(currentVideoId);
+        // Sheets is authoritative — load fresh data
+        const sheetsVideos = await loadFromSheets();
+        if (sheetsVideos && Array.isArray(sheetsVideos)) {
+          videoKeeper = sheetsVideos;
+          localStorage.setItem("videoKeeper", JSON.stringify(videoKeeper));
+          renderSavedVideos();
+          if (currentVideoId && videoKeeper.includes(currentVideoId)) {
+            highlightActiveThumbnail(currentVideoId);
+          }
         }
       }
 

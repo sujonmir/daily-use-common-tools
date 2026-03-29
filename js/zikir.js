@@ -185,39 +185,61 @@ function isSheetsConfigured() {
   );
 }
 
-/**
- * Returns the stored Gmail address used for Sheets sync.
- * On first call (no stored value) it prompts the user once and saves to localStorage.
- * Returns null if the user cancels or enters an invalid address.
- */
+// Read email from localStorage only — no prompt()
 function getSheetsEmail() {
-  let email = localStorage.getItem("zikirSheetsEmail");
-  if (!email) {
-    email = prompt(
-      "Enter your Gmail address for cross-device sync\n(e.g. you@gmail.com)\n\nLeave blank to skip sync.",
-    );
-    if (email && email.includes("@")) {
-      email = email.trim().toLowerCase();
-      localStorage.setItem("zikirSheetsEmail", email);
-    } else {
-      email = null;
-    }
-  }
-  return email;
+  return localStorage.getItem("zikirSheetsEmail") || null;
 }
 
-function updateSheetsStatus(state) {
+// Visible sync status bar
+function updateSheetsStatus(state, detail) {
   if (!sheetStatusEl) return;
-  const userLabel = sheetsUser ? sheetsUser.email : "";
-  const messages = {
-    loading: "Connecting to Google Sheets...",
-    connected: "Synced \u2714 " + userLabel,
-    "no-email":
-      "Sheets sync disabled (no email set). <button onclick=\"localStorage.removeItem('zikirSheetsEmail');location.reload()\">Set email</button>",
-    error: "Google Sheets unavailable (working offline)",
-    disabled: "",
-  };
-  sheetStatusEl.innerHTML = messages[state] ?? "";
+  const email = getSheetsEmail();
+  if (state === "no-email") {
+    sheetStatusEl.innerHTML =
+      '<span class="sync-label">&#x1F4CB; Google Sheets sync:</span>' +
+      '<input type="email" id="zikirEmailInput" placeholder="your@gmail.com" autocomplete="email">' +
+      '<button class="sync-btn" onclick="connectZikirEmail()">Connect</button>';
+  } else if (state === "loading") {
+    sheetStatusEl.innerHTML =
+      '<span class="sync-label">&#x23F3; Connecting to Google Sheets&hellip;</span>';
+  } else if (state === "connected") {
+    sheetStatusEl.innerHTML =
+      '<span style="color:green">&#x2714; Synced: <strong>' + email + "</strong></span>" +
+      '<button class="sync-btn danger" onclick="disconnectZikirEmail()">Change</button>';
+  } else if (state === "error") {
+    sheetStatusEl.innerHTML =
+      '<span style="color:#c00">&#x26A0; Sheets error: ' + (detail || "check console") + "</span>" +
+      '<button class="sync-btn" onclick="retryZikirSync()">Retry</button>' +
+      '<button class="sync-btn danger" onclick="disconnectZikirEmail()">Change Email</button>';
+  } else if (state === "disabled") {
+    sheetStatusEl.innerHTML = "";
+  }
+}
+
+// Called when user clicks "Connect" in the status bar
+async function connectZikirEmail() {
+  const input = document.getElementById("zikirEmailInput");
+  const email = input ? input.value.trim().toLowerCase() : "";
+  if (!email || !email.includes("@")) {
+    if (input) input.style.borderColor = "red";
+    return;
+  }
+  localStorage.setItem("zikirSheetsEmail", email);
+  const sheetsData = await loadFromSheets();
+  if (sheetsData) {
+    zikrCounts = { ...zikrCounts, ...sheetsData };
+    await saveCountsToDBWithIdb();
+    updateDisplay();
+  }
+}
+
+function disconnectZikirEmail() {
+  localStorage.removeItem("zikirSheetsEmail");
+  updateSheetsStatus("no-email");
+}
+
+function retryZikirSync() {
+  saveToSheets();
 }
 
 async function loadFromSheets() {
@@ -243,7 +265,7 @@ async function loadFromSheets() {
     return json.data;
   } catch (err) {
     console.error("Sheets load error:", err);
-    updateSheetsStatus("error");
+    updateSheetsStatus("error", err.message);
     return null;
   }
 }
@@ -275,6 +297,7 @@ async function saveToSheets() {
     }
   } catch (err) {
     console.error("Sheets save error:", err);
+    updateSheetsStatus("error", err.message);
   }
 }
 
@@ -729,12 +752,16 @@ async function initializeApp() {
     updateDisplay(); // Show locally cached counts immediately
 
     // Try to load fresher data from Google Sheets (cross-device sync)
-    const sheetsData = await loadFromSheets();
-    if (sheetsData) {
-      // Sheets data is authoritative — merge it in and persist locally
-      zikrCounts = { ...zikrCounts, ...sheetsData };
-      await saveCountsToDBWithIdb();
-      updateDisplay();
+    if (isSheetsConfigured() && !getSheetsEmail()) {
+      updateSheetsStatus("no-email"); // Show email input bar immediately
+    } else {
+      const sheetsData = await loadFromSheets();
+      if (sheetsData) {
+        // Sheets data is authoritative — merge it in and persist locally
+        zikrCounts = { ...zikrCounts, ...sheetsData };
+        await saveCountsToDBWithIdb();
+        updateDisplay();
+      }
     }
 
     // Set initial state message and style selected radio (if any)
