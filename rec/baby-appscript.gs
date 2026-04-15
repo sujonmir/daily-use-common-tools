@@ -23,9 +23,9 @@ const DRIVE_FOLDER = 'BabyPageMedia'; // Google Drive folder name (auto-created)
 // ── Column indices (0-based) ───────────────────────────────────────────────────
 const COL = {
   id: 0, type: 1, date: 2, displayDate: 3,
-  title: 4, mediaSrc: 5, mediaAlt: 6, bodyText: 7, timestamp: 8,
+  title: 4, mediaSrc: 5, mediaAlt: 6, bodyText: 7, timestamp: 8, tags: 9,
 };
-const HEADERS = ['id','type','date','displayDate','title','mediaSrc','mediaAlt','bodyText','timestamp'];
+const HEADERS = ['id','type','date','displayDate','title','mediaSrc','mediaAlt','bodyText','timestamp','tags'];
 
 // ── GET: return all saved cards ────────────────────────────────────────────────
 function doGet() {
@@ -47,6 +47,7 @@ function doGet() {
         mediaSrc:    r[COL.mediaSrc]    || '',
         mediaAlt:    r[COL.mediaAlt]    || '',
         bodyText:    r[COL.bodyText]    || '',
+        tags:        r[COL.tags]        || '',
       });
     }
     return jsonResponse_({ cards });
@@ -98,6 +99,7 @@ function doPost(e) {
           sheet.getRange(i + 1, COL.mediaSrc    + 1).setValue(sanitize_(data.mediaSrc));
           sheet.getRange(i + 1, COL.mediaAlt    + 1).setValue(sanitize_(data.mediaAlt));
           sheet.getRange(i + 1, COL.bodyText    + 1).setValue(sanitize_(data.bodyText));
+          sheet.getRange(i + 1, COL.tags        + 1).setValue(sanitize_(data.tags));
           return jsonResponse_({ status: 'success', id: data.id });
         }
       }
@@ -118,6 +120,7 @@ function doPost(e) {
       sanitize_(data.mediaAlt),
       sanitize_(data.bodyText),
       new Date().toISOString(),
+      sanitize_(data.tags),
     ]);
 
     return jsonResponse_({ status: 'success', id: newId });

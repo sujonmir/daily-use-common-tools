@@ -22,7 +22,7 @@ const VIDEO_DIR = "media/Video/";
 // ── GitHub upload config (used on GitHub Pages instead of Google Drive) ───────
 // Fine-grained PAT: Settings → Developer settings → Fine-grained tokens
 // Required permission: Contents → Read and write  (for this repo only)
-const GITHUB_TOKEN  = "";          // paste your PAT here (never commit the actual token)
+const GITHUB_TOKEN  = ""; 
 const GITHUB_REPO   = "sujonmir/daily-use-common-tools";          // e.g. "sujonmhk786/daily-use-common-tools"
 const GITHUB_BRANCH = "main";
 
@@ -395,6 +395,7 @@ function setupToolbar() {
   const ftTime  = document.getElementById("filter-time");
   const ftSort  = document.getElementById("filter-sort");
   const ftYear  = document.getElementById("filter-year");
+  const ftType  = document.getElementById("filter-type");
   const search  = document.getElementById("search-input");
   const countEl = document.getElementById("toolbar-count");
   const noRes   = document.getElementById("no-results-msg");
@@ -456,8 +457,9 @@ function setupToolbar() {
     }
 
     // ── Year + search ──────────────────────────────────────────────────────
-    const yv = ftYear ? (+ftYear.value || null) : null;
-    const sq = search.value.toLowerCase().trim();
+    const yv  = ftYear ? (+ftYear.value || null) : null;
+    const tv2 = ftType ? (ftType.value || "") : "";
+    const sq  = search.value.toLowerCase().trim();
 
     let vis = 0;
     wrapper.querySelectorAll(".box").forEach((box) => {
@@ -466,17 +468,19 @@ function setupToolbar() {
 
       const timeOk = !cutoff || !dt || dt >= cutoff;
       const yearOk = !yv    || !dt || dt.getFullYear() === yv;
+      const typeOk = !tv2   || (box.dataset.type || "image") === tv2;
 
       let srchOk = true;
       if (sq) {
-        const h3t = (box.querySelector("h3")?.textContent || "").toLowerCase();
-        const bdy = (box.querySelector(".card-text-wrapper,.details")?.textContent || "").toLowerCase();
-        const alt = (box.querySelector("img")?.alt || "").toLowerCase();
+        const h3t  = (box.querySelector("h3")?.textContent || "").toLowerCase();
+        const bdy  = (box.querySelector(".card-text-wrapper,.details")?.textContent || "").toLowerCase();
+        const alt  = (box.querySelector("img")?.alt || "").toLowerCase();
+        const tags = (box.dataset.tags || "").toLowerCase();
         srchOk = h3t.includes(sq) || bdy.includes(sq) || alt.includes(sq) ||
-                 (iso && dateMatchesQuery(iso, sq));
+                 tags.includes(sq) || (iso && dateMatchesQuery(iso, sq));
       }
 
-      const show = timeOk && yearOk && srchOk;
+      const show = timeOk && yearOk && typeOk && srchOk;
       box.classList.toggle("filter-hidden", !show);
       if (show) vis++;
     });
@@ -496,7 +500,7 @@ function setupToolbar() {
   }
 
   _applyFilters = applyFilters;
-  [ftTime, ftSort, ftYear].filter(Boolean).forEach((el) =>
+  [ftTime, ftSort, ftYear, ftType].filter(Boolean).forEach((el) =>
     el.addEventListener("change", applyFilters)
   );
   search.addEventListener("input", applyFilters);
@@ -599,6 +603,9 @@ function setupAddCardModal() {
       const ta = document.getElementById("fc-body-text");
       if (ta) ta.value = box.dataset.bodyText || box.querySelector(".card-text-wrapper")?.innerHTML || "";
     }
+
+    const tagsEl = document.getElementById("fc-tags");
+    if (tagsEl) tagsEl.value = box.dataset.tags || "";
 
     open();
   };
@@ -735,7 +742,8 @@ function setupAddCardModal() {
       bodyText = document.getElementById("fc-body-text").value.trim();
     }
 
-    const cardData = { type: selectedType, date: dateVal, displayDate, title: titleVal, mediaSrc, mediaAlt, bodyText };
+    const tags = (document.getElementById("fc-tags")?.value || "").trim();
+    const cardData = { type: selectedType, date: dateVal, displayDate, title: titleVal, mediaSrc, mediaAlt, bodyText, tags };
 
     if (isEdit) {
       // ── Edit: replace old card in DOM, update Sheets ──
@@ -1001,6 +1009,7 @@ function createCardElement(data) {
   box.dataset.mediaSrc = data.mediaSrc || "";
   box.dataset.mediaAlt = data.mediaAlt || "";
   box.dataset.bodyText = data.bodyText || "";
+  box.dataset.tags     = data.tags     || "";
 
   const h3 = document.createElement("h3");
   h3.textContent = data.title || "";
@@ -1045,7 +1054,8 @@ function createCardElement(data) {
   // Edit button (visible on hover)
   const editBtn = document.createElement("button");
   editBtn.className = "card-edit-btn";
-  editBtn.textContent = "✏ Edit";
+  editBtn.title = "Edit card";
+  editBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
   editBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     if (window.openEditModal) window.openEditModal(box);
