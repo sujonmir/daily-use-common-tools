@@ -829,6 +829,10 @@
         opacity: 1;
       }
 
+      /* Read-only mode: hide add + edit controls */
+      body.read-only-mode #fab-add-btn,
+      body.read-only-mode .card-edit-btn { display: none !important; }
+
       /* Filter hidden / no results */
       .box.filter-hidden {
         display: none !important;
@@ -1160,24 +1164,36 @@
     <script src="js/baby.js"></script>
     <script>
       (function () {
-        const SECRET = "$ahal$ara";
-        const KEY = "baby_page_unlocked";
+        const SECRET_FULL = "$ahal$ara";
+        const SECRET_READ = "$ifr@";
+        const KEY = "baby_page_access";
         const overlay = document.getElementById("baby-lock-overlay");
-        if (sessionStorage.getItem(KEY) === "1") {
+
+        function applyAccess(level) {
           overlay.remove();
+          if (level === "read") document.body.classList.add("read-only-mode");
+        }
+
+        const saved = sessionStorage.getItem(KEY);
+        if (saved === "full" || saved === "read") {
+          applyAccess(saved);
           return;
         }
+
         document
           .getElementById("baby-lock-form")
           .addEventListener("submit", function (e) {
             e.preventDefault();
             const input = document.getElementById("baby-lock-input");
-            if (input.value === SECRET) {
-              sessionStorage.setItem(KEY, "1");
-              overlay.remove();
+            const val = input.value;
+            if (val === SECRET_FULL) {
+              sessionStorage.setItem(KEY, "full");
+              applyAccess("full");
+            } else if (val === SECRET_READ) {
+              sessionStorage.setItem(KEY, "read");
+              applyAccess("read");
             } else {
-              document.getElementById("baby-lock-error").style.display =
-                "block";
+              document.getElementById("baby-lock-error").style.display = "block";
               input.value = "";
               input.focus();
             }
