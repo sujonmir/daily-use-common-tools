@@ -969,50 +969,6 @@ function createCardElement(data) {
  * Load an image from `src`, draw it on a canvas, overlay the title as a
  * semi-transparent bar at the bottom, and return a PNG Blob.
  */
-function _compositeImageWithTitle(src, title) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous"; // needed for canvas.toBlob on remote URLs
-    img.onload = () => {
-      const BAR = title ? Math.max(36, Math.round(img.naturalHeight * 0.07)) : 0;
-      const canvas = document.createElement("canvas");
-      canvas.width  = img.naturalWidth;
-      canvas.height = img.naturalHeight + BAR;
-      const ctx = canvas.getContext("2d");
-
-      // Draw original image
-      ctx.drawImage(img, 0, 0);
-
-      if (BAR && title) {
-        // Dark gradient bar
-        const grad = ctx.createLinearGradient(0, img.naturalHeight - BAR * 0.4, 0, canvas.height);
-        grad.addColorStop(0, "rgba(0,0,0,0)");
-        grad.addColorStop(1, "rgba(0,0,0,0.72)");
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, img.naturalHeight - BAR * 0.4, canvas.width, BAR * 1.4);
-
-        // Title text
-        const fontSize = Math.round(BAR * 0.52);
-        ctx.font = `bold ${fontSize}px sans-serif`;
-        ctx.fillStyle = "#ffffff";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        // Truncate if too wide
-        let label = title;
-        const maxW = canvas.width - fontSize * 2;
-        while (ctx.measureText(label).width > maxW && label.length > 4) {
-          label = label.slice(0, -4) + "…";
-        }
-        ctx.fillText(label, canvas.width / 2, img.naturalHeight + BAR / 2);
-      }
-
-      canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("canvas.toBlob failed")), "image/png");
-    };
-    img.onerror = () => reject(new Error("Image load failed"));
-    img.src = src;
-  });
-}
-
 async function copyCard(box, btn) {
   const type  = box.dataset.type || "image";
   const title = box.querySelector("h3")?.textContent || "";
@@ -1026,15 +982,29 @@ async function copyCard(box, btn) {
       const combined = title ? `${title}\n\n${body}` : body;
       await navigator.clipboard.writeText(combined);
     } else if (type === "image") {
-      // Use the already-loaded img element if available (avoids a second fetch)
       const imgEl = box.querySelector("img.img-trigger");
       const src   = imgEl?.src || box.dataset.mediaSrc || "";
       if (!src) return;
-
-      const finalBlob = await _compositeImageWithTitle(src, title);
-      await navigator.clipboard.write([
-        new ClipboardItem({ "image/png": finalBlob }),
-      ]);
+      const res  = await fetch(src);
+      const blob = await res.blob();
+      // Clipboard API requires image/png — convert if needed
+      let finalBlob = blob;
+      if (!blob.type.startsWith("image/png")) {
+        finalBlob = await new Promise((resolve) => {
+          const img    = new Image();
+          const objUrl = URL.createObjectURL(blob);
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width  = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            canvas.getContext("2d").drawImage(img, 0, 0);
+            URL.revokeObjectURL(objUrl);
+            canvas.toBlob(resolve, "image/png");
+          };
+          img.src = objUrl;
+        });
+      }
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": finalBlob })]);
     }
 
     btn.classList.add("copied");
