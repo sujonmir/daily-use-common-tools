@@ -57,12 +57,6 @@
       }
 
       /* Age bar */
-      #p-week,
-      #p-day {
-        font-size: 1.2rem;
-        padding-right: 2px;
-        font-weight: normal;
-      }
       .age-del {
         font-family: "Baumans", system-ui;
         display: flex;
@@ -107,20 +101,6 @@
         object-fit: cover;
         border-top: 1px solid #ccc;
         border-bottom: 1px solid #ccc;
-      }
-      .box video {
-        width: 100%;
-        height: 230px;
-        position: absolute;
-        top: 70px;
-        left: 0;
-        object-fit: cover;
-        border-top: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
-        border-bottom-left-radius: 15px;
-        border-bottom-right-radius: 15px;
-        margin: 0;
-        padding: 0;
       }
       .box p {
         font-family: "Baumans", system-ui;
@@ -322,90 +302,6 @@
           right: 20px;
           top: 20px;
         }
-      }
-
-      /* ── Lock overlay ───────────────────────────────────────────────────── */
-      #baby-lock-overlay {
-        position: fixed;
-        inset: 0;
-        background: linear-gradient(
-          135deg,
-          #1a0a2e 0%,
-          #3d1a5e 50%,
-          #1a1a3e 100%
-        );
-        z-index: 99999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      #baby-lock-box {
-        background: #fff;
-        border-radius: 18px;
-        padding: 40px 36px;
-        width: 90%;
-        max-width: 360px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        text-align: center;
-      }
-      #baby-lock-box .lock-icon {
-        font-size: 3rem;
-        margin-bottom: 6px;
-      }
-      #baby-lock-box h2 {
-        margin: 0 0 4px;
-        color: #111;
-        font-family: "Bad Script", cursive;
-        font-size: 1.8rem;
-        font-weight: normal;
-      }
-      #baby-lock-box p {
-        color: #888;
-        font-size: 0.9em;
-        margin: 0 0 22px;
-        font-family: sans-serif;
-      }
-      #baby-lock-input {
-        width: 100%;
-        padding: 12px 14px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        font-size: 1em;
-        margin-bottom: 10px;
-        box-sizing: border-box;
-        transition: border-color 0.2s;
-        outline: none;
-      }
-      #baby-lock-input:focus {
-        border-color: #000;
-        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
-      }
-      #baby-lock-error {
-        display: none;
-        color: #dc3545;
-        font-size: 0.85em;
-        margin-bottom: 10px;
-        padding: 8px 12px;
-        background: #fff5f5;
-        border-radius: 4px;
-        border: 1px solid #ffd0d0;
-        font-family: sans-serif;
-      }
-      #baby-lock-submit {
-        width: 100%;
-        padding: 13px;
-        background: #111;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        font-size: 1.05em;
-        font-weight: 700;
-        cursor: pointer;
-        transition: background 0.2s;
-        font-family: sans-serif;
-      }
-      #baby-lock-submit:hover {
-        background: #333;
       }
 
       /* ── Filter / Search Toolbar ────────────────────────────────────────── */
@@ -741,12 +637,6 @@
         border-radius: 8px;
         border: 1px solid #eee;
       }
-      .file-preview video {
-        width: 100%;
-        max-height: 140px;
-        border-radius: 8px;
-        border: 1px solid #eee;
-      }
       .file-name-display {
         font-size: 11px;
         color: #666;
@@ -863,12 +753,14 @@
       .card-edit-btn:hover {
         background: rgba(0, 0, 0, 0.85);
       }
-      .box:hover .card-edit-btn { opacity: 1; }
+      .box:hover .card-edit-btn {
+        opacity: 1;
+      }
 
       .card-copy-btn {
         position: absolute;
         bottom: 6px;
-        right: 8px;
+        left: 40px;
         background: rgba(0, 0, 0, 0.55);
         border: none;
         border-radius: 50%;
@@ -880,18 +772,27 @@
         cursor: pointer;
         z-index: 3;
         opacity: 0;
-        transition: opacity 0.2s, background 0.2s;
+        transition:
+          opacity 0.2s,
+          background 0.2s;
         padding: 0;
       }
-      .card-copy-btn svg { width: 13px; height: 13px; }
-      .card-copy-btn:hover { background: rgba(0,0,0,0.85); }
-      .box:hover .card-copy-btn { opacity: 1; }
-      .card-copy-btn.copied { background: rgba(30,140,60,0.85); }
-
-      /* Read-only mode: hide add + edit controls */
-      body.read-only-mode #fab-add-btn,
-      body.read-only-mode .card-edit-btn {
-        display: none !important;
+      .card-copy-btn.force-position {
+        right: 8px;
+        left: auto;
+      }
+      .card-copy-btn svg {
+        width: 13px;
+        height: 13px;
+      }
+      .card-copy-btn:hover {
+        background: rgba(0, 0, 0, 0.85);
+      }
+      .box:hover .card-copy-btn {
+        opacity: 1;
+      }
+      .card-copy-btn.copied {
+        background: rgba(30, 140, 60, 0.85);
       }
 
       /* Filter hidden / no results */
@@ -910,24 +811,6 @@
     </style>
   </head>
   <body>
-    <!-- ── Secret Key Lock ──────────────────────────────────────────────────── -->
-    <div id="baby-lock-overlay">
-      <div id="baby-lock-box">
-        <div class="lock-icon">👶🔒</div>
-        <h2>Parenthood</h2>
-        <p>Enter the secret key to continue</p>
-        <form id="baby-lock-form" autocomplete="off">
-          <input
-            type="password"
-            id="baby-lock-input"
-            placeholder="Secret Key"
-          />
-          <div id="baby-lock-error">Wrong key. Please try again.</div>
-          <button type="submit" id="baby-lock-submit">Unlock</button>
-        </form>
-      </div>
-    </div>
-
     <!-- ── Floating Add Card Button ─────────────────────────────────────────── -->
     <button class="fab-add" id="fab-add-btn" title="Add New Card">+</button>
 
@@ -1036,7 +919,6 @@
             </div>
           </div>
 
-
           <div id="fc-text-fields" style="display: none">
             <div class="form-field">
               <label>Body Text</label>
@@ -1079,7 +961,6 @@
       <span class="modal-close-btn">×</span>
       <img class="modal-content" id="modalImage" alt="Enlarged view" />
     </div>
-
 
     <!-- ── Header ───────────────────────────────────────────────────────────── -->
     <a href="index.html">
@@ -1169,7 +1050,21 @@
             Design with SASS & Vanilla JS, Shopify & WordPress Developer
           </p>
         </div>
-        <button class="card-copy-btn" title="Copy card"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        <button class="card-copy-btn force-position" title="Copy card">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#fff"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            width="14"
+            height="14"
+          >
+            <rect x="9" y="9" width="13" height="13" rx="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+        </button>
       </div>
       <!-- Bank Info -->
       <div class="box full-screen-mode" data-type="text">
@@ -1187,7 +1082,21 @@
           <p><b>Gmail: </b>sujonmhk786@gmail.com</p>
           <p><b>District: </b>Munshiganj</p>
         </div>
-        <button class="card-copy-btn" title="Copy card"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        <button class="card-copy-btn force-position" title="Copy card">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#fff"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            width="14"
+            height="14"
+          >
+            <rect x="9" y="9" width="13" height="13" rx="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+        </button>
       </div>
 
       <!-- Loading / error states (shown while fetching from Google Sheets) -->
@@ -1230,15 +1139,9 @@
     <script src="js/memory-cards.js"></script>
     <script>
       // Access check: must be verified via verify.html
-      (function () {
-        if (localStorage.getItem("mhk_super") !== "1") {
-          window.location.replace("index.html");
-          return;
-        }
-        // Remove the lock overlay — page is open directly
-        const overlay = document.getElementById("baby-lock-overlay");
-        if (overlay) overlay.remove();
-      })();
+      if (localStorage.getItem("mhk_super") !== "1") {
+        window.location.replace("index.html");
+      }
     </script>
 
     <!-- ── Scroll-to-top button ──────────────────────────────────────────────── -->

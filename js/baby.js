@@ -20,10 +20,8 @@ const IMG_DIR   = "img/";
 const VIDEO_DIR = "media/Video/";
 
 // ── GitHub upload config (used on GitHub Pages instead of Google Drive) ───────
-// Fine-grained PAT: Settings → Developer settings → Fine-grained tokens
-// Required permission: Contents → Read and write  (for this repo only)
-const GITHUB_TOKEN  = ""; 
-const GITHUB_REPO   = "sujonmir/daily-use-common-tools";          // e.g. "sujonmhk786/daily-use-common-tools"
+// Fine-grained PAT stored in localStorage("baby_gh_token") — never hard-coded
+const GITHUB_REPO   = "sujonmir/daily-use-common-tools";
 const GITHUB_BRANCH = "main";
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
@@ -749,6 +747,11 @@ function setupAddCardModal() {
       // ── Edit: replace old card in DOM, update Sheets ──
       const sheetId = _editBox.dataset.sheetId;
       const newBox  = createCardElement(cardData);
+      // Show image immediately via blob URL (CDN/server propagation can lag)
+      if (selectedType === "image" && _selectedFile) {
+        const imgEl = newBox.querySelector("img.img-trigger");
+        if (imgEl) imgEl.src = URL.createObjectURL(_selectedFile);
+      }
       if (sheetId) newBox.dataset.sheetId = sheetId;
       _editBox.replaceWith(newBox);
       if (selectedType === "image") setupImagePopup(".img-trigger");
@@ -759,6 +762,11 @@ function setupAddCardModal() {
     } else {
       // ── Add: append new card, save to Sheets ──
       const newBox = createCardElement(cardData);
+      // Show image immediately via blob URL (CDN/server propagation can lag)
+      if (selectedType === "image" && _selectedFile) {
+        const imgEl = newBox.querySelector("img.img-trigger");
+        if (imgEl) imgEl.src = URL.createObjectURL(_selectedFile);
+      }
       document.querySelector(".box-wrapper").appendChild(newBox);
       if (selectedType === "image") setupImagePopup(".img-trigger");
       if (selectedType === "video") setupVideoPopup(".video-trigger");
@@ -900,50 +908,6 @@ async function _uploadToLocalServer(file, relativePath, statusEl) {
     statusEl.textContent = "✗ Local server unreachable. Run: node server.js";
     statusEl.className = "sync-status error";
     return relativePath; // optimistic: path is correct even if server missed it
-  }
-}
-
-/**
- * Upload to Google Drive via Apps Script.
- * Reads the file as base64, POSTs to the web app → returns a public Drive URL.
- */
-async function _uploadToDrive(file, relativePath, statusEl) {
-  statusEl.textContent = "Uploading to Google Drive…";
-  statusEl.className = "sync-status";
-
-  try {
-    // Convert file to base64 (inside try so any FileReader error is caught)
-    const base64 = await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(",")[1]);
-      reader.onerror = () => reject(new Error("Could not read file"));
-      reader.readAsDataURL(file);
-    });
-
-    const filename = relativePath.split("/").pop();
-    const payload = {
-      action: "uploadFile",
-      base64,
-      filename,
-      mimeType: file.type || "application/octet-stream",
-      fileType: (file.type || "").startsWith("video/") ? "video" : "image",
-    };
-
-    const res = await fetch(SHEETS_WEB_APP_URL, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-    });
-    const json = await res.json();
-    if (!json.ok) throw new Error(json.error || "Drive upload failed");
-    statusEl.textContent = "✓ Uploaded to Google Drive";
-    statusEl.className = "sync-status success";
-    return json.url; // public Drive URL
-  } catch (err) {
-    console.warn("Drive upload failed:", err);
-    statusEl.textContent = "✗ Upload failed: " + err.message;
-    statusEl.className = "sync-status error";
-    return null; // signals failure to caller
   }
 }
 

@@ -678,6 +678,11 @@ function setupAddCardModal() {
       // ── Edit: replace old card in DOM, update Sheets ──
       const sheetId = _editBox.dataset.sheetId;
       const newBox  = createCardElement(cardData);
+      // Show image immediately via blob URL (CDN/server propagation can lag)
+      if (selectedType === "image" && _selectedFile) {
+        const imgEl = newBox.querySelector("img.img-trigger");
+        if (imgEl) imgEl.src = URL.createObjectURL(_selectedFile);
+      }
       if (sheetId) newBox.dataset.sheetId = sheetId;
       _editBox.replaceWith(newBox);
       if (selectedType === "image") setupImagePopup(".img-trigger");
@@ -687,6 +692,11 @@ function setupAddCardModal() {
     } else {
       // ── Add: append new card, save to Sheets ──
       const newBox = createCardElement(cardData);
+      // Show image immediately via blob URL (CDN/server propagation can lag)
+      if (selectedType === "image" && _selectedFile) {
+        const imgEl = newBox.querySelector("img.img-trigger");
+        if (imgEl) imgEl.src = URL.createObjectURL(_selectedFile);
+      }
       document.querySelector(".box-wrapper").appendChild(newBox);
       if (selectedType === "image") setupImagePopup(".img-trigger");
       if (selectedType === "text")  setupContentFullscreen(".full-screen-mode");
@@ -746,7 +756,7 @@ async function _uploadToGitHub(file, relativePath, statusEl) {
   }
 
   if (!GITHUB_REPO) {
-    statusEl.textContent = "✗ Set GITHUB_REPO in baby.js";
+    statusEl.textContent = "✗ Set GITHUB_REPO in memory-cards.js";
     statusEl.className = "sync-status error";
     return null;
   }
@@ -827,50 +837,6 @@ async function _uploadToLocalServer(file, relativePath, statusEl) {
     statusEl.textContent = "✗ Local server unreachable. Run: node server.js";
     statusEl.className = "sync-status error";
     return relativePath; // optimistic: path is correct even if server missed it
-  }
-}
-
-/**
- * Upload to Google Drive via Apps Script.
- * Reads the file as base64, POSTs to the web app → returns a public Drive URL.
- */
-async function _uploadToDrive(file, relativePath, statusEl) {
-  statusEl.textContent = "Uploading to Google Drive…";
-  statusEl.className = "sync-status";
-
-  try {
-    // Convert file to base64 (inside try so any FileReader error is caught)
-    const base64 = await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(",")[1]);
-      reader.onerror = () => reject(new Error("Could not read file"));
-      reader.readAsDataURL(file);
-    });
-
-    const filename = relativePath.split("/").pop();
-    const payload = {
-      action: "uploadFile",
-      base64,
-      filename,
-      mimeType: file.type || "application/octet-stream",
-      fileType: (file.type || "").startsWith("video/") ? "video" : "image",
-    };
-
-    const res = await fetch(SHEETS_WEB_APP_URL, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-    });
-    const json = await res.json();
-    if (!json.ok) throw new Error(json.error || "Drive upload failed");
-    statusEl.textContent = "✓ Uploaded to Google Drive";
-    statusEl.className = "sync-status success";
-    return json.url; // public Drive URL
-  } catch (err) {
-    console.warn("Drive upload failed:", err);
-    statusEl.textContent = "✗ Upload failed: " + err.message;
-    statusEl.className = "sync-status error";
-    return null; // signals failure to caller
   }
 }
 
@@ -999,6 +965,54 @@ function createCardElement(data) {
  * - text card  → copies title + body text as plain text
  * - image card → copies image to clipboard (ClipboardItem)
  */
+/**
+ * Load an image from `src`, draw it on a canvas, overlay the title as a
+ * semi-transparent bar at the bottom, and return a PNG Blob.
+ */
+function _compositeImageWithTitle(src, title) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous"; // needed for canvas.toBlob on remote URLs
+    img.onload = () => {
+      const BAR = title ? Math.max(36, Math.round(img.naturalHeight * 0.07)) : 0;
+      const canvas = document.createElement("canvas");
+      canvas.width  = img.naturalWidth;
+      canvas.height = img.naturalHeight + BAR;
+      const ctx = canvas.getContext("2d");
+
+      // Draw original image
+      ctx.drawImage(img, 0, 0);
+
+      if (BAR && title) {
+        // Dark gradient bar
+        const grad = ctx.createLinearGradient(0, img.naturalHeight - BAR * 0.4, 0, canvas.height);
+        grad.addColorStop(0, "rgba(0,0,0,0)");
+        grad.addColorStop(1, "rgba(0,0,0,0.72)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, img.naturalHeight - BAR * 0.4, canvas.width, BAR * 1.4);
+
+        // Title text
+        const fontSize = Math.round(BAR * 0.52);
+        ctx.font = `bold ${fontSize}px sans-serif`;
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        // Truncate if too wide
+        let label = title;
+        const maxW = canvas.width - fontSize * 2;
+        while (ctx.measureText(label).width > maxW && label.length > 4) {
+          label = label.slice(0, -4) + "…";
+        }
+        ctx.fillText(label, canvas.width / 2, img.naturalHeight + BAR / 2);
+      }
+
+      canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("canvas.toBlob failed")), "image/png");
+    };
+    img.onerror = () => reject(new Error("Image load failed"));
+    img.src = src;
+  });
+}
+
 async function copyCard(box, btn) {
   const type  = box.dataset.type || "image";
   const title = box.querySelector("h3")?.textContent || "";
@@ -1012,28 +1026,12 @@ async function copyCard(box, btn) {
       const combined = title ? `${title}\n\n${body}` : body;
       await navigator.clipboard.writeText(combined);
     } else if (type === "image") {
-      const src = box.dataset.mediaSrc || "";
+      // Use the already-loaded img element if available (avoids a second fetch)
+      const imgEl = box.querySelector("img.img-trigger");
+      const src   = imgEl?.src || box.dataset.mediaSrc || "";
       if (!src) return;
-      // Fetch image and write as ClipboardItem
-      const res  = await fetch(src);
-      const blob = await res.blob();
-      // Safari requires "image/png" — convert if needed
-      let finalBlob = blob;
-      if (!blob.type.startsWith("image/png")) {
-        finalBlob = await new Promise((resolve) => {
-          const img    = new Image();
-          const objUrl = URL.createObjectURL(blob);
-          img.onload = () => {
-            const canvas = document.createElement("canvas");
-            canvas.width  = img.naturalWidth;
-            canvas.height = img.naturalHeight;
-            canvas.getContext("2d").drawImage(img, 0, 0);
-            URL.revokeObjectURL(objUrl);
-            canvas.toBlob(resolve, "image/png");
-          };
-          img.src = objUrl;
-        });
-      }
+
+      const finalBlob = await _compositeImageWithTitle(src, title);
       await navigator.clipboard.write([
         new ClipboardItem({ "image/png": finalBlob }),
       ]);
