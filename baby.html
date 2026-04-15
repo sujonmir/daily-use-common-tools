@@ -36,10 +36,14 @@
         top: 0;
         left: 0;
         padding: 10px;
-        transition: transform 0.2s ease-in-out;
+        transition: transform 0.2s ease-in-out, top 0.2s ease;
       }
       .back-to-home:hover {
         transform: scale(1.1);
+      }
+      /* Desktop only: drop below sticky toolbar */
+      @media screen and (min-width: 601px) {
+        .back-to-home.toolbar-sticky { top: 44px; }
       }
 
       /* Page title */

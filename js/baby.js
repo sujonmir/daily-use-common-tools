@@ -372,12 +372,17 @@ function setupMobileFilterToggle() {
  * When the sentinel is visible again (page is at top) → remove the class.
  */
 function setupFabStickyShift() {
-  const sentinel = document.getElementById("toolbar-sentinel");
-  const fab      = document.getElementById("fab-add-btn");
+  const sentinel   = document.getElementById("toolbar-sentinel");
+  const fab        = document.getElementById("fab-add-btn");
+  const backToHome = document.querySelector(".back-to-home");
   if (!sentinel || !fab) return;
 
   const obs = new IntersectionObserver(
-    ([entry]) => fab.classList.toggle("toolbar-sticky", !entry.isIntersecting),
+    ([entry]) => {
+      const sticky = !entry.isIntersecting;
+      fab.classList.toggle("toolbar-sticky", sticky);
+      if (backToHome) backToHome.classList.toggle("toolbar-sticky", sticky);
+    },
     { threshold: 0 }
   );
   obs.observe(sentinel);
