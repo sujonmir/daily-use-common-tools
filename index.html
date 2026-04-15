@@ -20,6 +20,10 @@
           <img src="./img/budget.webp" alt="Finance Tracker" />
           <span>Finance Tracker</span>
         </a>
+        <a href="memory-cards.html" class="memory-cards f-set" id="memory-cards-link" style="display:none">
+          <img src="./img/memory.webp" alt="Memory Cards" />
+          <span>Memory Cards</span>
+        </a>
       </div>
     </div>
     <!-- global floating elements start-->
@@ -160,9 +164,18 @@
         <a href="./personal-finance-tracker.html" class="footer-menu-item">
           <img src="./img/budget.webp" alt="Finance Icon">
         </a>
+        <a href="./memory-cards.html" class="footer-menu-item" id="memory-cards-footer" style="display:none">
+          <img src="./img/memory.webp" alt="Memory Cards">
+        </a>
      </section>
     <!-- footer menu end -->
     <!-- timer & stopwatch end -->
+    <script>
+      if (localStorage.getItem("mhk_super") === "1") {
+        document.getElementById("memory-cards-link").style.display = "";
+        document.getElementById("memory-cards-footer").style.display = "";
+      }
+    </script>
     <script src="js/baby.js"></script>
     <script src="js/popup.js"></script>
     <script src="js/timer.js"></script>

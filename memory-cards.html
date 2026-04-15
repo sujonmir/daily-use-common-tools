@@ -1,0 +1,1249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Memory Cards</title>
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/baby.css" />
+    <link rel="shortcut icon" href="img/baby.webp" type="image/x-icon" />
+    <style>
+      :root {
+        --bangla-font: "Anek Bangla", sans-serif;
+      }
+      /* clip doesn't create a scroll container so position:sticky still works */
+      html,
+      body {
+        overflow-x: clip;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Bad Script", cursive;
+        position: relative;
+      }
+      .bangla {
+        font-family: var(--bangla-font);
+      }
+      hr {
+        margin: 0;
+      }
+
+      /* Back-to-home arrow */
+      .back-to-home {
+        width: 30px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding: 10px;
+        transition:
+          transform 0.2s ease-in-out,
+          top 0.2s ease;
+      }
+      .back-to-home:hover {
+        transform: scale(1.1);
+      }
+      /* Desktop only: drop below sticky toolbar */
+      @media screen and (min-width: 601px) {
+        .back-to-home.toolbar-sticky {
+          top: 44px;
+        }
+      }
+
+      /* Page title */
+      .title {
+        text-align: center;
+        font-size: 36px;
+      }
+
+      /* Age bar */
+      #p-week,
+      #p-day {
+        font-size: 1.2rem;
+        padding-right: 2px;
+        font-weight: normal;
+      }
+      .age-del {
+        font-family: "Baumans", system-ui;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+        font-size: 18px;
+        font-weight: 300;
+      }
+      .age-del b {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      /* Card grid */
+      .box-wrapper {
+        display: flex;
+        gap: 20px;
+        padding: 50px 20px;
+        flex-flow: row wrap;
+        justify-content: center;
+      }
+      .box {
+        flex-basis: 250px;
+        height: 300px;
+        border: 1px solid #ccc;
+        border-radius: 15px;
+        text-align: center;
+        position: relative;
+        box-sizing: border-box;
+        background: #eee;
+      }
+      .box img {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        height: 230px;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        object-fit: cover;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+      }
+      .box video {
+        width: 100%;
+        height: 230px;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        object-fit: cover;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        margin: 0;
+        padding: 0;
+      }
+      .box p {
+        font-family: "Baumans", system-ui;
+        margin: 0;
+        border-bottom: 1px solid #ccc;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 10px;
+      }
+      .box p:last-child {
+        border-bottom: none;
+      }
+      .box h3 {
+        font-size: 18px;
+      }
+
+      /* Text card content */
+      .card-text-wrapper {
+        font-family: var(--bangla-font) !important;
+        width: 100%;
+        height: 230px;
+        display: flex !important;
+        justify-content: center !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        box-sizing: border-box;
+        font-weight: 300;
+        font-size: 20px;
+        line-height: 1;
+        border-bottom: none !important;
+      }
+      .special {
+        font-size: 11px;
+      }
+      .tb-b {
+        border-bottom: 2px solid yellowgreen;
+        margin: 10px 0 5px 0;
+        color: yellowgreen;
+      }
+      .gray {
+        color: #888;
+      }
+
+      /* Details card */
+      .details {
+        font-family: "Baumans", system-ui;
+        font-size: 1rem;
+        line-height: 1.2;
+        text-align: left;
+      }
+
+      /* Responsive */
+      @media screen and (max-width: 768px) {
+        .box-wrapper {
+          flex-direction: column;
+          align-items: center;
+          gap: 20px;
+          padding: 24px 12px;
+        }
+        .box {
+          width: 95%;
+          max-width: 420px;
+          flex-basis: auto;
+        }
+        .age-del {
+          flex-direction: column;
+          align-items: center;
+        }
+        .age-del b {
+          font-size: 20px;
+          font-weight: 300;
+        }
+        .daughter-age-calculator {
+          margin-top: 10px;
+        }
+        .daughter-age-calculator,
+        .age {
+          text-align: center;
+          font-style: italic;
+        }
+        .daughter-age-calculator b,
+        .age b {
+          display: block;
+          font-size: 22px;
+          font-style: normal;
+          font-weight: 600;
+        }
+      }
+
+      /* ── Fullscreen ─────────────────────────────────────────────────────── */
+      .in-fullscreen {
+        background: #000 !important;
+        color: #fff !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100vw !important;
+        height: 100vh !important;
+        flex-basis: auto !important;
+        padding: 2em;
+        box-sizing: border-box;
+        font-size: 16px;
+        cursor: context-menu !important;
+      }
+      .in-fullscreen h3 {
+        font-family: "Bad Script", cursive;
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        font-weight: normal;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: baseline;
+        gap: 0.3em;
+      }
+      .in-fullscreen hr {
+        display: none;
+      }
+      .in-fullscreen .details {
+        font-family: "Baumans", system-ui;
+        font-size: 1.2rem;
+        line-height: 1.2;
+        text-align: left;
+        width: 40%;
+        max-width: 900px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 2em;
+        border-radius: 15px;
+      }
+      .in-fullscreen .details p {
+        border-bottom: none !important;
+        margin: 0.5em 0;
+      }
+      .in-fullscreen .card-text-wrapper {
+        font-family: var(--bangla-font);
+        font-size: 2.5rem;
+        line-height: 1.2;
+        text-align: center;
+        height: auto;
+        width: 90%;
+        max-width: 1200px;
+      }
+      .in-fullscreen .card-text-wrapper big {
+        font-size: 4rem;
+        display: inline-block;
+        padding-top: 0.5em;
+      }
+      .full-screen-mode {
+        cursor: pointer;
+      }
+      .fullscreen-close-btn {
+        position: fixed;
+        top: 20px;
+        right: 30px;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 30px;
+        cursor: pointer;
+        z-index: 2147483647;
+        display: none;
+        transition: transform 0.2s ease;
+      }
+      .fullscreen-close-btn:hover {
+        transform: scale(1.1);
+      }
+      .in-fullscreen .fullscreen-close-btn {
+        display: block;
+      }
+
+      @media screen and (max-width: 768px) {
+        .age-del .age {
+          text-align: center;
+        }
+        .in-fullscreen {
+          padding: 1em;
+          font-size: 14px;
+        }
+        .in-fullscreen h3 {
+          font-size: 2.5rem;
+        }
+        .in-fullscreen .details {
+          font-size: 1.2rem;
+          width: 95%;
+        }
+        .in-fullscreen .card-text-wrapper {
+          font-size: 1.8rem;
+          width: 95%;
+        }
+        .fullscreen-close-btn {
+          width: 40px;
+          height: 40px;
+          font-size: 24px;
+          right: 20px;
+          top: 20px;
+        }
+      }
+
+      /* ── Lock overlay ───────────────────────────────────────────────────── */
+      #baby-lock-overlay {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          #1a0a2e 0%,
+          #3d1a5e 50%,
+          #1a1a3e 100%
+        );
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #baby-lock-box {
+        background: #fff;
+        border-radius: 18px;
+        padding: 40px 36px;
+        width: 90%;
+        max-width: 360px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        text-align: center;
+      }
+      #baby-lock-box .lock-icon {
+        font-size: 3rem;
+        margin-bottom: 6px;
+      }
+      #baby-lock-box h2 {
+        margin: 0 0 4px;
+        color: #111;
+        font-family: "Bad Script", cursive;
+        font-size: 1.8rem;
+        font-weight: normal;
+      }
+      #baby-lock-box p {
+        color: #888;
+        font-size: 0.9em;
+        margin: 0 0 22px;
+        font-family: sans-serif;
+      }
+      #baby-lock-input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1em;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+        outline: none;
+      }
+      #baby-lock-input:focus {
+        border-color: #000;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+      }
+      #baby-lock-error {
+        display: none;
+        color: #dc3545;
+        font-size: 0.85em;
+        margin-bottom: 10px;
+        padding: 8px 12px;
+        background: #fff5f5;
+        border-radius: 4px;
+        border: 1px solid #ffd0d0;
+        font-family: sans-serif;
+      }
+      #baby-lock-submit {
+        width: 100%;
+        padding: 13px;
+        background: #111;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.05em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s;
+        font-family: sans-serif;
+      }
+      #baby-lock-submit:hover {
+        background: #333;
+      }
+
+      /* ── Filter / Search Toolbar ────────────────────────────────────────── */
+      .toolbar {
+        display: flex;
+        gap: 8px;
+        padding: 10px 16px;
+        background: #f7f7f7;
+        border-bottom: 1px solid #ddd;
+        flex-wrap: wrap;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 500;
+        box-sizing: border-box;
+        width: 100%;
+      }
+      /* On desktop the filters wrapper is transparent to layout */
+      .toolbar-filters {
+        display: contents;
+      }
+      .toolbar-filter-toggle {
+        display: none;
+      }
+      .toolbar select,
+      .toolbar input[type="text"] {
+        padding: 7px 11px;
+        border: 1px solid #bbb;
+        border-radius: 8px;
+        font-size: 13px;
+        font-family: "Baumans", system-ui;
+        outline: none;
+        background: #fff;
+        transition: border-color 0.2s;
+        box-sizing: border-box;
+        min-width: 0;
+      }
+      .toolbar select:focus,
+      .toolbar input[type="text"]:focus {
+        border-color: #000;
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+      }
+      .toolbar input[type="text"] {
+        flex: 1;
+        min-width: 140px;
+      }
+      .toolbar-count {
+        font-family: "Baumans", system-ui;
+        font-size: 12px;
+        color: #999;
+        white-space: nowrap;
+      }
+      /* ── Smart mobile toolbar: single row, filters collapsible ── */
+      @media screen and (max-width: 600px) {
+        .toolbar {
+          padding: 7px 10px;
+          gap: 6px;
+          flex-wrap: nowrap;
+        }
+        .toolbar-filter-toggle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          padding: 6px 10px;
+          border: 1px solid #bbb;
+          border-radius: 8px;
+          background: #fff;
+          font-size: 14px;
+          line-height: 1;
+          cursor: pointer;
+          transition:
+            background 0.2s,
+            border-color 0.2s;
+          box-sizing: border-box;
+        }
+        .toolbar-filter-toggle.active {
+          background: #111;
+          color: #fff;
+          border-color: #111;
+        }
+        .toolbar-filters {
+          display: none;
+          flex: 1 1 100%;
+          flex-wrap: wrap;
+          gap: 6px;
+          order: 10;
+        }
+        .toolbar-filters.open {
+          display: flex;
+        }
+        .toolbar-filters select {
+          flex: 1 1 calc(33% - 6px);
+          font-size: 12px;
+          padding: 6px 6px;
+        }
+        .toolbar input[type="text"] {
+          flex: 1;
+          font-size: 12px;
+          padding: 6px 10px;
+          min-width: 0;
+        }
+        .toolbar-count {
+          font-size: 11px;
+          flex-shrink: 0;
+        }
+      }
+
+      /* ── Scroll-to-top button ────────────────────────────────────────────── */
+      #scroll-top-btn {
+        position: fixed;
+        bottom: 24px;
+        right: 16px;
+        width: 40px;
+        height: 40px;
+        background: #11111130;
+        color: #000;
+        border: none;
+        border-radius: 50%;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 9997;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.25s,
+          transform 0.2s,
+          background 0.2s;
+      }
+      #scroll-top-btn.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #scroll-top-btn:hover {
+        background: #11111150;
+        transform: scale(1.1);
+      }
+      @media screen and (max-width: 600px) {
+        #scroll-top-btn {
+          bottom: 25px;
+          right: auto;
+          left: 5px;
+        }
+      }
+
+      /* ── Floating Add Button ────────────────────────────────────────────── */
+      .fab-add {
+        position: fixed;
+        top: 14px; /* default: aligns with back-to-home link at page top */
+        right: 16px;
+        width: 46px;
+        height: 46px;
+        background: #111;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        font-size: 26px;
+        line-height: 1;
+        cursor: pointer;
+        z-index: 9998;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+      .fab-add:hover {
+        background: #333;
+        transform: scale(1.1);
+      }
+      /* When toolbar is sticky, drop FAB below it */
+      .fab-add.toolbar-sticky {
+        top: 58px;
+      }
+      /* On small screens move FAB to bottom-right (standard mobile FAB position) */
+      @media screen and (max-width: 600px) {
+        .fab-add,
+        .fab-add.toolbar-sticky {
+          top: auto;
+          bottom: 25px;
+          right: 5px;
+        }
+        .add-card-box {
+          margin: 0 10px;
+        }
+      }
+
+      /* ── Add Card Modal ─────────────────────────────────────────────────── */
+      .add-card-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+        overscroll-behavior: contain;
+      }
+      .add-card-overlay.open {
+        display: flex;
+      }
+      .add-card-box {
+        background: #fff;
+        border-radius: 16px;
+        padding: 28px 26px;
+        width: 92%;
+        max-width: 460px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        font-family: "Baumans", system-ui;
+      }
+      .add-card-box h2 {
+        margin: 0 0 16px;
+        color: #000;
+        font-family: "Bad Script", cursive;
+        font-size: 1.5rem;
+        font-weight: normal;
+      }
+      .type-selector {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 18px;
+      }
+      .type-btn {
+        flex: 1;
+        padding: 9px 6px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        background: #fff;
+        cursor: pointer;
+        font-family: "Baumans", system-ui;
+        font-size: 13px;
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        color: #555;
+      }
+      .type-btn svg {
+        width: 20px;
+        height: 20px;
+      }
+      .type-btn:hover,
+      .type-btn.active {
+        border-color: #000;
+        background: #f0f0f0;
+        color: #000;
+      }
+      .form-field {
+        margin-bottom: 12px;
+      }
+      .form-field label {
+        display: block;
+        font-size: 12px;
+        color: #555;
+        margin-bottom: 4px;
+        font-weight: 600;
+      }
+      .form-field input[type="text"],
+      .form-field input[type="date"],
+      .form-field textarea {
+        width: 100%;
+        padding: 9px 11px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 13px;
+        font-family: "Baumans", system-ui;
+        box-sizing: border-box;
+        outline: none;
+        transition: border-color 0.2s;
+        background: #fff;
+      }
+      .form-field input[type="date"] {
+        cursor: pointer;
+      }
+      .form-field input[type="text"]:focus,
+      .form-field input[type="date"]:focus,
+      .form-field textarea:focus {
+        border-color: #000;
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+      }
+      .form-field textarea {
+        min-height: 85px;
+        resize: vertical;
+        font-family: var(--bangla-font);
+        font-size: 14px;
+      }
+
+      /* File picker */
+      .file-pick-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border: 1px dashed #aaa;
+        border-radius: 8px;
+        background: #fafafa;
+        cursor: pointer;
+        font-family: "Baumans", system-ui;
+        font-size: 13px;
+        color: #444;
+        width: 100%;
+        box-sizing: border-box;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .file-pick-btn:hover {
+        border-color: #000;
+        background: #f0f0f0;
+      }
+      .file-pick-btn input[type="file"] {
+        display: none;
+      }
+      .file-preview {
+        margin-top: 8px;
+        border-radius: 8px;
+        overflow: hidden;
+        display: none;
+      }
+      .file-preview img {
+        width: 100%;
+        max-height: 140px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #eee;
+      }
+      .file-preview video {
+        width: 100%;
+        max-height: 140px;
+        border-radius: 8px;
+        border: 1px solid #eee;
+      }
+      .file-name-display {
+        font-size: 11px;
+        color: #666;
+        margin-top: 4px;
+        word-break: break-all;
+        font-family: "Baumans", system-ui;
+      }
+      .save-info {
+        font-size: 11px;
+        color: #888;
+        background: #f5f5f5;
+        border-radius: 6px;
+        padding: 6px 10px;
+        margin-top: 6px;
+        font-family: "Baumans", system-ui;
+        display: none;
+      }
+
+      .add-card-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .btn-submit {
+        flex: 1;
+        padding: 11px;
+        background: #111;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: "Baumans", system-ui;
+        transition: background 0.2s;
+      }
+      .btn-submit:hover {
+        background: #333;
+      }
+      .btn-submit:disabled {
+        background: #999;
+        cursor: not-allowed;
+      }
+      .btn-cancel {
+        padding: 11px 18px;
+        background: #fff;
+        color: #333;
+        border: 1px solid #bbb;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        font-family: "Baumans", system-ui;
+        transition: background 0.2s;
+      }
+      .btn-cancel:hover {
+        background: #f0f0f0;
+      }
+      .sync-status {
+        font-size: 12px;
+        color: #777;
+        margin-top: 8px;
+        font-family: "Baumans", system-ui;
+        min-height: 16px;
+      }
+      .sync-status.success {
+        color: #166534;
+      }
+      .sync-status.error {
+        color: #991b1b;
+      }
+
+      /* Card date badge */
+      .card-date-badge {
+        position: absolute;
+        bottom: 4px;
+        right: 8px;
+        font-family: "Baumans", system-ui;
+        font-size: 11px;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+        padding: 3px 5px;
+        z-index: 2;
+        pointer-events: none;
+        font-weight: 500;
+      }
+
+      /* Card edit button */
+      .card-edit-btn {
+        position: absolute;
+        bottom: 6px;
+        left: 8px;
+        background: rgba(0, 0, 0, 0.55);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 3;
+        opacity: 0;
+        transition:
+          opacity 0.2s,
+          background 0.2s;
+        padding: 0;
+      }
+      .card-edit-btn svg {
+        width: 14px;
+        height: 14px;
+      }
+      .card-edit-btn:hover {
+        background: rgba(0, 0, 0, 0.85);
+      }
+      .box:hover .card-edit-btn { opacity: 1; }
+
+      .card-copy-btn {
+        position: absolute;
+        bottom: 6px;
+        right: 8px;
+        background: rgba(0, 0, 0, 0.55);
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 3;
+        opacity: 0;
+        transition: opacity 0.2s, background 0.2s;
+        padding: 0;
+      }
+      .card-copy-btn svg { width: 13px; height: 13px; }
+      .card-copy-btn:hover { background: rgba(0,0,0,0.85); }
+      .box:hover .card-copy-btn { opacity: 1; }
+      .card-copy-btn.copied { background: rgba(30,140,60,0.85); }
+
+      /* Read-only mode: hide add + edit controls */
+      body.read-only-mode #fab-add-btn,
+      body.read-only-mode .card-edit-btn {
+        display: none !important;
+      }
+
+      /* Filter hidden / no results */
+      .box.filter-hidden {
+        display: none !important;
+      }
+      .no-results-msg {
+        text-align: center;
+        padding: 50px 20px;
+        color: #bbb;
+        font-family: "Baumans", system-ui;
+        font-size: 18px;
+        width: 100%;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── Secret Key Lock ──────────────────────────────────────────────────── -->
+    <div id="baby-lock-overlay">
+      <div id="baby-lock-box">
+        <div class="lock-icon">👶🔒</div>
+        <h2>Parenthood</h2>
+        <p>Enter the secret key to continue</p>
+        <form id="baby-lock-form" autocomplete="off">
+          <input
+            type="password"
+            id="baby-lock-input"
+            placeholder="Secret Key"
+          />
+          <div id="baby-lock-error">Wrong key. Please try again.</div>
+          <button type="submit" id="baby-lock-submit">Unlock</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ── Floating Add Card Button ─────────────────────────────────────────── -->
+    <button class="fab-add" id="fab-add-btn" title="Add New Card">+</button>
+
+    <!-- ── Add Card Modal ──────────────────────────────────────────────────── -->
+    <div class="add-card-overlay" id="addCardModal">
+      <div class="add-card-box">
+        <h2 id="addCardTitle">Add New Card</h2>
+        <div class="type-selector">
+          <button class="type-btn active" data-type="image">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+            Image
+          </button>
+          <button class="type-btn" data-type="text">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="17" y1="10" x2="3" y2="10" />
+              <line x1="21" y1="6" x2="3" y2="6" />
+              <line x1="21" y1="14" x2="3" y2="14" />
+              <line x1="17" y1="18" x2="3" y2="18" />
+            </svg>
+            Text
+          </button>
+        </div>
+        <form id="addCardForm" autocomplete="off">
+          <div class="form-field">
+            <label>Date *</label>
+            <input type="date" id="fc-date" required />
+          </div>
+          <div class="form-field">
+            <label>Title *</label>
+            <input
+              type="text"
+              id="fc-title"
+              placeholder="Card title"
+              required
+            />
+          </div>
+
+          <div id="fc-image-fields">
+            <div
+              class="form-field"
+              id="fc-img-current-wrap"
+              style="display: none"
+            >
+              <label>Current image</label>
+              <div
+                id="fc-img-current-src"
+                style="
+                  font-size: 11px;
+                  color: #666;
+                  padding: 4px 0;
+                  word-break: break-all;
+                  font-family: &quot;Baumans&quot;, system-ui;
+                "
+              ></div>
+            </div>
+            <div class="form-field">
+              <label id="fc-img-pick-label">Pick Image *</label>
+              <label class="file-pick-btn">
+                <input type="file" id="fc-img-file" accept="image/*" />
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="width: 16px; height: 16px; flex-shrink: 0"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+                <span id="fc-img-btn-text">Choose image file…</span>
+              </label>
+              <div class="file-preview" id="fc-img-preview">
+                <img id="fc-img-thumb" src="" alt="preview" />
+              </div>
+              <div class="file-name-display" id="fc-img-name"></div>
+              <div class="save-info" id="fc-img-save-info"></div>
+            </div>
+            <div class="form-field">
+              <label>Alt Text</label>
+              <input
+                type="text"
+                id="fc-img-alt"
+                placeholder="Image description (optional)"
+              />
+            </div>
+          </div>
+
+
+          <div id="fc-text-fields" style="display: none">
+            <div class="form-field">
+              <label>Body Text</label>
+              <textarea
+                id="fc-body-text"
+                placeholder="Enter card text content…"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label
+              >Tags
+              <span style="font-weight: 400; font-size: 12px; color: #888"
+                >(hidden · search only)</span
+              ></label
+            >
+            <input
+              type="text"
+              id="fc-tags"
+              placeholder="e.g. vv2, milestone, first"
+            />
+          </div>
+
+          <div class="add-card-actions">
+            <button type="submit" class="btn-submit" id="addCardSubmit">
+              Add Card
+            </button>
+            <button type="button" class="btn-cancel" id="addCardCancel">
+              Cancel
+            </button>
+          </div>
+          <div class="sync-status" id="sync-status"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ── Image Modal ──────────────────────────────────────────────────────── -->
+    <div id="imageModal" class="modal-overlay">
+      <span class="modal-close-btn">×</span>
+      <img class="modal-content" id="modalImage" alt="Enlarged view" />
+    </div>
+
+
+    <!-- ── Header ───────────────────────────────────────────────────────────── -->
+    <a href="index.html">
+      <img src="img/back.webp" alt="Back to Home" class="back-to-home" />
+    </a>
+    <h1 class="title">Personal Memory Cards</h1>
+    <img
+      src="img/hr.webp"
+      alt=""
+      style="
+        width: 350px;
+        height: 50px;
+        object-fit: cover;
+        margin: auto;
+        display: block;
+        margin-top: -35px;
+      "
+    />
+
+    <div class="age-del">
+      <div class="age">
+        <b>Total time spent here :</b> <span id="time-spent"></span>
+      </div>
+      <div class="daughter-age-calculator">
+        <b>My Age : </b>
+        <span id="my-age"></span>
+      </div>
+    </div>
+
+    <!-- sentinel: when this exits the viewport the toolbar has gone sticky -->
+    <div id="toolbar-sentinel" style="height: 1px; pointer-events: none"></div>
+
+    <!-- ── Filter / Search Toolbar ──────────────────────────────────────────── -->
+    <div class="toolbar">
+      <!-- mobile-only toggle button for filters -->
+      <button
+        class="toolbar-filter-toggle"
+        id="toolbar-filter-toggle"
+        aria-label="Toggle filters"
+      >
+        ⚙
+      </button>
+      <!-- selects wrapped so they can collapse on mobile -->
+      <div class="toolbar-filters" id="toolbar-filters">
+        <select id="filter-time">
+          <option value="all" selected>All Cards</option>
+          <option value="3m">Last 3 Months</option>
+          <option value="6m">Last 6 Months</option>
+          <option value="9m">Last 9 Months</option>
+          <option value="1y">Last 1 Year</option>
+          <option value="2y">Last 2 Years</option>
+        </select>
+        <select id="filter-sort">
+          <option value="">Default Order</option>
+          <option value="new-old">Newest First</option>
+          <option value="old-new">Oldest First</option>
+        </select>
+        <select id="filter-year">
+          <option value="">Any Year</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+        </select>
+        <select id="filter-type">
+          <option value="">All Types</option>
+          <option value="image">Images</option>
+          <option value="text">Text</option>
+        </select>
+      </div>
+      <input type="text" id="search-input" placeholder="Search…" />
+      <span class="toolbar-count" id="toolbar-count"></span>
+    </div>
+
+    <!-- ── Cards ────────────────────────────────────────────────────────────── -->
+    <div class="box-wrapper">
+      <!-- Intro card -->
+      <div class="box full-screen-mode" data-type="text">
+        <button class="fullscreen-close-btn">×</button>
+        <h3>Myself</h3>
+        <hr />
+        <div class="details">
+          <p><b>Name: </b>Sujon Mir</p>
+          <p><b>DOB: </b>19 April, 1996</p>
+          <p><b>Profession: </b>Freelancer</p>
+          <p><b>Exprience: </b>7 Years</p>
+          <p><b>Expert: </b></p>
+          <p style="padding-top: 10px; text-align: right">
+            Design with SASS & Vanilla JS, Shopify & WordPress Developer
+          </p>
+        </div>
+        <button class="card-copy-btn" title="Copy card"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+      </div>
+      <!-- Bank Info -->
+      <div class="box full-screen-mode" data-type="text">
+        <button class="fullscreen-close-btn">×</button>
+        <h3>Bank Details</h3>
+        <hr />
+        <div class="details">
+          <p><b>Bank Name: </b>The City Bank Ltd.</p>
+          <p><b>Name: </b>SUJON MIR</p>
+          <p><b>Branch Name: </b>Rekabi Bazar</p>
+          <p><b>Account No: </b>2103183908001</p>
+          <p><b>Phone: </b>+8801700539061</p>
+          <p><b>Routing Number: </b>225591215</p>
+          <p><b>Swift Code: </b>CIBLBDDH</p>
+          <p><b>Gmail: </b>sujonmhk786@gmail.com</p>
+          <p><b>District: </b>Munshiganj</p>
+        </div>
+        <button class="card-copy-btn" title="Copy card"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+      </div>
+
+      <!-- Loading / error states (shown while fetching from Google Sheets) -->
+      <div
+        id="cards-loader"
+        style="
+          width: 100%;
+          text-align: center;
+          padding: 60px 20px;
+          color: #bbb;
+          font-family: &quot;Baumans&quot;, system-ui;
+          font-size: 16px;
+          display: none;
+        "
+      >
+        Loading cards…
+      </div>
+      <div
+        id="cards-load-error"
+        style="
+          width: 100%;
+          text-align: center;
+          padding: 60px 20px;
+          color: #e55;
+          font-family: &quot;Baumans&quot;, system-ui;
+          font-size: 15px;
+          display: none;
+        "
+      >
+        Could not load cards. Please check your connection and refresh.
+      </div>
+
+      <!-- All other cards are loaded dynamically from Google Sheets -->
+
+      <div class="no-results-msg" id="no-results-msg">
+        No cards match your filter.
+      </div>
+    </div>
+    <!-- ── Scripts ──────────────────────────────────────────────────────────── -->
+    <script src="js/memory-cards.js"></script>
+    <script>
+      // Access check: must be verified via verify.html
+      (function () {
+        if (localStorage.getItem("mhk_super") !== "1") {
+          window.location.replace("index.html");
+          return;
+        }
+        // Remove the lock overlay — page is open directly
+        const overlay = document.getElementById("baby-lock-overlay");
+        if (overlay) overlay.remove();
+      })();
+    </script>
+
+    <!-- ── Scroll-to-top button ──────────────────────────────────────────────── -->
+    <button id="scroll-top-btn" aria-label="Back to top" title="Back to top">
+      ↑
+    </button>
+  </body>
+</html>
