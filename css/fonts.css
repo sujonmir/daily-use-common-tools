@@ -1,5 +1,20 @@
-@import url("https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@100..800&family=Bad+Script&family=Baumans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@100..800&family=Bad+Script&family=Baumans&family=Playwrite+IE:wght@100..400&display=swap");
 
 /* font-family: "Baumans", system-ui; → 400 */
 /* font-family: "Anek Bangla", sans-serif; → 100-800 */
 /* font-family: "Bad Script", cursive; → 400 */
+/* font-family: "Playwrite IE" → 100-400 */
+
+/*
+ * Override digits (0–9) in "Bad Script" with Playwrite IE glyphs.
+ * Wherever Bad Script is used, numbers render in Playwrite IE
+ * without changing any font-family declarations elsewhere.
+ */
+@font-face {
+  font-family: "Bad Script";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/playwriteie/v11/fC1zPYtWYWnH0hvndYd6GCGWXCAxfsUebXFMyzioBpI.ttf') format('truetype');
+  unicode-range: U+0030-0039; /* 0 1 2 3 4 5 6 7 8 9 */
+}

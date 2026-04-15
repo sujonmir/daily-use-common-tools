@@ -21,6 +21,7 @@
   /* Centering properties will apply when JS sets display to 'flex' */
   justify-content: center;
   align-items: center;
+  overscroll-behavior: contain;
 }
 .modal-content {
   display: block;
