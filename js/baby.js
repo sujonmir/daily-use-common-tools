@@ -782,12 +782,31 @@ async function saveFileToPath(file, relativePath, statusEl) {
 
 /**
  * Commit a file directly to the GitHub repo via the Contents API.
- * Works from any browser (including GitHub Pages) — no server needed.
+ * Token is read from localStorage (never hard-coded) — set once via the
+ * token prompt that appears automatically on first upload attempt.
  * Returns the relative path on success (works as-is on GitHub Pages), null on failure.
  */
 async function _uploadToGitHub(file, relativePath, statusEl) {
-  if (!GITHUB_TOKEN || !GITHUB_REPO) {
-    statusEl.textContent = "✗ Set GITHUB_TOKEN and GITHUB_REPO in baby.js";
+  // Read token from localStorage — never from source code
+  let token = localStorage.getItem("baby_gh_token") || "";
+
+  if (!token) {
+    token = (prompt(
+      "Enter your GitHub Personal Access Token (PAT).\n" +
+      "It will be saved in this browser only — never in the source code.\n\n" +
+      "Create one at: GitHub → Settings → Developer settings → Fine-grained tokens\n" +
+      "Permission needed: Contents → Read and write"
+    ) || "").trim();
+    if (!token) {
+      statusEl.textContent = "✗ No GitHub token — upload cancelled.";
+      statusEl.className = "sync-status error";
+      return null;
+    }
+    localStorage.setItem("baby_gh_token", token);
+  }
+
+  if (!GITHUB_REPO) {
+    statusEl.textContent = "✗ Set GITHUB_REPO in baby.js";
     statusEl.className = "sync-status error";
     return null;
   }
@@ -806,7 +825,7 @@ async function _uploadToGitHub(file, relativePath, statusEl) {
 
     const apiUrl  = `https://api.github.com/repos/${GITHUB_REPO}/contents/${relativePath}`;
     const headers = {
-      "Authorization": `token ${GITHUB_TOKEN}`,
+      "Authorization": `token ${token}`,
       "Accept":        "application/vnd.github+json",
       "Content-Type":  "application/json",
     };
