@@ -15,9 +15,16 @@ const LOCAL_UPLOAD_URL = "http://localhost:3000/upload";
 const IS_LOCAL =
   location.hostname === "localhost" || location.hostname === "127.0.0.1";
 
-// Relative folder paths used only in local mode
-const IMG_DIR = "img/";
+// Relative folder paths used in both local and GitHub upload modes
+const IMG_DIR   = "img/";
 const VIDEO_DIR = "media/Video/";
+
+// ── GitHub upload config (used on GitHub Pages instead of Google Drive) ───────
+// Fine-grained PAT: Settings → Developer settings → Fine-grained tokens
+// Required permission: Contents → Read and write  (for this repo only)
+const GITHUB_TOKEN  = "";          // paste your PAT here (never commit the actual token)
+const GITHUB_REPO   = "sujonmir/daily-use-common-tools";          // e.g. "sujonmhk786/daily-use-common-tools"
+const GITHUB_BRANCH = "main";
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
@@ -769,7 +776,75 @@ async function saveFileToPath(file, relativePath, statusEl) {
   if (IS_LOCAL) {
     return await _uploadToLocalServer(file, relativePath, statusEl);
   } else {
-    return await _uploadToDrive(file, relativePath, statusEl);
+    return await _uploadToGitHub(file, relativePath, statusEl);
+  }
+}
+
+/**
+ * Commit a file directly to the GitHub repo via the Contents API.
+ * Works from any browser (including GitHub Pages) — no server needed.
+ * Returns the relative path on success (works as-is on GitHub Pages), null on failure.
+ */
+async function _uploadToGitHub(file, relativePath, statusEl) {
+  if (!GITHUB_TOKEN || !GITHUB_REPO) {
+    statusEl.textContent = "✗ Set GITHUB_TOKEN and GITHUB_REPO in baby.js";
+    statusEl.className = "sync-status error";
+    return null;
+  }
+
+  statusEl.textContent = "Uploading to GitHub…";
+  statusEl.className = "sync-status";
+
+  try {
+    // Read file as base64
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(reader.result.split(",")[1]);
+      reader.onerror = () => reject(new Error("Could not read file"));
+      reader.readAsDataURL(file);
+    });
+
+    const apiUrl  = `https://api.github.com/repos/${GITHUB_REPO}/contents/${relativePath}`;
+    const headers = {
+      "Authorization": `token ${GITHUB_TOKEN}`,
+      "Accept":        "application/vnd.github+json",
+      "Content-Type":  "application/json",
+    };
+
+    // If the file already exists we need its SHA to overwrite it
+    let sha;
+    const getRes = await fetch(apiUrl, { headers });
+    if (getRes.ok) {
+      const existing = await getRes.json();
+      sha = existing.sha;
+    }
+
+    const body = {
+      message: `Add media: ${file.name}`,
+      content: base64,
+      branch:  GITHUB_BRANCH,
+    };
+    if (sha) body.sha = sha; // required for updates
+
+    const putRes = await fetch(apiUrl, {
+      method:  "PUT",
+      headers,
+      body:    JSON.stringify(body),
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.json();
+      throw new Error(err.message || `HTTP ${putRes.status}`);
+    }
+
+    statusEl.textContent = "✓ Uploaded to GitHub";
+    statusEl.className   = "sync-status success";
+    return relativePath; // relative path works directly on GitHub Pages
+  } catch (err) {
+    console.warn("GitHub upload failed:", err);
+    statusEl.textContent = "✗ GitHub upload failed: " + err.message;
+    statusEl.className   = "sync-status error";
+    return null;
   }
 }
 
