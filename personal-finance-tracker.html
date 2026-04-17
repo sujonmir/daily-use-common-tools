@@ -51,12 +51,25 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         z-index: 1000;
       }
+      header .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
       header .logo a {
         font-weight: 700;
         font-size: 1.5em;
         text-decoration: none;
         color: var(--primary-color);
       }
+      header .logo a.settings-link {
+        font-size: 1em;
+        display: inline-flex;
+        align-items: center;
+        color: rgba(0,0,0,0.55);
+        transition: color 0.15s;
+      }
+      header .logo a.settings-link:hover { color: var(--primary-color); }
       header .header-center button {
         margin: 0 10px;
       }
@@ -649,8 +662,24 @@
       }
       #login-box .login-sub {
         color: var(--light-text);
-        margin: 0 0 24px;
+        margin: 0 0 20px;
         font-size: 0.9em;
+      }
+      #login-setup-notice {
+        background: #fff8e1;
+        border: 1px solid #ffe082;
+        border-radius: 8px;
+        padding: 11px 14px;
+        margin-bottom: 16px;
+        font-size: 0.83em;
+        color: #7a5c00;
+        text-align: left;
+        line-height: 1.5;
+      }
+      #login-setup-notice a {
+        color: #4a90e2;
+        font-weight: 700;
+        text-decoration: none;
       }
       .login-input {
         width: 100%;
@@ -850,28 +879,25 @@
     <div id="login-overlay">
       <div id="login-box">
         <div class="login-logo">FinanceTracker</div>
-        <p class="login-sub">Sign in to access your dashboard</p>
+        <p class="login-sub" id="login-sub-text">Enter your secret key</p>
+
+        <div id="login-setup-notice" style="display:none">
+          <strong>Google Sheet not connected.</strong><br>
+          Connect your Apps Script URL to enable cloud sync.<br>
+          <a href="finance-tracker-settings.html">→ Go to Setup</a>
+        </div>
 
         <form id="login-form" autocomplete="off">
-          <input
-            type="email"
-            class="login-input"
-            id="login-gmail"
-            placeholder="Gmail address"
-            required
-          />
-          <input
-            type="password"
-            class="login-input"
-            id="login-secret"
-            placeholder="Secret Key"
-            required
-          />
-          <div id="login-error">Invalid credentials. Please try again.</div>
-          <button type="submit" id="login-submit-btn">Login</button>
+          <input type="password" class="login-input" id="login-secret" placeholder="Secret Key" required />
+          <div id="login-error" style="display:none;color:var(--danger-color);font-size:0.88em;margin-bottom:10px;"></div>
+          <button type="submit" id="login-submit-btn">Unlock</button>
         </form>
 
-        <div id="sync-status-wrap">
+        <div style="margin-top:14px;font-size:0.82em;text-align:center;">
+          <a href="finance-tracker-settings.html" style="color:#4a90e2;text-decoration:none;">⚙ Settings &amp; Setup</a>
+        </div>
+
+        <div id="sync-status-wrap" style="display:none;flex-direction:column;align-items:center;gap:14px;padding:10px 0;">
           <div class="sync-spinner"></div>
           <p id="sync-status-msg">Connecting...</p>
         </div>
@@ -1132,6 +1158,9 @@
       <div class="logo">
         <a href="index.html" class="back-to-home">← Back</a>
         <a href="#">FinanceTracker</a>
+        <a href="finance-tracker-settings.html" title="Settings" class="settings-link">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </a>
       </div>
       <div class="header-center">
         <button id="export-monthly-btn">Export Monthly Report</button>
@@ -1151,7 +1180,7 @@
 
       <!-- Entry Form Section -->
       <section id="form-section" class="form-section">
-        <h2>Add New Transaction</h2>
+        <h2 id="form-title">Add New Transaction</h2>
         <form id="transaction-form">
           <div class="form-grid">
             <div class="form-group">
@@ -1212,9 +1241,17 @@
 
           <button
             type="submit"
+            id="form-submit-btn"
             style="margin-top: 20px; width: 100%; padding: 15px"
           >
             Add Transaction
+          </button>
+          <button
+            type="button"
+            id="cancel-edit-btn"
+            style="margin-top: 8px; width: 100%; padding: 12px; display: none; background: #6c757d; color: #fff; border: none; border-radius: 4px; font-size: 1em; cursor: pointer;"
+          >
+            Cancel Edit
           </button>
         </form>
       </section>
@@ -1288,68 +1325,87 @@
     <script>
       // ---- Auth Guard ----
       (function () {
-        const VALID_GMAIL = "sujonmhk786@gmail.com";
-        const VALID_SECRET = "$ahal$ara";
-        const AUTH_KEY = "ft_auth_v1";
-        const AUTH_VAL = btoa(VALID_GMAIL + ":" + VALID_SECRET);
+        const FINANCE_HASH_KEY = "financeHashKey";
+        const SESSION_KEY      = "personal-finance-tracker-session";
 
-        function isAuthenticated() {
-          return localStorage.getItem(AUTH_KEY) === AUTH_VAL;
+        async function sha256hex(text) {
+          const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+          return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
         }
 
-        // Promise that resolves when the user is authenticated
+        function sessionValid() {
+          const s = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+          return s && s.exp > Date.now();
+        }
+
+        function createSession() {
+          localStorage.setItem(SESSION_KEY, JSON.stringify({ exp: Date.now() + 8 * 60 * 60 * 1000 }));
+        }
+
+        window.clearFTSession = function () {
+          localStorage.removeItem(SESSION_KEY);
+        };
+
         var _resolveAuth;
-        window.authReady = new Promise(function (resolve) {
-          _resolveAuth = resolve;
-        });
+        window.authReady = new Promise(function (resolve) { _resolveAuth = resolve; });
 
-        // Called by main script while syncing
         window.setSyncStatus = function (msg) {
+          document.getElementById("login-form").style.display = "none";
           var wrap = document.getElementById("sync-status-wrap");
-          var msgEl = document.getElementById("sync-status-msg");
-          var form = document.getElementById("login-form");
-          if (form) form.style.display = "none";
-          if (wrap) wrap.style.display = "flex";
-          if (msgEl) msgEl.textContent = msg || "Loading...";
+          wrap.style.display = "flex";
+          document.getElementById("sync-status-msg").textContent = msg || "Loading...";
         };
 
-        // Called by main script when sync is done — hides overlay
         window.hideSyncOverlay = function () {
-          var overlay = document.getElementById("login-overlay");
-          if (overlay) overlay.style.display = "none";
+          document.getElementById("login-overlay").style.display = "none";
         };
+
+        function showError(msg) {
+          var el = document.getElementById("login-error");
+          el.textContent = msg;
+          el.style.display = "block";
+        }
 
         function init() {
-          if (isAuthenticated()) {
-            // Already logged in — show spinner, let main script start immediately
+          const hash = localStorage.getItem(FINANCE_HASH_KEY);
+
+          // No secret key set — prompt to go to settings
+          if (!hash) {
+            document.getElementById("login-sub-text").textContent = "Secret key not configured.";
+            document.getElementById("login-secret").style.display = "none";
+            document.getElementById("login-submit-btn").style.display = "none";
+            document.getElementById("login-setup-notice").style.display = "block";
+            document.getElementById("login-setup-notice").innerHTML =
+              "<strong>No secret key found.</strong><br>Set up your secret key in Settings first.<br>" +
+              "<a href=\"finance-tracker-settings.html\">→ Go to Settings</a>";
+            return;
+          }
+
+          // Show sheet notice if no URL configured
+          if (!localStorage.getItem("personal-finance-tracker-sheet-token")) {
+            document.getElementById("login-setup-notice").style.display = "block";
+          }
+
+          // Valid session — skip login prompt
+          if (sessionValid()) {
             window.setSyncStatus("Preparing your dashboard...");
             _resolveAuth();
             return;
           }
 
           var form = document.getElementById("login-form");
-          var errorEl = document.getElementById("login-error");
-          if (!form) {
-            _resolveAuth();
-            return;
-          }
-
-          form.addEventListener("submit", function (e) {
+          form.addEventListener("submit", async function (e) {
             e.preventDefault();
-            var gmail = document
-              .getElementById("login-gmail")
-              .value.trim()
-              .toLowerCase();
-            var secret = document.getElementById("login-secret").value;
+            document.getElementById("login-error").style.display = "none";
+            var pw = document.getElementById("login-secret").value;
+            if (!pw) return showError("Enter your secret key.");
 
-            if (gmail === VALID_GMAIL && secret === VALID_SECRET) {
-              localStorage.setItem(AUTH_KEY, AUTH_VAL);
-              errorEl.style.display = "none";
-              window.setSyncStatus("Preparing your dashboard...");
-              _resolveAuth(); // Signal main script to continue
-            } else {
-              errorEl.style.display = "block";
-            }
+            const inputHash = await sha256hex(pw);
+            if (inputHash !== hash) return showError("Wrong secret key.");
+
+            createSession();
+            window.setSyncStatus("Preparing your dashboard...");
+            _resolveAuth();
           });
         }
 
@@ -1549,86 +1605,70 @@
         // Wait for the user to authenticate before running anything
         await window.authReady;
 
-        // ---- Google Sheets Config ----
-        // After deploying Code.gs as a Web App, paste the URL below.
-        // Leave empty ("") to use IndexedDB only (offline mode).
-        const APPS_SCRIPT_URL =
-          "https://script.google.com/macros/s/AKfycbyu2hNOFwwE4fQ1CZHb5_mf3ddZ1IB4l2Pk1d1psg1jAlGmAcJAKc7J2uqi-RYz6byk/exec";
-        const SHEETS_TOKEN = "$ahal$ara";
+        // ---- Google Sheets Config (plain JSON, no encryption) ----
+        const APPS_SCRIPT_URL = localStorage.getItem("personal-finance-tracker-sheet-token") || "";
+        const SHEETS_TOKEN    = localStorage.getItem("financeHashKey") || "";
 
-        // ---- Sheets Sync Helpers ----
-        const fetchFromSheets = async () => {
-          const url = `${APPS_SCRIPT_URL}?action=getAll&token=${encodeURIComponent(SHEETS_TOKEN)}`;
-          const res = await fetch(url);
-          if (!res.ok) throw new Error("HTTP " + res.status);
-          const json = await res.json();
-          if (json.error) throw new Error(json.error);
-          return Array.isArray(json) ? json : [];
-        };
-
-        const syncToSheets = async (action, payload) => {
-          if (!APPS_SCRIPT_URL) return;
-          try {
-            const res = await fetch(APPS_SCRIPT_URL, {
-              method: "POST",
-              headers: { "Content-Type": "text/plain" },
-              body: JSON.stringify({ token: SHEETS_TOKEN, action, ...payload }),
-            });
-            const json = await res.json();
-            if (json.error) throw new Error(json.error);
-          } catch (err) {
-            console.warn("Sheets sync failed [" + action + "]:", err);
-            showSheetsSyncWarning();
-          }
-        };
-
-        const bulkSyncToSheets = async (txList) => {
-          if (!APPS_SCRIPT_URL || !txList.length) return;
-          await fetch(APPS_SCRIPT_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify({
-              token: SHEETS_TOKEN,
-              action: "bulkAdd",
-              data: txList,
-            }),
-          });
-        };
-
-        // Replace all Sheets data in one atomic server-side call
-        const syncReplaceAll = async (txList) => {
-          if (!APPS_SCRIPT_URL) return;
-          const res = await fetch(APPS_SCRIPT_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify({
-              token: SHEETS_TOKEN,
-              action: "replaceAll",
-              data: txList,
-            }),
-          });
-          const json = await res.json();
-          if (json.error) throw new Error(json.error);
-        };
-
-        const showSheetsSyncWarning = () => {
-          let el = document.getElementById("sheets-warn-toast");
+        // ---- Sync badge ----
+        const _showSyncBadge = (state) => {
+          let el = document.getElementById("sheets-sync-badge");
           if (!el) {
             el = document.createElement("div");
-            el.id = "sheets-warn-toast";
+            el.id = "sheets-sync-badge";
             el.style.cssText =
-              "position:fixed;bottom:110px;left:50%;transform:translateX(-50%);" +
-              "background:#dc3545;color:#fff;padding:10px 20px;border-radius:6px;" +
-              "z-index:5000;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.3);";
+              "position:fixed;bottom:80px;right:16px;padding:6px 12px;" +
+              "border-radius:20px;font-size:12px;font-weight:600;z-index:4000;" +
+              "box-shadow:0 2px 6px rgba(0,0,0,.2);transition:opacity 0.3s;";
             document.body.appendChild(el);
           }
-          el.textContent =
-            "⚠️ Could not sync with Google Sheets. Data saved locally.";
-          el.style.display = "block";
-          clearTimeout(el._timer);
-          el._timer = setTimeout(() => {
-            el.style.display = "none";
-          }, 5000);
+          if (state === "syncing") {
+            el.style.background = "#e9ecef"; el.style.color = "#495057";
+            el.textContent = "⏳ Syncing…"; el.style.opacity = "1";
+          } else if (state === "ok") {
+            el.style.background = "#d4edda"; el.style.color = "#155724";
+            el.textContent = "☁ Synced"; el.style.opacity = "1";
+            clearTimeout(el._t);
+            el._t = setTimeout(() => { el.style.opacity = "0"; }, 3000);
+          } else {
+            el.style.background = "#fde8ea"; el.style.color = "#b02030";
+            el.textContent = "⚠ Sync failed"; el.style.opacity = "1";
+            clearTimeout(el._t);
+            el._t = setTimeout(() => { el.style.opacity = "0"; }, 5000);
+          }
+        };
+
+        // Fire-and-forget POST via sendBeacon (text/plain = simple request, no preflight)
+        // Apps Script receives body via e.postData.contents and JSON.parse()s it
+        const _postToSheets = (body) => {
+          if (!APPS_SCRIPT_URL || !SHEETS_TOKEN) return;
+          if (window._sheetsSyncBlocked) return;
+          const payload = JSON.stringify({ token: SHEETS_TOKEN, ...body });
+          _showSyncBadge("syncing");
+          const sent = navigator.sendBeacon(APPS_SCRIPT_URL, payload);
+          if (sent) {
+            setTimeout(() => _showSyncBadge("ok"), 400);
+          } else {
+            fetch(APPS_SCRIPT_URL, {
+              method: "POST", mode: "no-cors", redirect: "follow",
+              headers: { "Content-Type": "text/plain" }, body: payload,
+            }).then(() => _showSyncBadge("ok")).catch(() => _showSyncBadge("fail"));
+          }
+        };
+
+        const syncAdd        = (tx)     => _postToSheets({ action: "add",        data: tx });
+        const syncDelete     = (id)     => _postToSheets({ action: "delete",     id });
+        const syncUpdate     = (tx)     => _postToSheets({ action: "update",     data: tx });
+        const syncReplaceAll = (txList) => _postToSheets({ action: "replaceAll", data: txList });
+
+        // GET all rows from Sheets on startup (no CORS issue with GET)
+        const fetchFromSheets = async () => {
+          if (!APPS_SCRIPT_URL || !SHEETS_TOKEN) return null;
+          const url = `${APPS_SCRIPT_URL}?token=${encodeURIComponent(SHEETS_TOKEN)}&action=getAll`;
+          const res = await fetch(url, { method: "GET", redirect: "follow" });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json();
+          if (data.error) throw new Error(data.error);
+          return Array.isArray(data) && data.length > 0 ? data : null;
         };
 
         // --- DOM Elements ---
@@ -1720,10 +1760,27 @@
           dbRequest("transactions", "readonly", "getAll");
         const addTransaction = (tx) =>
           dbRequest("transactions", "readwrite", "add", tx);
+        const updateTransaction = (tx) =>
+          dbRequest("transactions", "readwrite", "put", tx);
         const deleteTransaction = (id) =>
           dbRequest("transactions", "readwrite", "delete", id);
         const clearTransactions = () =>
           dbRequest("transactions", "readwrite", "clear");
+
+        let editingId = null;
+
+        const localToday = () => {
+          const d = new Date();
+          return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        };
+
+        const normalizeDate = (str) => {
+          if (!str) return localToday();
+          if (/^\d{4}-\d{2}-\d{2}$/.test(String(str))) return String(str);
+          const d = new Date(str);
+          if (isNaN(d)) return String(str).slice(0, 10);
+          return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        };
 
         // --- NEW: Currency Formatting Helper ---
         const formatToIndianCurrency = (num) => {
@@ -1761,8 +1818,7 @@
             } catch (e) {
               console.warn("Migration IDB error:", e);
             }
-            // Sync to Sheets (fire-and-forget)
-            syncToSheets("update", { data: tx });
+            syncUpdate(tx);
           }
         };
 
@@ -1771,40 +1827,53 @@
             await initDB();
 
             if (APPS_SCRIPT_URL) {
-              // ---- Sync from Google Sheets ----
               try {
-                window.setSyncStatus("☁️ Loading data from Google Sheets...");
-                const sheetsData = await fetchFromSheets();
-                const localData = await getAllTransactions();
+                window.setSyncStatus("☁️ Syncing from Google Sheets...");
+                const sheetsData = await fetchFromSheets(); // null = empty sheet
+                window._sheetsSyncBlocked = false;
 
-                if (sheetsData.length === 0 && localData.length > 0) {
-                  // First-time setup: migrate existing local data → Sheets
-                  window.setSyncStatus(
-                    "📤 Migrating local data to Google Sheets...",
-                  );
-                  await bulkSyncToSheets(localData);
-                  window.transactions = transactions = localData;
-                } else {
-                  // Normal load: Sheets is source of truth → overwrite IndexedDB
-                  window.setSyncStatus("🔄 Updating local cache...");
+                if (sheetsData !== null && sheetsData.length > 0) {
+                  // Sheets has data — it's source of truth, overwrite local
+                  window.setSyncStatus("🔄 Updating local data...");
+                  const normalizedData = sheetsData.map(tx => ({ ...tx, date: normalizeDate(tx.date) }));
                   await clearTransactions();
-                  for (const tx of sheetsData) {
-                    await addTransaction(tx);
-                  }
-                  window.transactions = transactions = sheetsData;
+                  for (const tx of normalizedData) await addTransaction(tx);
+                  window.transactions = transactions = normalizedData;
+                } else {
+                  // Sheets is empty — use local data and push it up as initial backup
+                  const localData = await getAllTransactions();
+                  window.transactions = transactions = localData;
+                  if (localData.length > 0) syncReplaceAll(localData);
                 }
               } catch (sheetsErr) {
-                console.warn(
-                  "Sheets sync failed on load, using local cache:",
-                  sheetsErr,
-                );
-                window.setSyncStatus(
-                  "⚠️ Sheets unavailable — using local data...",
-                );
-                await new Promise((r) => setTimeout(r, 1500));
+                console.warn("Sheets load error:", sheetsErr.message);
+                const isTokenErr = sheetsErr.message && sheetsErr.message.includes("Unauthorized");
+                if (isTokenErr) {
+                  window._sheetsSyncBlocked = true;
+                  window.setSyncStatus("🔑 Wrong token — sync paused.");
+                  await new Promise(r => setTimeout(r, 2000));
+                  let warn = document.getElementById("sheets-pw-warn");
+                  if (!warn) {
+                    warn = document.createElement("div");
+                    warn.id = "sheets-pw-warn";
+                    warn.style.cssText =
+                      "position:fixed;top:64px;left:50%;transform:translateX(-50%);" +
+                      "background:#dc3545;color:#fff;padding:10px 20px;border-radius:7px;" +
+                      "z-index:5000;font-size:13px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.3);" +
+                      "text-align:center;max-width:90vw;";
+                    warn.textContent =
+                      "⚠️ Wrong secret token — sync paused. Check the token in Settings matches your Apps Script.";
+                    document.body.appendChild(warn);
+                  }
+                } else {
+                  window._sheetsSyncBlocked = false;
+                  window.setSyncStatus("⚠️ Sheets unavailable — using local data.");
+                  await new Promise(r => setTimeout(r, 1200));
+                }
                 window.transactions = transactions = await getAllTransactions();
               }
             } else {
+              window._sheetsSyncBlocked = false;
               window.transactions = transactions = await getAllTransactions();
             }
           } catch (error) {
@@ -1812,13 +1881,14 @@
             alert("Could not initialize the database. Data will not be saved.");
           }
 
-          transactionDateInput.value = new Date().toISOString().split("T")[0];
+          transactionDateInput.value = localToday();
           // Update keyword sums after loading transactions
           if (window.updateKeywordFooterNote) window.updateKeywordFooterNote();
           transactionTypeSelect.addEventListener("change", renderCalculator);
           categorySelect.addEventListener("change", renderCalculator);
           transactionForm.addEventListener("submit", handleFormSubmit);
           entriesContainer.addEventListener("click", handleEntryAction);
+          document.getElementById("cancel-edit-btn").addEventListener("click", resetEditMode);
 
           exportMonthlyBtn.addEventListener("click", () =>
             openExportModal("monthly"),
@@ -2213,48 +2283,57 @@
           };
 
         // --- Event Handlers & Logic ---
+        const resetEditMode = () => {
+          editingId = null;
+          document.getElementById("form-title").textContent = "Add New Transaction";
+          document.getElementById("form-submit-btn").textContent = "Add Transaction";
+          document.getElementById("cancel-edit-btn").style.display = "none";
+          transactionForm.reset();
+          transactionDateInput.value = localToday();
+          renderCalculator();
+        };
+
         const handleFormSubmit = async (e) => {
           e.preventDefault();
           const date = transactionDateInput.value;
           const type = transactionTypeSelect.value;
-          const newTransaction = {
-            id: Date.now(),
+          const txData = {
+            id: editingId !== null ? editingId : Date.now(),
             date,
             type,
             details: [],
             total: 0,
           };
           if (type === "income") {
-            newTransaction.category = "Income";
-            const title =
-              calculatorContainer.querySelector(".item-title").value;
-            const amount = parseFloat(
-              calculatorContainer.querySelector(".item-amount").value,
-            );
-            const isLoan =
-              document.getElementById("income-is-loan")?.checked || false;
-            newTransaction.details.push({ title, amount, isLoan });
-            newTransaction.total = amount;
+            txData.category = "Income";
+            const title = calculatorContainer.querySelector(".item-title").value;
+            const amount = parseFloat(calculatorContainer.querySelector(".item-amount").value);
+            const isLoan = document.getElementById("income-is-loan")?.checked || false;
+            txData.details.push({ title, amount, isLoan });
+            txData.total = amount;
           } else {
-            newTransaction.category = categorySelect.value;
-            const calculation = calculateExpense(newTransaction.category);
-            newTransaction.details = calculation.details;
-            newTransaction.total = calculation.total;
+            txData.category = categorySelect.value;
+            const calculation = calculateExpense(txData.category);
+            txData.details = calculation.details;
+            txData.total = calculation.total;
           }
-          if (isNaN(newTransaction.total) || newTransaction.total <= 0) {
+          if (isNaN(txData.total) || txData.total <= 0) {
             alert("Please check your inputs. The total amount is invalid.");
             return;
           }
           try {
-            await addTransaction(newTransaction);
-            transactions.push(newTransaction); // Update local cache
-            syncToSheets("add", { data: newTransaction }); // fire-and-forget to Sheets
+            if (editingId !== null) {
+              await updateTransaction(txData);
+              window.transactions = transactions = transactions.map(t => t.id === editingId ? txData : t);
+              syncUpdate(txData);
+            } else {
+              await addTransaction(txData);
+              transactions.push(txData);
+              syncAdd(txData);
+            }
             renderApp();
-            if (window.updateKeywordFooterNote)
-              window.updateKeywordFooterNote();
-            transactionForm.reset();
-            transactionDateInput.value = new Date().toISOString().split("T")[0];
-            renderCalculator();
+            if (window.updateKeywordFooterNote) window.updateKeywordFooterNote();
+            resetEditMode();
           } catch (error) {
             console.error("Failed to save transaction:", error);
             alert("Error: Could not save the transaction to the database.");
@@ -2275,7 +2354,7 @@
                 window.transactions = transactions = transactions.filter(
                   (t) => t.id !== id,
                 );
-                syncToSheets("delete", { id }); // fire-and-forget to Sheets
+                syncDelete(id);
                 renderApp();
                 if (window.updateKeywordFooterNote)
                   window.updateKeywordFooterNote();
@@ -2290,45 +2369,27 @@
             const entryEl = e.target.closest(".entry");
             const id = parseInt(entryEl.dataset.id);
             const transactionToEdit = transactions.find((t) => t.id === id);
-
             if (!transactionToEdit) return;
 
-            // 1. Pre-fill the form
-            document
-              .getElementById("form-section")
-              .scrollIntoView({ behavior: "smooth" });
-            transactionDateInput.value = transactionToEdit.date;
-            transactionTypeSelect.value = transactionToEdit.type;
+            // Enter edit mode — do NOT delete the transaction yet
+            editingId = id;
+            document.getElementById("form-title").textContent = "Edit Transaction";
+            document.getElementById("form-submit-btn").textContent = "Update Transaction";
+            document.getElementById("cancel-edit-btn").style.display = "block";
 
-            // Trigger change to update category visibility
+            document.getElementById("form-section").scrollIntoView({ behavior: "smooth" });
+            transactionDateInput.value = normalizeDate(transactionToEdit.date);
+            transactionTypeSelect.value = transactionToEdit.type;
             transactionTypeSelect.dispatchEvent(new Event("change"));
 
             if (transactionToEdit.type === "expense") {
               categorySelect.value = transactionToEdit.category;
-              // Trigger change to render correct calculator
               categorySelect.dispatchEvent(new Event("change"));
             }
 
-            // Allow the DOM to update with the correct calculator template
             setTimeout(() => {
               populateCalculator(transactionToEdit);
             }, 100);
-
-            // 2. Delete the old transaction from state and DB
-            try {
-              await deleteTransaction(id);
-              window.transactions = transactions = transactions.filter(
-                (t) => t.id !== id,
-              );
-              syncToSheets("delete", { id }); // fire-and-forget to Sheets (new version synced on submit)
-              // Re-render immediately to show the item has been removed and is now being edited
-              renderApp();
-              if (window.updateKeywordFooterNote)
-                window.updateKeywordFooterNote();
-            } catch (error) {
-              console.error("Failed to delete transaction for editing:", error);
-              alert("Error: Could not start edit process.");
-            }
           }
         };
 
@@ -3816,25 +3877,11 @@
               });
 
               window.transactions = transactions = importedData;
+              syncReplaceAll(importedData);
               renderApp();
               if (window.updateKeywordFooterNote)
                 window.updateKeywordFooterNote();
-              // Sync restored data to Google Sheets
-              if (APPS_SCRIPT_URL) {
-                try {
-                  await syncReplaceAll(importedData);
-                  alert(
-                    "Data successfully imported, overwritten locally and synced to Google Sheets!",
-                  );
-                } catch (sheetsErr) {
-                  console.warn("Sheets sync after import failed:", sheetsErr);
-                  alert(
-                    "Data imported locally but Google Sheets sync failed. Please check your connection and try importing again.",
-                  );
-                }
-              } else {
-                alert("Data successfully imported and overwritten!");
-              }
+              alert("Data successfully imported and overwritten!");
             } catch (error) {
               alert(
                 "Error importing file. Please ensure it is a valid backup file.\n\n" +
