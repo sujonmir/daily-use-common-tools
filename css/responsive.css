@@ -60,17 +60,27 @@ input#endTimeInput {
 }
 @media screen and (max-width: 768px) {
   body {
-    margin: 10px;
+    margin: 0 10px 10px;
+    padding-top: 56px;
+    overflow-x: hidden;
   }
-  /* footer menu */
-  .footer-menu-wrapper {
+  #mob-header {
     display: flex;
+    margin: 0;
+  }
+  #mob-menu-btn {
+    display: flex;
+  }
+  #nav-topbar {
+    display: none !important;
   }
   .clock-wrapper {
     padding-top: 10px;
   }
   .clock {
     font-size: 72px;
+    width: 100%;
+    max-width: 480px;
   }
   .timer_stopwatch_container {
     flex-direction: column; /* Stack the items vertically */
@@ -130,7 +140,7 @@ input#endTimeInput {
   }
 
   h3.title {
-    font-size: 32px;
+    font-size: 24px;
     letter-spacing: 0;
   }
   h1.qa-title {

@@ -10,8 +10,40 @@
     <title>Clock & Tools</title>
   </head>
   <body>
-    <div class="floating-menu-wrapper">
-      <div class="floating-menu">
+
+    <!-- ── Mobile sticky header ──────────────────────────────────────────────── -->
+    <header id="mob-header">
+      <span class="mob-title">My Utilities</span>
+      <button id="mob-menu-btn" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- ── Desktop: top bar (items 13+, auto-shown by JS when needed) ───────── -->
+    <button id="topbar-theme-toggle" aria-label="Toggle theme" title="Toggle light/dark"></button>
+
+    <div id="nav-topbar">
+      <button id="nav-topbar-prev" aria-label="Previous">
+        <svg viewBox="0 0 10 16" width="10" height="16" fill="currentColor"><polygon points="10,0 0,8 10,16"/></svg>
+      </button>
+      <div id="nav-topbar-track"></div>
+      <button id="nav-topbar-next" aria-label="Next">
+        <svg viewBox="0 0 10 16" width="10" height="16" fill="currentColor"><polygon points="0,0 10,8 0,16"/></svg>
+      </button>
+    </div>
+
+    <!-- ── Desktop: left column (items 7–12, auto-shown by JS when needed) ──── -->
+    <div class="floating-menu-wrapper" id="nav-left">
+      <div class="floating-menu" id="nav-left-list"></div>
+    </div>
+
+    <!-- ── Desktop: right column (items 1–6) ────────────────────────────────── -->
+    <div class="floating-menu-wrapper" id="nav-right">
+      <div class="floating-menu" id="nav-right-list">
         <a href="./baby.html" class="baby-icon f-set">
           <img src="./img/baby.webp" alt="Baby" />
           <span>Baby Health</span>
@@ -24,8 +56,13 @@
           <img src="./img/memory.webp" alt="Memory Cards" />
           <span>Memory Cards</span>
         </a>
+        <a href="mobile-reader.html" class="passwords f-set" id="passwords-link" style="display:none">
+          <img src="./img/password.webp" alt="Passwords" />
+          <span>Passwords</span>
+        </a>
       </div>
     </div>
+
     <!-- global floating elements start-->
     <!-- <div class="password" id="password">PW & QR Generator</div> -->
     <!-- global floating elements end-->
@@ -43,8 +80,6 @@
       </div>
       <div class="date" id="banglaDate">
         <span class="date-title">বাংলাঃ </span>
-        <!-- <span id="date-today"></span> বঙ্গাব্দ -->
-        <!-- <span id="fhs-bangla-day"></span>, -->
         <span id="fhs-bangla-date"></span>
         <span id="fhs-bangla-month"></span> ,
         <span id="fhs-bangla-year"></span> বঙ্গাব্দ,
@@ -59,25 +94,16 @@
     <div class="popup-trigger-container">
       <hr />
       <div class="wrapper">
-        <!-- The clickable span element -->
-        <span class="" id="fiveAyat">দৈনিক ৫টি কোরআনের আয়াত পড়ুন</span>
+        <span class="" id="fiveAyat">দৈনিক ৫টি কোরআনের আয়াত পড়ুন</span>
         <span class="" id="zikir">জিকির করুন</span>
-        <span class="" id="password">পাসওয়ার্ড এবং QR কোড জেনারেটর</span>
+        <span class="" id="password">পাসওয়ার্ড এবং QR কোড জেনারেটর</span>
         <span class="" id="yt">ইউটিউব ভিডিও কিপার</span>
         <span class="" id="fiverrCal">ফাইভার ক্যালকুলেটর</span>
-        <span class="" id="weather-update">ওয়েদার আপডেট</span>
-
-        <!-- The popup structure -->
+        <span class="" id="weather-update">ওয়েদার আপডেট</span>
         <div id="popup" class="popup">
           <div class="popup-content">
             <button id="closePopup" class="close-btn">X</button>
-            <iframe
-              src=""
-              width="100%"
-              height="100%"
-              frameborder="0"
-              id="webPageFrame"
-            ></iframe>
+            <iframe src="" width="100%" height="100%" frameborder="0" id="webPageFrame"></iframe>
           </div>
         </div>
       </div>
@@ -86,53 +112,25 @@
     <!-- quaran part end -->
     <!-- timer & stopwatch start -->
     <div class="timer_stopwatch_container">
-      <!-- HTML timer start  -->
-
       <div class="timerSection">
         <h3 class="title">TIMER</h3>
-
-        <!-- Dropdown to select timer type -->
         <select id="timerType" onchange="handleTimerTypeChange()">
           <option value="" disabled selected>Choose Timer method</option>
           <option value="fixedTime">Fixed Time</option>
           <option value="endTime">End Time</option>
         </select>
         <br />
-
         <div class="timerhandler">
-          <!-- Input for Fixed Time (hidden by default) -->
           <div id="fixedTimeInput" style="display: none">
-            <input
-              type="number"
-              id="minutesInput"
-              min="1"
-              placeholder="Enter minutes"
-            />
+            <input type="number" id="minutesInput" min="1" placeholder="Enter minutes" />
           </div>
-
-          <!-- Input for End Time (hidden by default) -->
           <div id="endTimeInputSection" style="display: none">
-            <input
-              type="datetime-local"
-              id="endTimeInput"
-              placeholder="Set end time"
-            />
+            <input type="datetime-local" id="endTimeInput" placeholder="Set end time" />
           </div>
-
-          <!-- Start/Reset Timer Button -->
-          <button onclick="toggleTimer()" id="timerController">
-            Start Timer
-          </button>
+          <button onclick="toggleTimer()" id="timerController">Start Timer</button>
         </div>
-
-        <!-- Timer Display -->
-        <div class="timer" id="timer" onclick="toggleTimerFullscreen()">
-          00:00:00
-        </div>
+        <div class="timer" id="timer" onclick="toggleTimerFullscreen()">00:00:00</div>
       </div>
-      <!-- HTML timer end -->
-
-      <!-- stopwatch start -->
       <div class="stopwatch_section" id="stopwatch_section">
         <h3 class="title">Stop Watch</h3>
         <div id="">
@@ -140,41 +138,211 @@
             <span class="time-part" id="hours_stopwatch">00</span> :
             <span class="time-part" id="minutes_stopwatch">00</span> :
             <span class="time-part" id="seconds_stopwatch">00</span> :
-            <span
-              class="time-part milliseconds_stopwatch"
-              id="milliseconds_stopwatch"
-              >000</span
-            >
+            <span class="time-part milliseconds_stopwatch" id="milliseconds_stopwatch">000</span>
           </div>
         </div>
-
         <div class="btn_container">
           <button id="start_stopwatch">Start</button>
           <button id="stop_stopwatch">Stop</button>
           <button id="reset_stopwatch">Reset</button>
         </div>
       </div>
-      <!-- stopwatch end -->
     </div>
-    <!-- footer menu start -->
-     <section class="footer-menu-wrapper">
-        <a href="./baby.html" class="footer-menu-item">
-          <img src="./img/baby.webp" alt="Baby Icon">
-        </a>
-        <a href="./personal-finance-tracker.html" class="footer-menu-item">
-          <img src="./img/budget.webp" alt="Finance Icon">
-        </a>
-        <a href="./memory-cards.html" class="footer-menu-item" id="memory-cards-footer" style="display:none">
-          <img src="./img/memory.webp" alt="Memory Cards">
-        </a>
-     </section>
-    <!-- footer menu end -->
     <!-- timer & stopwatch end -->
+
+    <!-- ── Mobile full-screen nav ─────────────────────────────────────────────── -->
+    <div id="mob-nav">
+      <div id="mob-nav-panel">
+        <div id="mob-nav-header">
+          <span id="mob-nav-header-title">My Utilities</span>
+          <button id="mob-nav-close" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <nav id="mob-nav-links"></nav>
+      </div>
+    </div>
+
     <script>
+      // ── Reveal verified-only links ──────────────────────────────────────────
       if (localStorage.getItem("mhk_super") === "1") {
-        document.getElementById("memory-cards-link").style.display = "";
-        document.getElementById("memory-cards-footer").style.display = "";
+        ["memory-cards-link","passwords-link"]
+          .forEach(id => document.getElementById(id).style.display = "");
       }
+
+      // ── Build mobile nav from desktop items ─────────────────────────────────
+      (function buildMobNav() {
+        const mobLinks = document.getElementById("mob-nav-links");
+        const desktopItems = Array.from(document.querySelectorAll("#nav-right-list .f-set"));
+        const visible = desktopItems.filter(el => el.style.display !== "none");
+        visible.forEach((el, i) => {
+          const a = document.createElement("a");
+          a.href = el.href;
+          a.className = "mob-nav-item";
+          a.style.borderBottom = i < visible.length - 1 ? "1px solid rgba(255,255,255,0.1)" : "none";
+          const img = el.querySelector("img");
+          const span = el.querySelector("span");
+          if (img) { const i2 = document.createElement("img"); i2.src = img.src; i2.alt = img.alt; a.appendChild(i2); }
+          if (span) { const s = document.createElement("span"); s.textContent = span.textContent; a.appendChild(s); }
+          mobLinks.appendChild(a);
+        });
+      })();
+
+      // ── Desktop: redistribute items into left col / top bar ──
+      window._updateTopbarArrows = null;
+      (function() {
+        const rightList   = document.getElementById("nav-right-list");
+        const leftList    = document.getElementById("nav-left-list");
+        const navLeft     = document.getElementById("nav-left");
+        const navRight    = document.getElementById("nav-right");
+        const topbar      = document.getElementById("nav-topbar");
+        const topbarTrack = document.getElementById("nav-topbar-track");
+        const prev        = document.getElementById("nav-topbar-prev");
+        const next        = document.getElementById("nav-topbar-next");
+
+        // Snapshot of all items in original DOM order — never changes
+        const allItems = Array.from(rightList.querySelectorAll(".f-set"));
+
+        function updateArrows() {
+          const needsScroll = topbarTrack.scrollWidth > topbarTrack.clientWidth + 1;
+          prev.style.display = needsScroll ? "flex" : "none";
+          next.style.display = needsScroll ? "flex" : "none";
+          topbarTrack.style.justifyContent = needsScroll ? "flex-start" : "center";
+          if (needsScroll) {
+            const dark = topbar.classList.contains("topbar-dark");
+            const on  = dark ? "#fff" : "#111";
+            const off = dark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.25)";
+            prev.style.color = topbarTrack.scrollLeft > 0 ? on : off;
+            next.style.color = topbarTrack.scrollLeft < topbarTrack.scrollWidth - topbarTrack.clientWidth - 1 ? on : off;
+          }
+        }
+        prev.addEventListener("click", () => {
+          const w = topbarTrack.querySelector(".topbar-item")?.offsetWidth || 120;
+          topbarTrack.scrollBy({ left: -(w + 1), behavior: "smooth" });
+          setTimeout(updateArrows, 350);
+        });
+        next.addEventListener("click", () => {
+          const w = topbarTrack.querySelector(".topbar-item")?.offsetWidth || 120;
+          topbarTrack.scrollBy({ left: w + 1, behavior: "smooth" });
+          setTimeout(updateArrows, 350);
+        });
+        topbarTrack.addEventListener("scroll", updateArrows);
+        window._updateTopbarArrows = updateArrows;
+
+        let _hiddenForTopbar = [];
+
+        function cloneToTopbar(items, hideOriginals) {
+          items.forEach(el => {
+            const ti = document.createElement("a");
+            ti.href      = el.href;
+            ti.className = "topbar-item";
+            ti.innerHTML = el.innerHTML;
+            topbarTrack.appendChild(ti);
+            if (hideOriginals) {
+              el.style.display = "none";
+              _hiddenForTopbar.push(el);
+            }
+          });
+          topbar.style.display = "flex";
+          document.body.classList.add("has-topbar");
+          setTimeout(updateArrows, 50);
+        }
+
+        function distributeNav() {
+          const w = window.innerWidth;
+
+          // Reset to clean slate
+          topbarTrack.innerHTML = "";
+          topbar.style.display  = "none";
+          document.body.classList.remove("has-topbar");
+          _hiddenForTopbar.forEach(el => { el.style.display = ""; });
+          _hiddenForTopbar = [];
+          allItems.forEach(el => rightList.appendChild(el));
+          navLeft.style.display  = "none";
+          navRight.style.display = "";
+
+          if (w <= 768) {
+            navRight.style.display = "none";
+            return;
+          }
+
+          const visible = allItems.filter(el => el.style.display !== "none");
+
+          if (w < 1500) {
+            // Narrow desktop: all visible items → topbar, hide side cols
+            navRight.style.display = "none";
+            cloneToTopbar(visible, false);
+          } else {
+            // Wide desktop
+            if (visible.length > 12) {
+              // 13+ items: all go to topbar, hide side cols
+              navRight.style.display = "none";
+              cloneToTopbar(visible, false);
+            } else if (visible.length > 6) {
+              // 7-12 items: right col + left col
+              visible.slice(6).forEach(el => leftList.appendChild(el));
+              navLeft.style.display = "block";
+            }
+            // ≤6 items: right col only (default)
+          }
+        }
+
+        function distributeAndSync() {
+          distributeNav();
+          document.dispatchEvent(new Event("topbar-updated"));
+        }
+
+        distributeAndSync();
+        let _rt;
+        window.addEventListener("resize", () => { clearTimeout(_rt); _rt = setTimeout(distributeAndSync, 150); });
+      })();
+
+      // ── Mobile hamburger toggle ─────────────────────────────────────────────
+      const mobNav   = document.getElementById("mob-nav");
+      const openBtn  = document.getElementById("mob-menu-btn");
+      const closeBtn = document.getElementById("mob-nav-close");
+      openBtn.addEventListener("click",  () => mobNav.classList.add("open"));
+      closeBtn.addEventListener("click", () => mobNav.classList.remove("open"));
+      mobNav.addEventListener("click", e => { if (e.target === mobNav) mobNav.classList.remove("open"); });
+
+      // ── Topbar light/dark toggle ────────────────────────────────────────────
+      (function() {
+        const topbar    = document.getElementById("nav-topbar");
+        const toggleBtn = document.getElementById("topbar-theme-toggle");
+        const MOON_SVG  = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>`;
+        const SUN_SVG   = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+
+        let isDark = localStorage.getItem("topbar_dark") === "1";
+
+        function applyTheme(dark) {
+          isDark = dark;
+          topbar.classList.toggle("topbar-dark", dark);
+          toggleBtn.classList.toggle("dark-mode", dark);
+          toggleBtn.innerHTML = dark ? SUN_SVG : MOON_SVG;
+          localStorage.setItem("topbar_dark", dark ? "1" : "0");
+        }
+
+        function syncToggleVisibility() {
+          const show = window.innerWidth > 768 && topbar.style.display === "flex";
+          toggleBtn.style.display = show ? "flex" : "none";
+        }
+
+        applyTheme(isDark);
+        toggleBtn.addEventListener("click", () => {
+          applyTheme(!isDark);
+          if (window._updateTopbarArrows) window._updateTopbarArrows();
+        });
+        window.addEventListener("resize", syncToggleVisibility);
+
+        // Re-sync after distributeNav runs
+        const _origDistribute = window.__syncTopbarToggle;
+        document.addEventListener("topbar-updated", syncToggleVisibility);
+
+        // Poll briefly after load for topbar state
+        setTimeout(syncToggleVisibility, 200);
+      })();
     </script>
     <script src="js/baby.js"></script>
     <script src="js/popup.js"></script>
@@ -182,8 +350,6 @@
     <script src="js/script.js"></script>
     <script src="js/bangla-date.js"></script>
     <script src="https://bangla.plus/scripts/bangladatetoday.min.js"></script>
-    <script>
-      dateToday("date-today", "bangla");
-    </script>
+    <script>dateToday("date-today", "bangla");</script>
   </body>
 </html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Password Keeper – Mobile Reader</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f0f2f5;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #1a1a2e;
+      color: #fff;
+      padding: 0 16px;
+      height: 50px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-home {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: color 0.15s;
+    }
+    .back-home:hover { color: #fff; }
+    .back-home svg { width: 20px; height: 20px; }
+
+    header h1 {
+      font-size: 1em;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      flex: 1;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    /* ── Login card ── */
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px 20px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+    }
+
+    .card h2 {
+      font-size: 0.95em;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    input[type="url"],
+    input[type="password"],
+    input[type="text"] {
+      display: block;
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid #dde1e7;
+      border-radius: 8px;
+      font-size: 0.95em;
+      margin-bottom: 10px;
+      background: #fafbfc;
+      color: #1a1a2e;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus { border-color: #4f7ef8; background: #fff; }
+    input::placeholder { color: #b0b8c4; }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #4f7ef8;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:active { background: #2d5dd4; }
+
+    .msg {
+      margin-top: 10px;
+      padding: 9px 12px;
+      border-radius: 7px;
+      font-size: 0.85em;
+      font-weight: 600;
+      display: none;
+    }
+
+    .msg.show { display: block; }
+    .msg.error   { background: #fde8ea; color: #b02030; }
+    .msg.success { background: #d4edda; color: #155724; }
+    .msg.loading { background: #e9ecef; color: #495057; }
+
+    /* ── Search ── */
+    .search-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #b0b8c4;
+      pointer-events: none;
+    }
+
+    #searchInput {
+      padding-left: 36px;
+      margin-bottom: 0;
+    }
+
+    /* ── Password entries ── */
+    .entry {
+      background: #fff;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .entry-site {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+    }
+
+    .entry-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 5px;
+    }
+
+    .entry-label {
+      font-size: 0.75em;
+      color: #8892a0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      min-width: 64px;
+    }
+
+    .entry-value {
+      font-size: 0.9em;
+      color: #2d3748;
+      flex: 1;
+      word-break: break-all;
+      text-align: right;
+    }
+
+    .copy-btn {
+      width: auto;
+      padding: 4px 10px;
+      font-size: 0.75em;
+      font-weight: 600;
+      background: #eef2ff;
+      color: #4f7ef8;
+      border-radius: 6px;
+      margin-left: 8px;
+      flex-shrink: 0;
+    }
+
+    .copy-btn:active { background: #c7d4fd; }
+
+    .pw-value {
+      filter: blur(4px);
+      transition: filter 0.2s;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .pw-value.revealed { filter: none; }
+
+    /* ── Count / empty ── */
+    .count-line {
+      font-size: 0.8em;
+      color: #a0aab4;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .empty {
+      text-align: center;
+      color: #a0aab4;
+      font-size: 0.9em;
+      padding: 30px 0;
+    }
+
+    /* ── Lock button ── */
+    #lockBtn {
+      background: #1a1a2e;
+      margin-top: 4px;
+      font-size: 0.85em;
+    }
+
+    #lockBtn:active { background: #000; }
+
+    /* ── Sections ── */
+    #loginSection  { display: block; }
+    #vaultSection  { display: none;  }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="back-home" aria-label="Back to home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+  </a>
+  <h1>Password Keeper</h1>
+</header>
+
+<div class="container">
+
+  <!-- LOGIN -->
+  <div id="loginSection">
+    <div class="card">
+      <h2>Unlock Vault</h2>
+      <div id="urlRow">
+        <input type="url" id="appUrl" placeholder="Apps Script Web App URL" autocomplete="off" />
+      </div>
+      <div id="savedUrlRow" style="display:none; margin-bottom:10px;">
+        <p style="font-size:0.8em;color:#8892a0;margin-bottom:4px;">Connected to saved URL &nbsp;<button id="changeUrlBtn" style="display:inline;width:auto;padding:2px 8px;font-size:0.8em;background:#eef2ff;color:#4f7ef8;border-radius:5px;">Change</button></p>
+      </div>
+      <input type="password" id="masterPw" placeholder="Master Password" />
+      <button id="unlockBtn">Unlock</button>
+      <div class="msg" id="loginMsg"></div>
+    </div>
+    <p style="font-size:0.75em;color:#a0aab4;text-align:center;line-height:1.6;">
+      Passwords are decrypted locally in your browser.<br>Nothing is sent to any server.
+    </p>
+  </div>
+
+  <!-- VAULT -->
+  <div id="vaultSection">
+    <div class="search-wrap">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Search by site or app..." autocomplete="off" />
+    </div>
+    <p class="count-line" id="countLine"></p>
+    <div id="entriesList"></div>
+    <button id="lockBtn">Lock &amp; Clear</button>
+  </div>
+
+</div>
+
+<script>
+// ── Crypto ───────────────────────────────────────────────────────────────────
+function str2ab(str) { return new TextEncoder().encode(str); }
+function ab2str(buf) { return new TextDecoder().decode(buf); }
+
+async function deriveKey(password, salt) {
+  const mat = await crypto.subtle.importKey("raw", str2ab(password), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt, iterations: 100000, hash: "SHA-256" },
+    mat,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["decrypt"]
+  );
+}
+
+async function decryptData(password, payload) {
+  const salt = new Uint8Array(payload.salt);
+  const iv   = new Uint8Array(payload.iv);
+  const ct   = new Uint8Array(payload.ciphertext);
+  try {
+    const key = await deriveKey(password, salt);
+    const raw = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ct);
+    return JSON.parse(ab2str(raw));
+  } catch {
+    throw new Error("Wrong master password or corrupt backup.");
+  }
+}
+
+// ── State ────────────────────────────────────────────────────────────────────
+let allPasswords = [];
+const APP_URL_KEY = "mr_app_url";
+
+function initUrlField() {
+  const saved = localStorage.getItem(APP_URL_KEY);
+  if (saved) {
+    document.getElementById("urlRow").style.display = "none";
+    document.getElementById("savedUrlRow").style.display = "block";
+    document.getElementById("appUrl").value = saved;
+  } else {
+    document.getElementById("urlRow").style.display = "block";
+    document.getElementById("savedUrlRow").style.display = "none";
+  }
+}
+
+document.getElementById("changeUrlBtn").addEventListener("click", () => {
+  localStorage.removeItem(APP_URL_KEY);
+  document.getElementById("appUrl").value = "";
+  initUrlField();
+});
+
+initUrlField();
+
+// ── UI helpers ───────────────────────────────────────────────────────────────
+function showLoginMsg(msg, type) {
+  const el = document.getElementById("loginMsg");
+  el.textContent = msg;
+  el.className = `msg show ${type}`;
+}
+
+function copyToClipboard(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = "Copied!";
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  });
+}
+
+// ── Render entries ───────────────────────────────────────────────────────────
+function renderEntries(list) {
+  const container  = document.getElementById("entriesList");
+  const countLine  = document.getElementById("countLine");
+  container.innerHTML = "";
+
+  const total = allPasswords.length;
+  const shown = list.length;
+  countLine.textContent = shown < total
+    ? `${shown} of ${total} passwords`
+    : `${total} password${total !== 1 ? "s" : ""}`;
+
+  if (list.length === 0) {
+    container.innerHTML = `<p class="empty">No results found.</p>`;
+    return;
+  }
+
+  list.forEach(entry => {
+    const div = document.createElement("div");
+    div.className = "entry";
+
+    // Site
+    const site = document.createElement("div");
+    site.className = "entry-site";
+    site.textContent = entry.site;
+    div.appendChild(site);
+
+    // Username row
+    const userRow = document.createElement("div");
+    userRow.className = "entry-row";
+    userRow.innerHTML = `<span class="entry-label">Username</span>`;
+    const userVal = document.createElement("span");
+    userVal.className = "entry-value";
+    userVal.textContent = entry.username;
+    const userCopy = document.createElement("button");
+    userCopy.className = "copy-btn";
+    userCopy.textContent = "Copy";
+    userCopy.onclick = () => copyToClipboard(entry.username, userCopy);
+    userRow.appendChild(userVal);
+    userRow.appendChild(userCopy);
+    div.appendChild(userRow);
+
+    // Password row
+    const pwRow = document.createElement("div");
+    pwRow.className = "entry-row";
+    pwRow.innerHTML = `<span class="entry-label">Password</span>`;
+    const pwVal = document.createElement("span");
+    pwVal.className = "entry-value pw-value";
+    pwVal.textContent = entry.password;
+    pwVal.title = "Tap to reveal";
+    pwVal.onclick = () => pwVal.classList.toggle("revealed");
+    const pwCopy = document.createElement("button");
+    pwCopy.className = "copy-btn";
+    pwCopy.textContent = "Copy";
+    pwCopy.onclick = () => copyToClipboard(entry.password, pwCopy);
+    pwRow.appendChild(pwVal);
+    pwRow.appendChild(pwCopy);
+    div.appendChild(pwRow);
+
+    container.appendChild(div);
+  });
+}
+
+// ── Search ───────────────────────────────────────────────────────────────────
+document.getElementById("searchInput").addEventListener("input", (e) => {
+  const term = e.target.value.toLowerCase().trim();
+  const filtered = term
+    ? allPasswords.filter(p => p.site && p.site.toLowerCase().includes(term))
+    : allPasswords;
+  renderEntries(filtered);
+});
+
+// ── Unlock ───────────────────────────────────────────────────────────────────
+document.getElementById("unlockBtn").addEventListener("click", async () => {
+  const url    = document.getElementById("appUrl").value.trim();
+  const master = document.getElementById("masterPw").value;
+
+  if (!url)    return showLoginMsg("Enter the Apps Script Web App URL.", "error");
+  if (!master) return showLoginMsg("Enter your master password.", "error");
+
+  showLoginMsg("Fetching encrypted backup…", "loading");
+
+  try {
+    const resp = await fetch(url, { method: "GET", redirect: "follow" });
+    const text = await resp.text();
+
+    let payload;
+    try { payload = JSON.parse(text); }
+    catch { throw new Error("Invalid response from server. Check your Apps Script URL — it may be wrong or not deployed as a web app."); }
+
+    if (!payload.salt || !payload.iv || !payload.ciphertext)
+      throw new Error("No valid backup found. Sync from the extension first.");
+
+    allPasswords = await decryptData(master, payload);
+    if (!Array.isArray(allPasswords)) throw new Error("Unexpected data format.");
+
+    localStorage.setItem(APP_URL_KEY, url);
+    document.getElementById("masterPw").value = "";
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("vaultSection").style.display = "block";
+    renderEntries(allPasswords);
+  } catch (e) {
+    showLoginMsg(e.message, "error");
+  }
+});
+
+// ── Lock ─────────────────────────────────────────────────────────────────────
+document.getElementById("lockBtn").addEventListener("click", () => {
+  allPasswords = [];
+  document.getElementById("entriesList").innerHTML = "";
+  document.getElementById("searchInput").value = "";
+  document.getElementById("masterPw").value = "";
+  document.getElementById("loginSection").style.display = "block";
+  document.getElementById("vaultSection").style.display = "none";
+  document.getElementById("loginMsg").className = "msg";
+  initUrlField();
+});
+
+// ── Allow Enter key on password field ────────────────────────────────────────
+document.getElementById("masterPw").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") document.getElementById("unlockBtn").click();
+});
+</script>
+</body>
+</html>
