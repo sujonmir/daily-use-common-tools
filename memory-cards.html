@@ -384,7 +384,7 @@
         white-space: nowrap;
       }
       /* ── Smart mobile toolbar: single row, filters collapsible ── */
-      @media screen and (max-width: 600px) {
+      @media screen and (max-width: 768px) {
         .toolbar {
           padding: 7px 10px;
           gap: 6px;
@@ -512,7 +512,7 @@
         top: 58px;
       }
       /* On small screens move FAB to bottom-right (standard mobile FAB position) */
-      @media screen and (max-width: 600px) {
+      @media screen and (max-width: 768px) {
         .fab-add,
         .fab-add.toolbar-sticky {
           top: auto;
@@ -523,8 +523,8 @@
           margin: 0 10px;
         }
         .card-copy-btn {
-          right: 8px;
-          left: auto;
+          right: 8px !important;
+          left: auto !important;
         }
       }
 
