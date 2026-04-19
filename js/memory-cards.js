@@ -1148,6 +1148,7 @@ function sanitizeText(text) {
   );
 }
 
+
 /** Copy card content to clipboard.
  * - text card  → copies title + body text as plain text (stripped of HTML/markdown)
  * - image card → copies image to clipboard (ClipboardItem)
