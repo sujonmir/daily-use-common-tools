@@ -780,8 +780,10 @@ function mdToHtml(text) {
 
   const processInlineFormatting = (text) => {
     // [https://url] link text  →  <a> (works inside lists, headings, paragraphs)
-    text = text.replace(/\[(https?:\/\/[^\]]+)\]\s*(.*)/g, (_, href, label) =>
-      `<a href="${href}" target="_blank" rel="noopener noreferrer">${label || href}</a>`
+    text = text.replace(
+      /\[(https?:\/\/[^\]]+)\]\s*(.*)/g,
+      (_, href, label) =>
+        `<a href="${href}" target="_blank" rel="noopener noreferrer">${label || href}</a>`,
     );
     // _..._  → italic
     text = text.replace(/_([^_]+)_/g, "<em>$1</em>");
@@ -1158,8 +1160,8 @@ async function copyCard(box, btn) {
     if (type === "text" || !type) {
       // Get rendered text from DOM (strips HTML automatically)
       const body =
-        box.querySelector(".card-text-wrapper")?.textContent ||
-        box.querySelector(".details")?.textContent ||
+        box.querySelector(".card-text-wrapper")?.innerText ||
+        box.querySelector(".details")?.innerText ||
         box.dataset.bodyText ||
         "";
       const cleanBody = sanitizeText(body);
