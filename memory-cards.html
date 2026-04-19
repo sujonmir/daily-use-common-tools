@@ -150,17 +150,70 @@
         font-weight: normal;
         line-height: 1;
       }
+      .card-text-wrapper .md-list-title {
+        align-self: flex-start;
+        text-align: left;
+      }
       .card-text-wrapper ul {
         margin: 0;
-        padding-left: 1.4em;
+        padding-left: 2rem;
+        padding-top: 5px;
         text-align: left;
-        line-height: 1.5;
+        line-height: 1.2;
+        align-self: flex-start;
       }
       .card-text-wrapper ul li {
         list-style: disc;
         font-size: 14px;
         font-weight: normal;
       }
+      .card-text-wrapper ul li a {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        position: relative;
+        cursor: pointer;
+        pointer-events: auto;
+      }
+      .card-text-wrapper ul li a::before {
+        content: "Link";
+        position: absolute;
+        bottom: calc(100% + 3px);
+        left: 100%;
+        transform: translateX(-100%);
+        background: rgba(0, 0, 0, 0.4);
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 11px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 1000;
+        font-weight: normal;
+        letter-spacing: 0.3px;
+      }
+      .card-text-wrapper ul li a:hover::before {
+        opacity: 1;
+      }
+      .card-text-wrapper ul li a::after {
+        content: "ℹ";
+        font-weight: normal;
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #ccc;
+        margin-left: 10px;
+        border-radius: 50%;
+        font-size: 10px;
+        position: relative;
+        margin-top: -2px;
+      }
+
       .special {
         font-size: 11px;
       }
@@ -252,7 +305,7 @@
       }
       .in-fullscreen .details {
         font-family: "Baumans", system-ui;
-        font-size: 1.2rem;
+        font-size: 1.2rem !important;
         line-height: 1.2;
         text-align: left;
         width: 40%;
@@ -267,17 +320,16 @@
       }
       .in-fullscreen .card-text-wrapper {
         font-family: var(--bangla-font);
-        font-size: 2.5rem;
-        line-height: 1.2;
         text-align: center;
         height: auto;
         width: 90%;
         max-width: 1200px;
       }
-      .in-fullscreen .card-text-wrapper big {
-        font-size: 4rem;
-        display: inline-block;
-        padding-top: 0.5em;
+      .in-fullscreen .card-text-wrapper em {
+        font-style: italic;
+      }
+      .in-fullscreen .card-text-wrapper strong {
+        font-weight: bold;
       }
       .full-screen-mode {
         cursor: pointer;
@@ -304,6 +356,16 @@
       .in-fullscreen .fullscreen-close-btn {
         display: block;
       }
+      .in-fullscreen .card-text-wrapper .md-h2,
+      .in-fullscreen .card-text-wrapper .md-h1,
+      .in-fullscreen .card-text-wrapper .md-p,
+      .in-fullscreen .card-text-wrapper ul li {
+        font-size: 2rem;
+      }
+      .in-fullscreen .card-text-wrapper ul {
+        padding-top: 10px;
+        padding-left: 5rem;
+      }
 
       @media screen and (max-width: 768px) {
         .age-del .age {
@@ -314,14 +376,13 @@
           font-size: 14px;
         }
         .in-fullscreen h3 {
-          font-size: 2.5rem;
+          font-size: 2rem;
         }
         .in-fullscreen .details {
           font-size: 1.2rem;
           width: 95%;
         }
         .in-fullscreen .card-text-wrapper {
-          font-size: 1.8rem;
           width: 95%;
         }
         .fullscreen-close-btn {
@@ -330,6 +391,12 @@
           font-size: 24px;
           right: 20px;
           top: 20px;
+        }
+        .in-fullscreen .card-text-wrapper .md-h2,
+        .in-fullscreen .card-text-wrapper .md-h1,
+        .in-fullscreen .card-text-wrapper .md-p,
+        .in-fullscreen .card-text-wrapper ul li {
+          font-size: 1.5rem;
         }
       }
 

@@ -36,14 +36,18 @@
         top: 0;
         left: 0;
         padding: 10px;
-        transition: transform 0.2s ease-in-out, top 0.2s ease;
+        transition:
+          transform 0.2s ease-in-out,
+          top 0.2s ease;
       }
       .back-to-home:hover {
         transform: scale(1.1);
       }
       /* Desktop only: drop below sticky toolbar */
       @media screen and (min-width: 601px) {
-        .back-to-home.toolbar-sticky { top: 44px; }
+        .back-to-home.toolbar-sticky {
+          top: 44px;
+        }
       }
 
       /* Page title */
@@ -166,11 +170,17 @@
         font-weight: normal;
         line-height: 1;
       }
+      .card-text-wrapper .md-list-title {
+        align-self: flex-start;
+        text-align: left;
+      }
       .card-text-wrapper ul {
         margin: 0;
-        padding-left: 1.4em;
+        padding-left: 2rem;
+        padding-top: 5px;
         text-align: left;
-        line-height: 1.5;
+        line-height: 1.2;
+        align-self: flex-start;
       }
       .card-text-wrapper ul li {
         list-style: disc;
@@ -283,17 +293,16 @@
       }
       .in-fullscreen .card-text-wrapper {
         font-family: var(--bangla-font);
-        font-size: 2.5rem;
-        line-height: 1.2;
         text-align: center;
         height: auto;
         width: 90%;
         max-width: 1200px;
       }
-      .in-fullscreen .card-text-wrapper big {
-        font-size: 4rem;
-        display: inline-block;
-        padding-top: 0.5em;
+      .in-fullscreen .card-text-wrapper em {
+        font-style: italic;
+      }
+      .in-fullscreen .card-text-wrapper strong {
+        font-weight: bold;
       }
       .full-screen-mode {
         cursor: pointer;
@@ -337,7 +346,6 @@
           width: 95%;
         }
         .in-fullscreen .card-text-wrapper {
-          font-size: 1.8rem;
           width: 95%;
         }
         .fullscreen-close-btn {
@@ -449,8 +457,12 @@
         width: 100%;
       }
       /* On desktop the filters wrapper is transparent to layout */
-      .toolbar-filters { display: contents; }
-      .toolbar-filter-toggle { display: none; }
+      .toolbar-filters {
+        display: contents;
+      }
+      .toolbar-filter-toggle {
+        display: none;
+      }
       .toolbar select,
       .toolbar input[type="text"] {
         padding: 7px 11px;
@@ -498,7 +510,9 @@
           font-size: 14px;
           line-height: 1;
           cursor: pointer;
-          transition: background 0.2s, border-color 0.2s;
+          transition:
+            background 0.2s,
+            border-color 0.2s;
           box-sizing: border-box;
         }
         .toolbar-filter-toggle.active {
@@ -513,7 +527,9 @@
           gap: 6px;
           order: 10;
         }
-        .toolbar-filters.open { display: flex; }
+        .toolbar-filters.open {
+          display: flex;
+        }
         .toolbar-filters select {
           flex: 1 1 calc(33% - 6px);
           font-size: 12px;
@@ -525,7 +541,10 @@
           padding: 6px 10px;
           min-width: 0;
         }
-        .toolbar-count { font-size: 11px; flex-shrink: 0; }
+        .toolbar-count {
+          font-size: 11px;
+          flex-shrink: 0;
+        }
       }
 
       /* ── Scroll-to-top button ────────────────────────────────────────────── */
@@ -548,12 +567,25 @@
         justify-content: center;
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.25s, transform 0.2s, background 0.2s;
+        transition:
+          opacity 0.25s,
+          transform 0.2s,
+          background 0.2s;
       }
-      #scroll-top-btn.visible { opacity: 1; pointer-events: auto; }
-      #scroll-top-btn:hover { background: #11111150; transform: scale(1.1); }
+      #scroll-top-btn.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #scroll-top-btn:hover {
+        background: #11111150;
+        transform: scale(1.1);
+      }
       @media screen and (max-width: 600px) {
-        #scroll-top-btn { bottom: 25px; right: auto; left: 5px; }
+        #scroll-top-btn {
+          bottom: 25px;
+          right: auto;
+          left: 5px;
+        }
       }
 
       /* ── Floating Add Button ────────────────────────────────────────────── */
@@ -653,7 +685,10 @@
         gap: 5px;
         color: #555;
       }
-      .type-btn svg { width: 20px; height: 20px; }
+      .type-btn svg {
+        width: 20px;
+        height: 20px;
+      }
       .type-btn:hover,
       .type-btn.active {
         border-color: #000;
@@ -849,18 +884,27 @@
         cursor: pointer;
         z-index: 3;
         opacity: 0;
-        transition: opacity 0.2s, background 0.2s;
+        transition:
+          opacity 0.2s,
+          background 0.2s;
         padding: 0;
       }
-      .card-edit-btn svg { width: 14px; height: 14px; }
-      .card-edit-btn:hover { background: rgba(0,0,0,0.85); }
+      .card-edit-btn svg {
+        width: 14px;
+        height: 14px;
+      }
+      .card-edit-btn:hover {
+        background: rgba(0, 0, 0, 0.85);
+      }
       .box:hover .card-edit-btn {
         opacity: 1;
       }
 
       /* Read-only mode: hide add + edit controls */
       body.read-only-mode #fab-add-btn,
-      body.read-only-mode .card-edit-btn { display: none !important; }
+      body.read-only-mode .card-edit-btn {
+        display: none !important;
+      }
 
       /* Filter hidden / no results */
       .box.filter-hidden {
@@ -905,15 +949,48 @@
         <h2 id="addCardTitle">Add New Card</h2>
         <div class="type-selector">
           <button class="type-btn active" data-type="image">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
             Image
           </button>
           <button class="type-btn" data-type="text">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="17" y1="10" x2="3" y2="10" />
+              <line x1="21" y1="6" x2="3" y2="6" />
+              <line x1="21" y1="14" x2="3" y2="14" />
+              <line x1="17" y1="18" x2="3" y2="18" />
+            </svg>
             Text
           </button>
           <button class="type-btn" data-type="video">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="15" height="10" rx="2"/><polyline points="17 10 22 7 22 17 17 14"/></svg>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="2" y="7" width="15" height="10" rx="2" />
+              <polyline points="17 10 22 7 22 17 17 14" />
+            </svg>
             Video
           </button>
         </div>
@@ -954,7 +1031,19 @@
               <label id="fc-img-pick-label">Pick Image *</label>
               <label class="file-pick-btn">
                 <input type="file" id="fc-img-file" accept="image/*" />
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="width: 16px; height: 16px; flex-shrink: 0"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
                 <span id="fc-img-btn-text">Choose image file…</span>
               </label>
               <div class="file-preview" id="fc-img-preview">
@@ -995,7 +1084,18 @@
               <label id="fc-video-pick-label">Pick Video *</label>
               <label class="file-pick-btn">
                 <input type="file" id="fc-video-file" accept="video/*" />
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0"><rect x="2" y="7" width="15" height="10" rx="2"/><polyline points="17 10 22 7 22 17 17 14"/></svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="width: 16px; height: 16px; flex-shrink: 0"
+                >
+                  <rect x="2" y="7" width="15" height="10" rx="2" />
+                  <polyline points="17 10 22 7 22 17 17 14" />
+                </svg>
                 <span id="fc-video-btn-text">Choose video file…</span>
               </label>
               <div class="file-preview" id="fc-video-preview">
@@ -1025,8 +1125,17 @@
           </div>
 
           <div class="form-field">
-            <label>Tags <span style="font-weight:400;font-size:12px;color:#888">(hidden · search only)</span></label>
-            <input type="text" id="fc-tags" placeholder="e.g. vv2, milestone, first" />
+            <label
+              >Tags
+              <span style="font-weight: 400; font-size: 12px; color: #888"
+                >(hidden · search only)</span
+              ></label
+            >
+            <input
+              type="text"
+              id="fc-tags"
+              placeholder="e.g. vv2, milestone, first"
+            />
           </div>
 
           <div class="add-card-actions">
@@ -1091,7 +1200,13 @@
     <!-- ── Filter / Search Toolbar ──────────────────────────────────────────── -->
     <div class="toolbar">
       <!-- mobile-only toggle button for filters -->
-      <button class="toolbar-filter-toggle" id="toolbar-filter-toggle" aria-label="Toggle filters">⚙</button>
+      <button
+        class="toolbar-filter-toggle"
+        id="toolbar-filter-toggle"
+        aria-label="Toggle filters"
+      >
+        ⚙
+      </button>
       <!-- selects wrapped so they can collapse on mobile -->
       <div class="toolbar-filters" id="toolbar-filters">
         <select id="filter-time">
@@ -1119,11 +1234,7 @@
           <option value="text">Text</option>
         </select>
       </div>
-      <input
-        type="text"
-        id="search-input"
-        placeholder="Search…"
-      />
+      <input type="text" id="search-input" placeholder="Search…" />
       <span class="toolbar-count" id="toolbar-count"></span>
     </div>
 
@@ -1222,7 +1333,8 @@
               sessionStorage.setItem(KEY, "read");
               applyAccess("read");
             } else {
-              document.getElementById("baby-lock-error").style.display = "block";
+              document.getElementById("baby-lock-error").style.display =
+                "block";
               input.value = "";
               input.focus();
             }
@@ -1231,6 +1343,8 @@
     </script>
 
     <!-- ── Scroll-to-top button ──────────────────────────────────────────────── -->
-    <button id="scroll-top-btn" aria-label="Back to top" title="Back to top">↑</button>
+    <button id="scroll-top-btn" aria-label="Back to top" title="Back to top">
+      ↑
+    </button>
   </body>
 </html>

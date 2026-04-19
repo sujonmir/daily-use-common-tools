@@ -777,6 +777,19 @@ function mdToHtml(text) {
   const lines = text.split("\n");
   const out = [];
   let inList = false;
+
+  const processInlineFormatting = (text) => {
+    // [https://url] link text  →  <a> (works inside lists, headings, paragraphs)
+    text = text.replace(/\[(https?:\/\/[^\]]+)\]\s*(.*)/g, (_, href, label) =>
+      `<a href="${href}" target="_blank" rel="noopener noreferrer">${label || href}</a>`
+    );
+    // _..._  → italic
+    text = text.replace(/_([^_]+)_/g, "<em>$1</em>");
+    // *...* → bold
+    text = text.replace(/\*([^*]+)\*/g, "<strong>$1</strong>");
+    return text;
+  };
+
   for (const line of lines) {
     const t = line.trim();
     if (t.startsWith("##")) {
@@ -784,25 +797,55 @@ function mdToHtml(text) {
         out.push("</ul>");
         inList = false;
       }
-      out.push(`<span class="md-h2">${t.slice(2).trimStart()}</span>`);
+      out.push(
+        `<span class="md-h2">${processInlineFormatting(t.slice(2).trimStart())}</span>`,
+      );
     } else if (t.startsWith("#")) {
       if (inList) {
         out.push("</ul>");
         inList = false;
       }
-      out.push(`<span class="md-h1">${t.slice(1).trimStart()}</span>`);
+      out.push(
+        `<span class="md-h1">${processInlineFormatting(t.slice(1).trimStart())}</span>`,
+      );
+    } else if (t.startsWith(">")) {
+      if (inList) {
+        out.push("</ul>");
+        inList = false;
+      }
+      out.push(
+        `<span class="md-p"><big>${processInlineFormatting(t.slice(1).trimStart())}</big></span>`,
+      );
+    } else if (t.startsWith("<")) {
+      if (inList) {
+        out.push("</ul>");
+        inList = false;
+      }
+      out.push(
+        `<span class="md-p"><small>${processInlineFormatting(t.slice(1).trimStart())}</small></span>`,
+      );
+    } else if (t.startsWith("-- ")) {
+      if (inList) {
+        out.push("</ul>");
+        inList = false;
+      }
+      const content = processInlineFormatting(t.slice(3));
+      out.push(
+        `<span class="md-p md-list-title"><big><strong>${content}</strong></big></span>`,
+      );
     } else if (t.startsWith("- ")) {
       if (!inList) {
         out.push("<ul>");
         inList = true;
       }
-      out.push(`<li>${t.slice(2)}</li>`);
+      out.push(`<li>${processInlineFormatting(t.slice(2))}</li>`);
     } else {
       if (inList) {
         out.push("</ul>");
         inList = false;
       }
-      if (t) out.push(`<span class="md-p">${t}</span>`);
+      if (t)
+        out.push(`<span class="md-p">${processInlineFormatting(t)}</span>`);
       else out.push("<br>");
     }
   }
@@ -1031,6 +1074,16 @@ function createCardElement(data) {
     const p = document.createElement("p");
     p.className = "card-text-wrapper";
     p.innerHTML = mdToHtml(data.bodyText || "");
+
+    // Intercept link clicks to use window.open() instead of target="_blank"
+    // This helps bypass pop-up blockers by using direct user event
+    p.addEventListener("click", (e) => {
+      if (e.target.tagName === "A" && e.target.href) {
+        e.preventDefault();
+        window.open(e.target.href, "_blank");
+      }
+    });
+
     box.appendChild(p);
   }
 
@@ -1103,10 +1156,11 @@ async function copyCard(box, btn) {
 
   try {
     if (type === "text" || !type) {
+      // Get rendered text from DOM (strips HTML automatically)
       const body =
+        box.querySelector(".card-text-wrapper")?.textContent ||
+        box.querySelector(".details")?.textContent ||
         box.dataset.bodyText ||
-        box.querySelector(".card-text-wrapper")?.innerText ||
-        box.querySelector(".details")?.innerText ||
         "";
       const cleanBody = sanitizeText(body);
       const cleanTitle = sanitizeText(title);
