@@ -810,14 +810,13 @@ function setupAddCardModal() {
       if (selectedType === "video") setupVideoPopup(".video-trigger");
       if (selectedType === "text") setupContentFullscreen(".full-screen-mode");
       if (_applyFilters) _applyFilters();
-      await saveToSheets(cardData, statusEl);
+      const newId = await saveToSheets(cardData, statusEl);
+      if (newId) newBox.dataset.sheetId = newId;
     }
 
     setTimeout(close, 2200);
   });
 }
-
-
 
 /** Get file extension including dot, lowercased. e.g. ".webp" */
 function getExt(filename) {
@@ -955,7 +954,7 @@ async function _uploadToLocalServer(file, relativePath, statusEl) {
 
 /** POST cardData to Google Sheets web app */
 async function saveToSheets(cardData, statusEl) {
-  if (!SHEETS_WEB_APP_URL) return;
+  if (!SHEETS_WEB_APP_URL) return null;
   try {
     statusEl.textContent = "Saving to Google Sheets…";
     statusEl.className = "sync-status";
@@ -968,13 +967,16 @@ async function saveToSheets(cardData, statusEl) {
     if (json.status === "success") {
       statusEl.textContent = "✓ Card saved to Google Sheets!";
       statusEl.className = "sync-status success";
+      return json.id || null;
     } else {
       statusEl.textContent = "✗ Sheet error: " + (json.message || "");
       statusEl.className = "sync-status error";
+      return null;
     }
   } catch {
     statusEl.textContent = "✗ Could not reach Google Sheets.";
     statusEl.className = "sync-status error";
+    return null;
   }
 }
 

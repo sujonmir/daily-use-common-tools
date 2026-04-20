@@ -6,6 +6,7 @@
     <title>Parenthood</title>
     <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/baby.css" />
+    <link rel="stylesheet" href="css/shared.css" />
     <link rel="shortcut icon" href="img/baby.webp" type="image/x-icon" />
     <style>
       :root {
@@ -83,6 +84,8 @@
         padding: 50px 20px;
         flex-flow: row wrap;
         justify-content: center;
+        width: 100%;
+        box-sizing: border-box;
       }
       .box {
         flex-basis: 250px;
@@ -1264,41 +1267,44 @@
         </div>
       </div>
 
-      <!-- Loading / error states (shown while fetching from Google Sheets) -->
-      <div
-        id="cards-loader"
-        style="
-          width: 100%;
-          text-align: center;
-          padding: 60px 20px;
-          color: #bbb;
-          font-family: &quot;Baumans&quot;, system-ui;
-          font-size: 16px;
-          display: none;
-        "
-      >
-        Loading cards…
-      </div>
-      <div
-        id="cards-load-error"
-        style="
-          width: 100%;
-          text-align: center;
-          padding: 60px 20px;
-          color: #e55;
-          font-family: &quot;Baumans&quot;, system-ui;
-          font-size: 15px;
-          display: none;
-        "
-      >
-        Could not load cards. Please check your connection and refresh.
-      </div>
-
       <!-- All other cards are loaded dynamically from Google Sheets -->
+    </div>
 
-      <div class="no-results-msg" id="no-results-msg">
-        No cards match your filter.
-      </div>
+    <!-- Loading / error states (shown while fetching from Google Sheets) -->
+    <div
+      id="cards-loader"
+      style="
+        width: 100%;
+        text-align: center;
+        padding: 60px 20px;
+        color: #bbb;
+        font-family: &quot;Baumans&quot;, system-ui;
+        font-size: 16px;
+        display: none;
+      "
+    >
+      Loading cards…
+    </div>
+    <div
+      id="cards-load-error"
+      style="
+        width: 100%;
+        text-align: center;
+        padding: 60px 20px;
+        color: #e55;
+        font-family: &quot;Baumans&quot;, system-ui;
+        font-size: 15px;
+        display: none;
+      "
+    >
+      Could not load cards. Please check your connection and refresh.
+    </div>
+    <div
+      class="no-results-msg"
+      id="no-results-msg"
+      style="display: none; text-align: center; padding: 50px 20px"
+    >
+      No cards match your filter.
     </div>
     <!-- ── Scripts ──────────────────────────────────────────────────────────── -->
     <script src="js/baby.js"></script>

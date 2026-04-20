@@ -1,0 +1,124 @@
+.md-code {
+  display: inline-block;
+  background: #00000010;
+  color: #111;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.875em;
+  padding: 5px 10px;
+  margin-top: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.md-code--copied {
+  background: #013001;
+  color: #00fc00;
+}
+.in-fullscreen .md-code {
+  display: inline-block;
+  background: #2d2d2d;
+  color: #fff;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.875em;
+  padding: 5px 10px;
+  margin-top: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.in-fullscreen .md-code:hover {
+  background: #2d2d2d;
+  color: #fff;
+}
+
+.in-fullscreen .md-code--copied {
+  background: #1a3a1a;
+  color: #00ff00;
+}
+
+/* card edit in full screen */
+
+.in-fullscreen .card-edit-btn {
+  width: 52px;
+  height: 52px;
+}
+.in-fullscreen .card-edit-btn svg {
+  width: 24px;
+  height: 24px;
+}
+.in-fullscreen .card-copy-btn {
+  width: 52px;
+  height: 52px;
+  left: 60px;
+}
+.in-fullscreen .card-copy-btn svg {
+  width: 24px;
+  height: 24px;
+}
+.in-fullscreen .card-copy-btn.copied svg {
+  stroke: #00fc00;
+}
+.fullscreen-close-btn {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 30px;
+  cursor: pointer;
+  z-index: 2147483647;
+  display: none;
+  transition: transform 0.2s ease;
+}
+.fullscreen-close-btn:hover {
+  transform: scale(1.1);
+}
+.in-fullscreen .fullscreen-close-btn {
+  display: block;
+}
+.in-fullscreen .card-text-wrapper .md-h2,
+.in-fullscreen .card-text-wrapper .md-h1,
+.in-fullscreen .card-text-wrapper .md-p,
+.in-fullscreen .card-text-wrapper ul li {
+  font-size: 2rem;
+}
+.in-fullscreen .card-text-wrapper ul {
+  padding-top: 10px;
+  padding-left: 5rem;
+}
+
+/* responsive */
+@media screen and (max-width: 768px) {
+  .fullscreen-close-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    right: 20px;
+    top: 20px;
+  }
+  .in-fullscreen .card-text-wrapper .md-h2,
+  .in-fullscreen .card-text-wrapper .md-h1,
+  .in-fullscreen .card-text-wrapper .md-p,
+  .in-fullscreen .card-text-wrapper ul li {
+    font-size: 1.5rem;
+  }
+  div.box-wrapper {
+    padding: 24px 12px 70px 12px;
+  }
+  .fab-add{
+    width: 40px;
+    height: 40px;
+  }
+}

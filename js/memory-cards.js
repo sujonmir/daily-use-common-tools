@@ -26,22 +26,18 @@ const IS_LOCAL =
 const IMG_DIR = "img/";
 
 // ── GitHub upload config (used on GitHub Pages instead of Google Drive) ───────
-// Fine-grained PAT: Settings → Developer settings → Fine-grained tokens
-// Required permission: Contents → Read and write  (for this repo only)
 const GITHUB_TOKEN = "";
-const GITHUB_REPO = "sujonmir/daily-use-common-tools"; // e.g. "sujonmhk786/daily-use-common-tools"
+const GITHUB_REPO = "sujonmir/daily-use-common-tools";
 const GITHUB_BRANCH = "main";
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
-  // Start ticking immediately (will update again once saved seconds load)
   updateTimeSpent();
   setInterval(updateTimeSpent, 1000);
 
-  // Load saved time then auto-save periodically and on page leave
   if (SHEETS_WEB_APP_URL) {
     loadSavedTime();
-    setInterval(saveTimeToSheets, 60000); // every 60 s
+    setInterval(saveTimeToSheets, 60000);
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") saveTimeToSheets();
     });
@@ -53,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupImagePopup(".img-trigger");
   setupContentFullscreen(".full-screen-mode");
 
-  // Wire copy buttons on hardcoded static cards
   document.querySelectorAll(".box-wrapper .box").forEach((box) => {
     const btn = box.querySelector(".card-copy-btn");
     if (btn) {
@@ -73,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (SHEETS_WEB_APP_URL) loadCardsFromSheets();
 });
 
-// ─── TIME SPENT COUNTER (live, ticks every second) ───────────────────────────
+// ─── TIME SPENT COUNTER ───────────────────────────────────────────────────────
 function _totalSeconds() {
   return _savedSeconds + Math.floor((Date.now() - _pageLoadTime) / 1000);
 }
@@ -86,7 +81,6 @@ function updateTimeSpent() {
   total = Math.floor(total / 60);
   const h = total % 24;
   total = Math.floor(total / 24);
-  // total is now total days
   const Y = Math.floor(total / 365);
   const rem = total % 365;
   const M = Math.floor(rem / 30);
@@ -277,16 +271,13 @@ const MONTH_SHORT = [
   "dec",
 ];
 
-/** Parse date from h3 text — returns Date or null */
 function parseDateFromText(txt) {
   const s = txt.replace(/\s+/g, " ").trim();
-  // D.M.YY
   let m = s.match(/\b(\d{1,2})\.(\d{1,2})\.(\d{2})\b/);
   if (m) {
     const [d, mo, y] = [+m[1], +m[2], 2000 + +m[3]];
     if (mo >= 1 && mo <= 12) return new Date(y, mo - 1, d);
   }
-  // D MonthName[.][,] YY
   m = s.match(/\b(\d{1,2})\s+([A-Za-z]+\.?),?\s*(\d{2})\b/);
   if (m) {
     const mo = MONTH_MAP[m[2].toLowerCase().replace(/\.$/, "")];
@@ -295,18 +286,15 @@ function parseDateFromText(txt) {
   return null;
 }
 
-/** Date → "DD.MM.YY" */
 function formatDDMMYY(date) {
   return `${String(date.getDate()).padStart(2, "0")}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getFullYear()).slice(-2)}`;
 }
 
-/** ISO date string → Date (handles "YYYY-MM-DD" and "YYYY-MM-DDTHH:MM:SS.sssZ" from Sheets) */
 function isoToDate(s) {
   const [y, m, d] = String(s).slice(0, 10).split("-").map(Number);
   return new Date(y, m - 1, d);
 }
 
-/** Check if isoDate string matches freeform search query */
 function dateMatchesQuery(iso, q) {
   const dt = isoToDate(iso);
   const d = dt.getDate(),
@@ -331,7 +319,6 @@ function dateMatchesQuery(iso, q) {
   ].some((f) => f.includes(q));
 }
 
-/** Sanitize string to safe filename part */
 function toSlug(str) {
   return str
     .toLowerCase()
@@ -376,19 +363,12 @@ function setupMobileFilterToggle() {
     if (search) search.style.display = open ? "none" : "";
   });
 
-  // Auto-close after selecting any filter option
   filters.querySelectorAll("select").forEach((sel) => {
     sel.addEventListener("change", closeFilters);
   });
 }
 
 // ─── FAB STICKY SHIFT ─────────────────────────────────────────────────────────
-/**
- * Watch the sentinel element placed just before the toolbar.
- * When the sentinel scrolls out of view the toolbar has gone sticky
- * → add .toolbar-sticky to the FAB so it drops below the toolbar.
- * When the sentinel is visible again (page is at top) → remove the class.
- */
 function setupFabStickyShift() {
   const sentinel = document.getElementById("toolbar-sentinel");
   const fab = document.getElementById("fab-add-btn");
@@ -449,7 +429,6 @@ function setupToolbar() {
   function applyFilters() {
     stampAll();
 
-    // ── Sort (independent of time filter) ──────────────────────────────────
     const sortOrd = ftSort ? ftSort.value : "";
     if (sortOrd) {
       [...wrapper.querySelectorAll(".box")]
@@ -461,7 +440,6 @@ function setupToolbar() {
         .forEach((b) => wrapper.appendChild(b));
     }
 
-    // ── Time cutoff ────────────────────────────────────────────────────────
     const tv = ftTime.value;
     const now = new Date();
     let cutoff = null;
@@ -478,7 +456,6 @@ function setupToolbar() {
       cutoff = new Date(now.getFullYear() - 2, now.getMonth(), now.getDate());
     }
 
-    // ── Year + search ──────────────────────────────────────────────────────
     const yv = ftYear ? +ftYear.value || null : null;
     const tv2 = ftType ? ftType.value || "" : "";
     const sq = search.value.toLowerCase().trim();
@@ -516,9 +493,7 @@ function setupToolbar() {
     if (countEl) countEl.textContent = `${vis} card${vis !== 1 ? "s" : ""}`;
     if (noRes) noRes.style.display = vis === 0 ? "block" : "none";
 
-    // Force the flex container to recalculate its height immediately after
-    // hiding cards, then clamp the scroll position to the new content height.
-    void wrapper.offsetHeight; // triggers synchronous reflow
+    void wrapper.offsetHeight;
     requestAnimationFrame(() => {
       const maxScroll = Math.max(
         0,
@@ -539,7 +514,7 @@ function setupToolbar() {
 }
 
 // ─── ADD CARD MODAL ───────────────────────────────────────────────────────────
-let _selectedFile = null; // the File object picked by the user
+let _selectedFile = null;
 
 function setupAddCardModal() {
   const fab = document.getElementById("fab-add-btn");
@@ -553,12 +528,11 @@ function setupAddCardModal() {
   const textFields = document.getElementById("fc-text-fields");
   const statusEl = document.getElementById("sync-status");
   let selectedType = "image";
-  let _editBox = null; // the .box element being edited (null = add mode)
+  let _editBox = null;
 
   const titleEl = document.getElementById("addCardTitle");
   const submitEl = document.getElementById("addCardSubmit");
 
-  // ── Open / Close ──
   const open = () => {
     modal.classList.add("open");
     setFabVisible(false);
@@ -567,7 +541,6 @@ function setupAddCardModal() {
     _editBox = null;
     if (titleEl) titleEl.textContent = "Add New Card";
     if (submitEl) submitEl.textContent = "Add Card";
-    // Reset current-src displays
     const imgWrap = document.getElementById("fc-img-current-wrap");
     const imgPL = document.getElementById("fc-img-pick-label");
     if (imgWrap) imgWrap.style.display = "none";
@@ -589,25 +562,21 @@ function setupAddCardModal() {
     if (e.key === "Escape" && modal.classList.contains("open")) close();
   });
 
-  // ── Edit mode: pre-fill modal with existing card data ──────────────────────
   window.openEditModal = (box) => {
     _editBox = box;
     if (titleEl) titleEl.textContent = "Edit Card";
     if (submitEl) submitEl.textContent = "Update Card";
 
-    // Set type
     const t = box.dataset.type || "image";
     typeBtns.forEach((b) => b.classList.toggle("active", b.dataset.type === t));
     selectedType = t;
     imageFields.style.display = t === "image" ? "" : "none";
     textFields.style.display = t === "text" ? "" : "none";
 
-    // Pre-fill date & title
     document.getElementById("fc-date").value = box.dataset.date || "";
     document.getElementById("fc-title").value =
       box.querySelector("h3")?.textContent || "";
 
-    // Show current mediaSrc for image/video
     const src = box.dataset.mediaSrc || "";
     if (t === "image") {
       const wrap = document.getElementById("fc-img-current-wrap");
@@ -645,7 +614,6 @@ function setupAddCardModal() {
     if (imgThumb) imgThumb.src = "";
   }
 
-  // ── Type selection ──
   typeBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       typeBtns.forEach((b) => b.classList.remove("active"));
@@ -658,7 +626,6 @@ function setupAddCardModal() {
     });
   });
 
-  // ── Image file picker ──
   document
     .getElementById("fc-img-file")
     .addEventListener("change", function () {
@@ -675,7 +642,6 @@ function setupAddCardModal() {
       preview.style.display = "block";
       nameEl.textContent = file.name;
       btnTxt.textContent = "✓ Image selected";
-      // Show suggested save path (filled in on submit after slug is known)
       infoEl.style.display = "block";
       infoEl.textContent = `Will be saved to: ${IMG_DIR}[title-date]${getExt(file.name)}`;
     });
@@ -711,7 +677,7 @@ function setupAddCardModal() {
           ? `Saving to: ${localPath}`
           : "Uploading to Google Drive…";
         const uploaded = await saveFileToPath(file, localPath, statusEl);
-        if (uploaded === null) return; // upload failed — error already shown
+        if (uploaded === null) return;
         mediaSrc = uploaded || localPath;
       }
     } else {
@@ -734,7 +700,6 @@ function setupAddCardModal() {
       // ── Edit: replace old card in DOM, update Sheets ──
       const sheetId = _editBox.dataset.sheetId;
       const newBox = createCardElement(cardData);
-      // Show image immediately via blob URL (CDN/server propagation can lag)
       if (selectedType === "image" && _selectedFile) {
         const imgEl = newBox.querySelector("img.img-trigger");
         if (imgEl) imgEl.src = URL.createObjectURL(_selectedFile);
@@ -746,9 +711,8 @@ function setupAddCardModal() {
       if (_applyFilters) _applyFilters();
       await updateToSheets(sheetId, cardData, statusEl);
     } else {
-      // ── Add: append new card, save to Sheets ──
+      // ── Add: append new card, save to Sheets, attach returned ID ──
       const newBox = createCardElement(cardData);
-      // Show image immediately via blob URL (CDN/server propagation can lag)
       if (selectedType === "image" && _selectedFile) {
         const imgEl = newBox.querySelector("img.img-trigger");
         if (imgEl) imgEl.src = URL.createObjectURL(_selectedFile);
@@ -757,26 +721,20 @@ function setupAddCardModal() {
       if (selectedType === "image") setupImagePopup(".img-trigger");
       if (selectedType === "text") setupContentFullscreen(".full-screen-mode");
       if (_applyFilters) _applyFilters();
-      await saveToSheets(cardData, statusEl);
+      const newId = await saveToSheets(cardData, statusEl); // ← capture ID
+      if (newId) newBox.dataset.sheetId = newId; // ← attach immediately
     }
 
     setTimeout(close, 2200);
   });
 }
 
-
-
-/** Get file extension including dot, lowercased. e.g. ".webp" */
+// ─── FILE HELPERS ─────────────────────────────────────────────────────────────
 function getExt(filename) {
   const idx = filename.lastIndexOf(".");
   return idx >= 0 ? filename.slice(idx).toLowerCase() : "";
 }
 
-/**
- * Save a file and return its final public URL.
- * • On localhost  → POST to node server → saved to img/ or media/Video/ → returns relative path
- * • On GitHub Pages / any other host → POST base64 to Apps Script → saved to Google Drive → returns Drive URL
- */
 async function saveFileToPath(file, relativePath, statusEl) {
   statusEl.textContent = "Uploading file…";
   statusEl.className = "sync-status";
@@ -788,14 +746,7 @@ async function saveFileToPath(file, relativePath, statusEl) {
   }
 }
 
-/**
- * Commit a file directly to the GitHub repo via the Contents API.
- * Token is read from localStorage (never hard-coded) — set once via the
- * token prompt that appears automatically on first upload attempt.
- * Returns the relative path on success (works as-is on GitHub Pages), null on failure.
- */
 async function _uploadToGitHub(file, relativePath, statusEl) {
-  // Read token from localStorage — never from source code
   let token = localStorage.getItem("baby_gh_token") || "";
 
   if (!token) {
@@ -825,7 +776,6 @@ async function _uploadToGitHub(file, relativePath, statusEl) {
   statusEl.className = "sync-status";
 
   try {
-    // Read file as base64
     const base64 = await new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result.split(",")[1]);
@@ -840,7 +790,6 @@ async function _uploadToGitHub(file, relativePath, statusEl) {
       "Content-Type": "application/json",
     };
 
-    // If the file already exists we need its SHA to overwrite it
     let sha;
     const getRes = await fetch(apiUrl, { headers });
     if (getRes.ok) {
@@ -853,7 +802,7 @@ async function _uploadToGitHub(file, relativePath, statusEl) {
       content: base64,
       branch: GITHUB_BRANCH,
     };
-    if (sha) body.sha = sha; // required for updates
+    if (sha) body.sha = sha;
 
     const putRes = await fetch(apiUrl, {
       method: "PUT",
@@ -868,7 +817,7 @@ async function _uploadToGitHub(file, relativePath, statusEl) {
 
     statusEl.textContent = "✓ Uploaded to GitHub";
     statusEl.className = "sync-status success";
-    return relativePath; // relative path works directly on GitHub Pages
+    return relativePath;
   } catch (err) {
     console.warn("GitHub upload failed:", err);
     statusEl.textContent = "✗ GitHub upload failed: " + err.message;
@@ -877,7 +826,6 @@ async function _uploadToGitHub(file, relativePath, statusEl) {
   }
 }
 
-/** Upload to node server.js — works only on localhost */
 async function _uploadToLocalServer(file, relativePath, statusEl) {
   const formData = new FormData();
   formData.append("file", file, file.name);
@@ -891,18 +839,20 @@ async function _uploadToLocalServer(file, relativePath, statusEl) {
     if (!json.ok) throw new Error(json.error);
     statusEl.textContent = `✓ Saved to ${relativePath}`;
     statusEl.className = "sync-status success";
-    return relativePath; // relative path works because server also serves static files
+    return relativePath;
   } catch (err) {
     console.warn("Local upload failed:", err.message);
     statusEl.textContent = "✗ Local server unreachable. Run: node server.js";
     statusEl.className = "sync-status error";
-    return relativePath; // optimistic: path is correct even if server missed it
+    return relativePath;
   }
 }
 
-/** POST cardData to Google Sheets web app */
+// ─── GOOGLE SHEETS SYNC ───────────────────────────────────────────────────────
+
+/** POST cardData to Google Sheets — returns the new row ID on success, null on failure */
 async function saveToSheets(cardData, statusEl) {
-  if (!SHEETS_WEB_APP_URL) return;
+  if (!SHEETS_WEB_APP_URL) return null;
   try {
     statusEl.textContent = "Saving to Google Sheets…";
     statusEl.className = "sync-status";
@@ -915,13 +865,16 @@ async function saveToSheets(cardData, statusEl) {
     if (json.status === "success") {
       statusEl.textContent = "✓ Card saved to Google Sheets!";
       statusEl.className = "sync-status success";
+      return json.id || null; // ← return new row ID so caller can attach it
     } else {
       statusEl.textContent = "✗ Sheet error: " + (json.message || "");
       statusEl.className = "sync-status error";
+      return null;
     }
   } catch {
     statusEl.textContent = "✗ Could not reach Google Sheets.";
     statusEl.className = "sync-status error";
+    return null;
   }
 }
 
@@ -955,7 +908,6 @@ function createCardElement(data) {
   const box = document.createElement("div");
   box.className = "box";
 
-  // Normalize date to YYYY-MM-DD (Google Sheets may return ISO datetime strings)
   const dateStr = data.date ? String(data.date).slice(0, 10) : "";
   box.dataset.date = dateStr;
   box.dataset.type = data.type || "image";
@@ -988,8 +940,6 @@ function createCardElement(data) {
     p.className = "card-text-wrapper";
     p.innerHTML = mdToHtml(data.bodyText || "");
 
-    // Intercept link clicks to use window.open() instead of target="_blank"
-    // This helps bypass pop-up blockers by using direct user event
     p.addEventListener("click", (e) => {
       if (e.target.tagName === "A" && e.target.href) {
         e.preventDefault();
@@ -1000,14 +950,12 @@ function createCardElement(data) {
     box.appendChild(p);
   }
 
-  // Date badge
   const badge = document.createElement("div");
   badge.className = "card-date-badge";
   badge.textContent =
     data.displayDate || (dateStr ? formatDDMMYY(isoToDate(dateStr)) : "");
   box.appendChild(badge);
 
-  // Edit button (visible on hover)
   const editBtn = document.createElement("button");
   editBtn.className = "card-edit-btn";
   editBtn.title = "Edit card";
@@ -1018,7 +966,6 @@ function createCardElement(data) {
   });
   box.appendChild(editBtn);
 
-  // Copy button
   const copyBtn = document.createElement("button");
   copyBtn.className = "card-copy-btn";
   copyBtn.title = "Copy card";
@@ -1032,45 +979,32 @@ function createCardElement(data) {
   return box;
 }
 
-/** Sanitize text by removing HTML tags, markdown syntax, and HTML entities */
+// ─── SANITIZE & COPY ──────────────────────────────────────────────────────────
 function sanitizeText(text) {
-  return (
-    text
-      // Remove HTML tags (keep content inside)
-      .replace(/<[^>]*>/g, "")
-      // Remove markdown heading syntax
-      .replace(/^#+\s*/gm, "")
-      // Remove markdown list syntax
-      .replace(/^[-*+]\s+/gm, "")
-      // Remove HTML entities
-      .replace(/&[a-z]+;/gi, (entity) => {
-        const map = {
-          "&amp;": "&",
-          "&lt;": "<",
-          "&gt;": ">",
-          "&quot;": '"',
-          "&apos;": "'",
-        };
-        return map[entity] || entity;
-      })
-      // Clean up excessive whitespace
-      .replace(/\n\n+/g, "\n\n")
-      .trim()
-  );
+  return text
+    .replace(/<[^>]*>/g, "")
+    .replace(/^#+\s*/gm, "")
+    .replace(/^[-*+]\s+/gm, "")
+    .replace(/&[a-z]+;/gi, (entity) => {
+      const map = {
+        "&amp;": "&",
+        "&lt;": "<",
+        "&gt;": ">",
+        "&quot;": '"',
+        "&apos;": "'",
+      };
+      return map[entity] || entity;
+    })
+    .replace(/\n\n+/g, "\n\n")
+    .trim();
 }
 
-
-/** Copy card content to clipboard.
- * - text card  → copies title + body text as plain text (stripped of HTML/markdown)
- * - image card → copies image to clipboard (ClipboardItem)
- */
 async function copyCard(box, btn) {
   const type = box.dataset.type || "image";
   const title = box.querySelector("h3")?.textContent || "";
 
   try {
     if (type === "text" || !type) {
-      // Get rendered text from DOM (strips HTML automatically)
       const body =
         box.querySelector(".card-text-wrapper")?.innerText ||
         box.querySelector(".details")?.innerText ||
@@ -1086,7 +1020,6 @@ async function copyCard(box, btn) {
       if (!src) return;
       const res = await fetch(src);
       const blob = await res.blob();
-      // Clipboard API requires image/png — convert if needed
       let finalBlob = blob;
       if (!blob.type.startsWith("image/png")) {
         finalBlob = await new Promise((resolve) => {
@@ -1146,4 +1079,106 @@ async function loadCardsFromSheets() {
     if (errEl) errEl.style.display = "block";
     console.warn("Could not load cards from Sheets:", err);
   }
+}
+
+// ─── MARKDOWN TO HTML ─────────────────────────────────────────────────────────
+function mdToHtml(text) {
+  if (!text) return "";
+  const lines = text.split("\n");
+  const out = [];
+  let inList = false;
+
+  const processInlineFormatting = (text) => {
+    // 1. Extract backtick code spans → placeholders (so inner content is untouched)
+    const codeParts = [];
+    text = text.replace(/`([^`]+)`/g, (_, code) => {
+      const safeDisplay = code
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+      const safeAttr = code
+        .replace(/&/g, "&amp;")
+        .replace(/'/g, "&#39;")
+        .replace(/"/g, "&quot;");
+      codeParts.push(
+        `<code class="md-code" title="Click to copy" onclick="navigator.clipboard.writeText('${safeAttr}').then(()=>{this.classList.add('md-code--copied');setTimeout(()=>this.classList.remove('md-code--copied'),1500)})">${safeDisplay}</code>`,
+      );
+      return `\x00CODE${codeParts.length - 1}\x00`;
+    });
+
+    // 2. Apply other inline formatting (never touches placeholder content)
+    text = text.replace(/\[([^\]]+)\](?:\s+(.+))?/g, (_, href, label) => {
+      const fullHref = /^https?:\/\//i.test(href) ? href : `https://${href}`;
+      return `<a href="${fullHref}" target="_blank" rel="noopener noreferrer">${label || href}</a>`;
+    });
+    text = text.replace(/_([^_]+)_/g, "<em>$1</em>");
+    text = text.replace(/\*([^*]+)\*/g, "<strong>$1</strong>");
+
+    // 3. Restore code spans
+    text = text.replace(/\x00CODE(\d+)\x00/g, (_, i) => codeParts[+i]);
+
+    return text;
+  };
+
+  for (const line of lines) {
+    const t = line.trim();
+    if (t.startsWith("##")) {
+      if (inList) {
+        out.push("</ul>");
+        inList = false;
+      }
+      out.push(
+        `<span class="md-h2">${processInlineFormatting(t.slice(2).trimStart())}</span>`,
+      );
+    } else if (t.startsWith("#")) {
+      if (inList) {
+        out.push("</ul>");
+        inList = false;
+      }
+      out.push(
+        `<span class="md-h1">${processInlineFormatting(t.slice(1).trimStart())}</span>`,
+      );
+    } else if (t.startsWith(">")) {
+      if (inList) {
+        out.push("</ul>");
+        inList = false;
+      }
+      out.push(
+        `<span class="md-p"><big>${processInlineFormatting(t.slice(1).trimStart())}</big></span>`,
+      );
+    } else if (t.startsWith("<")) {
+      if (inList) {
+        out.push("</ul>");
+        inList = false;
+      }
+      out.push(
+        `<span class="md-p"><small>${processInlineFormatting(t.slice(1).trimStart())}</small></span>`,
+      );
+    } else if (t.startsWith("-- ")) {
+      if (inList) {
+        out.push("</ul>");
+        inList = false;
+      }
+      const content = processInlineFormatting(t.slice(3));
+      out.push(
+        `<span class="md-p md-list-title"><big><strong>${content}</strong></big></span>`,
+      );
+    } else if (t.startsWith("- ")) {
+      if (!inList) {
+        out.push("<ul>");
+        inList = true;
+      }
+      out.push(`<li>${processInlineFormatting(t.slice(2))}</li>`);
+    } else {
+      if (inList) {
+        out.push("</ul>");
+        inList = false;
+      }
+      if (t)
+        out.push(`<span class="md-p">${processInlineFormatting(t)}</span>`);
+      else out.push("<br>");
+    }
+  }
+  if (inList) out.push("</ul>");
+  return out.join("");
 }

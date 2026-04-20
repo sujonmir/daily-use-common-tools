@@ -98,13 +98,17 @@
 
     .key-status-row {
       display: flex; align-items: center; gap: 12px;
-      padding: 12px 16px; background: #f0fdf4; border-radius: 8px;
+      padding: 12px; background: #f0fdf4; border-radius: 8px;
       margin-bottom: 14px;
     }
     .key-status-row .key-icon { font-size: 1.4em; }
     .key-status-row .key-info { flex: 1; }
     .key-status-row .key-info strong { display: block; color: #155724; font-size: 0.95em; }
-    .key-status-row .key-info small  { color: #666; font-size: 0.78em; font-family: monospace; }
+    .key-status-row .key-info small  { 
+      color: #666; font-size: 0.78em; font-family: monospace; 
+      display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; 
+      max-width: 180px;
+    }
 
     .steps { counter-reset: step; }
     .step  { display: flex; gap: 14px; margin-bottom: 18px; align-items: flex-start; }
@@ -134,6 +138,16 @@
 
     #after-key { display: none; }
     #backup-section { display: none; }
+
+    @media screen and (max-width: 480px) {
+      .key-status-row { flex-wrap: wrap; }
+      .key-status-row .key-info { flex: 1; min-width: 0; }
+      .key-status-row .key-info small { max-width: 100%; }
+      .key-status-row .btn { width: 100%; justify-content: center; margin-top: 8px; }
+      
+      .btn-row .btn { flex: 1; }
+      .section-header { flex-wrap: wrap; }
+    }
   </style>
 </head>
 <body>

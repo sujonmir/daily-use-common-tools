@@ -6,6 +6,7 @@
     <title>Personal Memory Cards</title>
     <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/baby.css" />
+    <link rel="stylesheet" href="css/shared.css" />
     <link rel="shortcut icon" href="img/baby.webp" type="image/x-icon" />
     <style>
       :root {
@@ -77,6 +78,9 @@
         padding: 50px 20px;
         flex-flow: row wrap;
         justify-content: center;
+        min-height: 400px;
+        width: 100%;
+        box-sizing: border-box;
       }
       .box {
         flex-basis: 250px;
@@ -179,7 +183,7 @@
         content: "Link";
         position: absolute;
         bottom: calc(100% + 3px);
-        right:0;
+        right: 0;
         background: rgba(0, 0, 0, 0.4);
         color: #fff;
         padding: 4px 8px;
@@ -332,38 +336,7 @@
       .full-screen-mode {
         cursor: pointer;
       }
-      .fullscreen-close-btn {
-        position: fixed;
-        top: 20px;
-        right: 30px;
-        background: rgba(0, 0, 0, 0.7);
-        color: #fff;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        font-size: 30px;
-        cursor: pointer;
-        z-index: 2147483647;
-        display: none;
-        transition: transform 0.2s ease;
-      }
-      .fullscreen-close-btn:hover {
-        transform: scale(1.1);
-      }
-      .in-fullscreen .fullscreen-close-btn {
-        display: block;
-      }
-      .in-fullscreen .card-text-wrapper .md-h2,
-      .in-fullscreen .card-text-wrapper .md-h1,
-      .in-fullscreen .card-text-wrapper .md-p,
-      .in-fullscreen .card-text-wrapper ul li {
-        font-size: 2rem;
-      }
-      .in-fullscreen .card-text-wrapper ul {
-        padding-top: 10px;
-        padding-left: 5rem;
-      }
+      
 
       @media screen and (max-width: 768px) {
         .age-del .age {
@@ -383,19 +356,7 @@
         .in-fullscreen .card-text-wrapper {
           width: 95%;
         }
-        .fullscreen-close-btn {
-          width: 40px;
-          height: 40px;
-          font-size: 24px;
-          right: 20px;
-          top: 20px;
-        }
-        .in-fullscreen .card-text-wrapper .md-h2,
-        .in-fullscreen .card-text-wrapper .md-h1,
-        .in-fullscreen .card-text-wrapper .md-p,
-        .in-fullscreen .card-text-wrapper ul li {
-          font-size: 1.5rem;
-        }
+        
       }
 
       /* ── Filter / Search Toolbar ────────────────────────────────────────── */
@@ -889,8 +850,8 @@
       .box:hover .card-copy-btn {
         opacity: 1;
       }
-      .card-copy-btn.copied {
-        background: rgba(30, 140, 60, 0.85);
+      .card-copy-btn.copied svg{
+        stroke: #00fc00;
       }
 
       /* Filter hidden / no results */
@@ -1197,41 +1158,44 @@
         </button>
       </div>
 
-      <!-- Loading / error states (shown while fetching from Google Sheets) -->
-      <div
-        id="cards-loader"
-        style="
-          width: 100%;
-          text-align: center;
-          padding: 60px 20px;
-          color: #bbb;
-          font-family: &quot;Baumans&quot;, system-ui;
-          font-size: 16px;
-          display: none;
-        "
-      >
-        Loading cards…
-      </div>
-      <div
-        id="cards-load-error"
-        style="
-          width: 100%;
-          text-align: center;
-          padding: 60px 20px;
-          color: #e55;
-          font-family: &quot;Baumans&quot;, system-ui;
-          font-size: 15px;
-          display: none;
-        "
-      >
-        Could not load cards. Please check your connection and refresh.
-      </div>
-
       <!-- All other cards are loaded dynamically from Google Sheets -->
+    </div>
 
-      <div class="no-results-msg" id="no-results-msg">
-        No cards match your filter.
-      </div>
+    <!-- Loading / error states (shown while fetching from Google Sheets) -->
+    <div
+      id="cards-loader"
+      style="
+        width: 100%;
+        text-align: center;
+        padding: 60px 20px;
+        color: #bbb;
+        font-family: &quot;Baumans&quot;, system-ui;
+        font-size: 16px;
+        display: none;
+      "
+    >
+      Loading cards…
+    </div>
+    <div
+      id="cards-load-error"
+      style="
+        width: 100%;
+        text-align: center;
+        padding: 60px 20px;
+        color: #e55;
+        font-family: &quot;Baumans&quot;, system-ui;
+        font-size: 15px;
+        display: none;
+      "
+    >
+      Could not load cards. Please check your connection and refresh.
+    </div>
+    <div
+      class="no-results-msg"
+      id="no-results-msg"
+      style="display: none; text-align: center; padding: 50px 20px"
+    >
+      No cards match your filter.
     </div>
     <!-- ── Scripts ──────────────────────────────────────────────────────────── -->
     <script src="js/memory-cards.js"></script>
