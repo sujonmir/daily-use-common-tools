@@ -1026,7 +1026,6 @@ function createCardElement(data) {
   const hr = document.createElement("hr");
 
   if (data.type === "image" && data.mediaSrc) {
-    box.appendChild(hr);
     const img = document.createElement("img");
     img.src = data.mediaSrc;
     img.alt = data.mediaAlt || data.title;
