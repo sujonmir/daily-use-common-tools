@@ -68,6 +68,11 @@ input#endTimeInput {
     display: flex;
     margin: 0;
   }
+  #mob-header a:focus,
+  #mob-header a:hover,
+  #mob-header a:active {
+    text-decoration: none;
+  }
   #mob-menu-btn {
     display: flex;
   }

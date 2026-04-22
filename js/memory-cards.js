@@ -938,6 +938,7 @@ function createCardElement(data) {
     const p = document.createElement("p");
     p.className = "card-text-wrapper";
     p.innerHTML = mdToHtml(data.bodyText || "");
+    // p.innerHTML = applyTodos(mdToHtml(data.bodyText || ""));
 
     p.addEventListener("click", (e) => {
       if (e.target.tagName === "A" && e.target.href) {
@@ -1078,106 +1079,4 @@ async function loadCardsFromSheets() {
     if (errEl) errEl.style.display = "block";
     console.warn("Could not load cards from Sheets:", err);
   }
-}
-
-// ─── MARKDOWN TO HTML ─────────────────────────────────────────────────────────
-function mdToHtml(text) {
-  if (!text) return "";
-  const lines = text.split("\n");
-  const out = [];
-  let inList = false;
-
-  const processInlineFormatting = (text) => {
-    // 1. Extract backtick code spans → placeholders (so inner content is untouched)
-    const codeParts = [];
-    text = text.replace(/`([^`]+)`/g, (_, code) => {
-      const safeDisplay = code
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-      const safeAttr = code
-        .replace(/&/g, "&amp;")
-        .replace(/'/g, "&#39;")
-        .replace(/"/g, "&quot;");
-      codeParts.push(
-        `<code class="md-code" title="Click to copy" onclick="navigator.clipboard.writeText('${safeAttr}').then(()=>{this.classList.add('md-code--copied');setTimeout(()=>this.classList.remove('md-code--copied'),1500)})">${safeDisplay}</code>`,
-      );
-      return `\x00CODE${codeParts.length - 1}\x00`;
-    });
-
-    // 2. Apply other inline formatting (never touches placeholder content)
-    text = text.replace(/\[([^\]]+)\](?:\s+(.+))?/g, (_, href, label) => {
-      const fullHref = /^https?:\/\//i.test(href) ? href : `https://${href}`;
-      return `<a href="${fullHref}" target="_blank" rel="noopener noreferrer">${label || href}</a>`;
-    });
-    text = text.replace(/_([^_]+)_/g, "<em>$1</em>");
-    text = text.replace(/\*([^*]+)\*/g, "<strong>$1</strong>");
-
-    // 3. Restore code spans
-    text = text.replace(/\x00CODE(\d+)\x00/g, (_, i) => codeParts[+i]);
-
-    return text;
-  };
-
-  for (const line of lines) {
-    const t = line.trim();
-    if (t.startsWith("##")) {
-      if (inList) {
-        out.push("</ul>");
-        inList = false;
-      }
-      out.push(
-        `<span class="md-h2">${processInlineFormatting(t.slice(2).trimStart())}</span>`,
-      );
-    } else if (t.startsWith("#")) {
-      if (inList) {
-        out.push("</ul>");
-        inList = false;
-      }
-      out.push(
-        `<span class="md-h1">${processInlineFormatting(t.slice(1).trimStart())}</span>`,
-      );
-    } else if (t.startsWith(">")) {
-      if (inList) {
-        out.push("</ul>");
-        inList = false;
-      }
-      out.push(
-        `<span class="md-p"><big>${processInlineFormatting(t.slice(1).trimStart())}</big></span>`,
-      );
-    } else if (t.startsWith("<")) {
-      if (inList) {
-        out.push("</ul>");
-        inList = false;
-      }
-      out.push(
-        `<span class="md-p"><small>${processInlineFormatting(t.slice(1).trimStart())}</small></span>`,
-      );
-    } else if (t.startsWith("-- ")) {
-      if (inList) {
-        out.push("</ul>");
-        inList = false;
-      }
-      const content = processInlineFormatting(t.slice(3));
-      out.push(
-        `<span class="md-p md-list-title"><big><strong>${content}</strong></big></span>`,
-      );
-    } else if (t.startsWith("- ")) {
-      if (!inList) {
-        out.push("<ul>");
-        inList = true;
-      }
-      out.push(`<li>${processInlineFormatting(t.slice(2))}</li>`);
-    } else {
-      if (inList) {
-        out.push("</ul>");
-        inList = false;
-      }
-      if (t)
-        out.push(`<span class="md-p">${processInlineFormatting(t)}</span>`);
-      else out.push("<br>");
-    }
-  }
-  if (inList) out.push("</ul>");
-  return out.join("");
 }

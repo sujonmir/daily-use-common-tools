@@ -98,6 +98,56 @@
   padding-top: 10px;
   padding-left: 5rem;
 }
+.card-text-wrapper {
+    padding: 15px 10px 40px 10px !important;
+    overflow-y: auto !important;
+}
+
+/* todo style */
+/* Removes the black dot and spaces the list */
+.md-todo-list {
+  list-style-type: none;
+  margin-bottom: 10px;
+}
+
+/* Flexbox layout to align the checkbox and text perfectly */
+.md-todo-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 6px;
+  margin-left: -1.5rem;
+}
+
+/* Styles the native checkbox */
+.md-todo-checkbox {
+  accent-color: black;
+  margin-top: 4px;
+  margin-right: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.in-fullscreen .md-todo-checkbox {
+  accent-color: #b3b0b0;
+  margin-top: 1rem;
+  margin-right: 1rem;
+  width: 16px;
+  height: 16px;
+}
+
+/* Base style for the text */
+.md-todo-text {
+  line-height: 1.4;
+  text-transform: lowercase;
+}
+
+/* The style applied when the checkbox is checked */
+.md-todo-text.is-done {
+  color: #b3b0b0;
+  /* background-image: linear-gradient(transparent 50%, #b3b0b0 50%, #b3b0b0 55%, transparent 55%); */
+  /* text-decoration: 1px dashed line-through; */
+  text-decoration-line:line-through;
+}
+
 
 /* responsive */
 @media screen and (max-width: 768px) {
@@ -117,7 +167,7 @@
   div.box-wrapper {
     padding: 24px 12px 70px 12px;
   }
-  .fab-add{
+  button.fab-add{
     width: 40px;
     height: 40px;
   }

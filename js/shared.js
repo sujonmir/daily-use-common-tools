@@ -20,6 +20,9 @@ function mdToHtml(text) {
   const out = [];
   let inList = false;
 
+  // 👇 ADD THIS LINE HERE
+  const todoCounts = {};
+
   const processInlineFormatting = (text) => {
     // 1. Extract backtick code spans → placeholders (so inner content is untouched)
     const codeParts = [];
@@ -54,7 +57,41 @@ function mdToHtml(text) {
 
   for (const line of lines) {
     const t = line.trim();
-    if (t.startsWith("##")) {
+    // todo start
+    if (t.startsWith("(-)")) {
+      if (!inList) {
+        out.push("<ul class='md-todo-list'>");
+        inList = true;
+      }
+      
+      const rawText = t.slice(3).trimStart();
+      const content = processInlineFormatting(rawText);
+      
+      // Track how many times this exact text has appeared
+      todoCounts[rawText] = (todoCounts[rawText] || 0) + 1;
+      
+      // Add the count number to the ID so duplicate text gets a unique save file
+      const safeId = 'todo_' + todoCounts[rawText] + '_' + btoa(encodeURIComponent(rawText)).replace(/=/g, '');
+      
+      const isChecked = localStorage.getItem(safeId) === 'true';
+      const checkedAttr = isChecked ? 'checked' : '';
+      const textClass = isChecked ? 'md-todo-text is-done' : 'md-todo-text';
+
+      out.push(`
+        <li class="md-todo-item">
+          <input type="checkbox" class="md-todo-checkbox" ${checkedAttr} onclick="event.stopPropagation();" onchange="
+            if(this.checked) { 
+              this.nextElementSibling.classList.add('is-done');
+              localStorage.setItem('${safeId}', 'true');
+            } else {
+              this.nextElementSibling.classList.remove('is-done');
+              localStorage.removeItem('${safeId}'); 
+            }
+          ">
+          <span class="${textClass}">${content}</span>
+        </li>
+      `);
+    } else if (t.startsWith("##")) {
       if (inList) {
         out.push("</ul>");
         inList = false;
@@ -171,3 +208,54 @@ document.addEventListener(
   },
   true,
 );
+
+// Note: Make sure your container already has overflow-y: auto set in your CSS. The function only controls justify-content — it doesn't set the overflow itself.
+
+window.addEventListener("load", function () {
+  function adjustJustifyOnOverflow(containerSelector) {
+    const containers = document.querySelectorAll(containerSelector);
+
+    if (containers.length === 0) {
+      console.warn("No elements found for →", containerSelector);
+      return;
+    }
+
+    function check(el) {
+      // 1. Force to flex-start temporarily to get a clean measurement
+      el.style.setProperty("justify-content", "flex-start", "important");
+
+      // Force the browser to recalculate layout synchronously
+      void el.offsetHeight;
+
+      // 2. Measure TRUE content height vs visible height
+      const isOverflowing = el.scrollHeight > el.clientHeight;
+
+      // 3. Lock in the correct alignment
+      if (isOverflowing) {
+        el.style.setProperty("justify-content", "flex-start", "important");
+      } else {
+        el.style.setProperty("justify-content", "center", "important");
+      }
+    }
+
+    containers.forEach((el) => {
+      // WAIT for custom fonts (like your Bangla font) to load before checking
+      document.fonts.ready.then(() => {
+        check(el);
+      });
+
+      // Use requestAnimationFrame to prevent ResizeObserver loop errors
+      const ro = new ResizeObserver(() =>
+        requestAnimationFrame(() => check(el)),
+      );
+      ro.observe(el);
+
+      const mo = new MutationObserver(() =>
+        requestAnimationFrame(() => check(el)),
+      );
+      mo.observe(el, { childList: true, characterData: true, subtree: true });
+    });
+  }
+
+  adjustJustifyOnOverflow(".card-text-wrapper");
+});
