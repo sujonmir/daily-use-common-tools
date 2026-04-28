@@ -13,7 +13,9 @@
     background 0.2s,
     color 0.2s;
 }
-
+.box h3 {
+  text-transform: capitalize;
+}
 .md-code--copied {
   background: #013001;
   color: #00fc00;
@@ -99,8 +101,8 @@
   padding-left: 5rem;
 }
 .card-text-wrapper {
-    padding: 15px 10px 40px 10px !important;
-    overflow-y: auto !important;
+  padding: 15px 10px 40px 10px !important;
+  overflow-y: auto !important;
 }
 
 /* todo style */
@@ -145,9 +147,8 @@
   color: #b3b0b0;
   /* background-image: linear-gradient(transparent 50%, #b3b0b0 50%, #b3b0b0 55%, transparent 55%); */
   /* text-decoration: 1px dashed line-through; */
-  text-decoration-line:line-through;
+  text-decoration-line: line-through;
 }
-
 
 /* responsive */
 @media screen and (max-width: 768px) {
@@ -167,7 +168,7 @@
   div.box-wrapper {
     padding: 24px 12px 70px 12px;
   }
-  button.fab-add{
+  button.fab-add {
     width: 40px;
     height: 40px;
   }
