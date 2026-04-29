@@ -1,375 +1,690 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Finance Tracker – Settings</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance Tracker – Settings</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f5f7fa;
-      color: #333;
-      min-height: 100vh;
-      padding-bottom: 60px;
-    }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f5f7fa;
+        color: #333;
+        min-height: 100vh;
+        padding-bottom: 60px;
+      }
 
-    header {
-      background: #fff;
-      border-bottom: 1px solid #e0e0e0;
-      padding: 0 20px;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-    }
-    .back-btn {
-      display: flex; align-items: center; text-decoration: none;
-      color: #4a90e2; font-size: 0.9em; font-weight: 600; gap: 4px; flex-shrink: 0;
-    }
-    .back-btn svg { width: 18px; height: 18px; }
-    header h1 { font-size: 1.1em; font-weight: 700; color: #333; }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 0 20px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+      }
+      .back-btn {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #4a90e2;
+        font-size: 0.9em;
+        font-weight: 600;
+        gap: 4px;
+        flex-shrink: 0;
+      }
+      .back-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+      header h1 {
+        font-size: 1.1em;
+        font-weight: 700;
+        color: #333;
+      }
 
-    .page { max-width: 680px; margin: 0 auto; padding: 24px 16px; }
+      .page {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 24px 16px;
+      }
 
-    .section {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
-    .section-header {
-      padding: 16px 20px 12px;
-      border-bottom: 1px solid #f0f0f0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .section-header h2 { font-size: 1em; font-weight: 700; color: #1a1a2e; }
-    .section-header .badge {
-      font-size: 0.72em; background: #e8f4fd; color: #4a90e2;
-      border-radius: 4px; padding: 2px 7px; font-weight: 600;
-    }
-    .section-body { padding: 18px 20px; }
+      .section {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+        margin-bottom: 20px;
+        overflow: hidden;
+      }
+      .section-header {
+        padding: 16px 20px 12px;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section-header h2 {
+        font-size: 1em;
+        font-weight: 700;
+        color: #1a1a2e;
+      }
+      .section-header .badge {
+        font-size: 0.72em;
+        background: #e8f4fd;
+        color: #4a90e2;
+        border-radius: 4px;
+        padding: 2px 7px;
+        font-weight: 600;
+      }
+      .section-body {
+        padding: 18px 20px;
+      }
 
-    label {
-      display: block; font-size: 0.82em; font-weight: 600; color: #666;
-      margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.04em;
-    }
-    input[type="url"], input[type="text"], input[type="password"] {
-      display: block; width: 100%; padding: 10px 13px;
-      border: 1px solid #dde1e7; border-radius: 8px; font-size: 0.95em;
-      background: #fafbfc; color: #333; outline: none;
-      transition: border-color 0.2s; margin-bottom: 14px;
-    }
-    input:focus { border-color: #4a90e2; background: #fff; }
+      label {
+        display: block;
+        font-size: 0.82em;
+        font-weight: 600;
+        color: #666;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      input[type="url"],
+      input[type="text"],
+      input[type="password"] {
+        display: block;
+        width: 100%;
+        padding: 10px 13px;
+        border: 1px solid #dde1e7;
+        border-radius: 8px;
+        font-size: 0.95em;
+        background: #fafbfc;
+        color: #333;
+        outline: none;
+        transition: border-color 0.2s;
+        margin-bottom: 14px;
+      }
+      input:focus {
+        border-color: #4a90e2;
+        background: #fff;
+      }
 
-    .btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 9px 18px; border: none; border-radius: 8px;
-      font-size: 0.9em; font-weight: 700; cursor: pointer;
-      transition: background 0.2s, opacity 0.2s;
-    }
-    .btn-primary   { background: #4a90e2; color: #fff; }
-    .btn-primary:hover { background: #2d6cb5; }
-    .btn-secondary { background: #f0f0f0; color: #444; }
-    .btn-secondary:hover { background: #e0e0e0; }
-    .btn-danger    { background: #dc3545; color: #fff; }
-    .btn-danger:hover  { background: #b02030; }
-    .btn-success   { background: #28a745; color: #fff; }
-    .btn-success:hover { background: #1e7e34; }
-    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 18px;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.9em;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          opacity 0.2s;
+      }
+      .btn-primary {
+        background: #4a90e2;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #2d6cb5;
+      }
+      .btn-secondary {
+        background: #f0f0f0;
+        color: #444;
+      }
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+      .btn-danger {
+        background: #dc3545;
+        color: #fff;
+      }
+      .btn-danger:hover {
+        background: #b02030;
+      }
+      .btn-success {
+        background: #28a745;
+        color: #fff;
+      }
+      .btn-success:hover {
+        background: #1e7e34;
+      }
+      .btn-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 4px;
+      }
 
-    .msg {
-      padding: 9px 13px; border-radius: 7px; font-size: 0.85em;
-      font-weight: 600; margin-top: 10px; display: none;
-    }
-    .msg.show    { display: block; }
-    .msg.ok      { background: #d4edda; color: #155724; }
-    .msg.err     { background: #fde8ea; color: #b02030; }
-    .msg.info    { background: #e8f4fd; color: #1a5276; }
-    .msg.loading { background: #e9ecef; color: #495057; }
+      .msg {
+        padding: 9px 13px;
+        border-radius: 7px;
+        font-size: 0.85em;
+        font-weight: 600;
+        margin-top: 10px;
+        display: none;
+      }
+      .msg.show {
+        display: block;
+      }
+      .msg.ok {
+        background: #d4edda;
+        color: #155724;
+      }
+      .msg.err {
+        background: #fde8ea;
+        color: #b02030;
+      }
+      .msg.info {
+        background: #e8f4fd;
+        color: #1a5276;
+      }
+      .msg.loading {
+        background: #e9ecef;
+        color: #495057;
+      }
 
-    .key-status-row {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px; background: #f0fdf4; border-radius: 8px;
-      margin-bottom: 14px;
-    }
-    .key-status-row .key-icon { font-size: 1.4em; }
-    .key-status-row .key-info { flex: 1; }
-    .key-status-row .key-info strong { display: block; color: #155724; font-size: 0.95em; }
-    .key-status-row .key-info small  { 
-      color: #666; font-size: 0.78em; font-family: monospace; 
-      display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; 
-      max-width: 180px;
-    }
+      .key-status-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: #f0fdf4;
+        border-radius: 8px;
+        margin-bottom: 14px;
+      }
+      .key-status-row .key-icon {
+        font-size: 1.4em;
+      }
+      .key-status-row .key-info {
+        flex: 1;
+      }
+      .key-status-row .key-info strong {
+        display: block;
+        color: #155724;
+        font-size: 0.95em;
+      }
+      .key-status-row .key-info small {
+        color: #666;
+        font-size: 0.78em;
+        font-family: monospace;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 180px;
+      }
 
-    .steps { counter-reset: step; }
-    .step  { display: flex; gap: 14px; margin-bottom: 18px; align-items: flex-start; }
-    .step-num {
-      counter-increment: step; width: 28px; height: 28px; border-radius: 50%;
-      background: #4a90e2; color: #fff; font-weight: 700; font-size: 0.85em;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; margin-top: 2px;
-    }
-    .step-content { flex: 1; }
-    .step-content strong { display: block; font-size: 0.95em; margin-bottom: 3px; }
-    .step-content p { font-size: 0.85em; color: #666; line-height: 1.6; }
-    .step-content code {
-      background: #f4f4f4; border-radius: 4px; padding: 1px 5px;
-      font-size: 0.9em; font-family: monospace; word-break: break-all;
-    }
+      .steps {
+        counter-reset: step;
+      }
+      .step {
+        display: flex;
+        gap: 14px;
+        margin-bottom: 18px;
+        align-items: flex-start;
+      }
+      .step-num {
+        counter-increment: step;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #4a90e2;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.85em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .step-content {
+        flex: 1;
+      }
+      .step-content strong {
+        display: block;
+        font-size: 0.95em;
+        margin-bottom: 3px;
+      }
+      .step-content p {
+        font-size: 0.85em;
+        color: #666;
+        line-height: 1.6;
+      }
+      .step-content code {
+        background: #f4f4f4;
+        border-radius: 4px;
+        padding: 1px 5px;
+        font-size: 0.9em;
+        font-family: monospace;
+        word-break: break-all;
+      }
 
-    .current-val { font-size: 0.8em; color: #888; margin-bottom: 8px; word-break: break-all; }
-    .current-val span { color: #4a90e2; font-weight: 600; }
-    .divider { height: 1px; background: #f0f0f0; margin: 16px 0; }
+      .current-val {
+        font-size: 0.8em;
+        color: #888;
+        margin-bottom: 8px;
+        word-break: break-all;
+      }
+      .current-val span {
+        color: #4a90e2;
+        font-weight: 600;
+      }
+      .divider {
+        height: 1px;
+        background: #f0f0f0;
+        margin: 16px 0;
+      }
 
-    .badge-connected    { font-size: 0.72em; background: #d4edda; color: #155724; border-radius: 4px; padding: 2px 8px; font-weight: 700; }
-    .badge-disconnected { font-size: 0.72em; background: #fde8ea; color: #b02030; border-radius: 4px; padding: 2px 8px; font-weight: 700; }
+      .badge-connected {
+        font-size: 0.72em;
+        background: #d4edda;
+        color: #155724;
+        border-radius: 4px;
+        padding: 2px 8px;
+        font-weight: 700;
+      }
+      .badge-disconnected {
+        font-size: 0.72em;
+        background: #fde8ea;
+        color: #b02030;
+        border-radius: 4px;
+        padding: 2px 8px;
+        font-weight: 700;
+      }
 
-    .collapse-form { display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid #f0f0f0; }
-    .collapse-form.open { display: block; }
+      .collapse-form {
+        display: none;
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid #f0f0f0;
+      }
+      .collapse-form.open {
+        display: block;
+      }
 
-    #after-key { display: none; }
-    #backup-section { display: none; }
+      #after-key {
+        display: none;
+      }
+      #backup-section {
+        display: none;
+      }
 
-    @media screen and (max-width: 480px) {
-      .key-status-row { flex-wrap: wrap; }
-      .key-status-row .key-info { flex: 1; min-width: 0; }
-      .key-status-row .key-info small { max-width: 100%; }
-      .key-status-row .btn { width: 100%; justify-content: center; margin-top: 8px; }
-      
-      .btn-row .btn { flex: 1; }
-      .section-header { flex-wrap: wrap; }
-    }
-  </style>
-</head>
-<body>
+      @media screen and (max-width: 480px) {
+        .key-status-row {
+          flex-wrap: wrap;
+        }
+        .key-status-row .key-info {
+          flex: 1;
+          min-width: 0;
+        }
+        .key-status-row .key-info small {
+          max-width: 100%;
+        }
+        .key-status-row .btn {
+          width: 100%;
+          justify-content: center;
+          margin-top: 8px;
+        }
 
-<header>
-  <a href="personal-finance-tracker.html" class="back-btn">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-      <polyline points="15 18 9 12 15 6"/>
-    </svg>
-    Back
-  </a>
-  <h1>Settings &amp; Setup</h1>
-</header>
+        .btn-row .btn {
+          flex: 1;
+        }
+        .section-header {
+          flex-wrap: wrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="personal-finance-tracker.html" class="back-btn">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+        >
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+        Back
+      </a>
+      <h1>Settings &amp; Setup</h1>
+    </header>
 
-<div class="page">
-
-  <!-- ── 1. Secret Key (always shown first — gates everything else) ── -->
-  <div class="section">
-    <div class="section-header">
-      <h2>Secret Key</h2>
-      <span id="key-badge"></span>
-    </div>
-    <div class="section-body">
-
-      <!-- Not set: setup form -->
-      <div id="key-setup-form">
-        <p style="font-size:0.85em;color:#888;margin-bottom:14px;">
-          Set a secret key first. This is also your app login key — you'll enter it every time you open the tracker.
-          It authenticates all Google Sheets operations. Store it somewhere safe.
-        </p>
-        <label>Secret Key</label>
-        <input type="password" id="new-key-1" placeholder="Enter secret key (min 6 chars)" />
-        <label>Confirm Secret Key</label>
-        <input type="password" id="new-key-2" placeholder="Confirm secret key" />
-        <div class="btn-row">
-          <button class="btn btn-primary" id="setKeyBtn">Set Secret Key</button>
+    <div class="page">
+      <!-- ── 1. Secret Key (always shown first — gates everything else) ── -->
+      <div class="section">
+        <div class="section-header">
+          <h2>Secret Key</h2>
+          <span id="key-badge"></span>
         </div>
-        <div class="msg" id="key-setup-msg"></div>
-      </div>
-
-      <!-- Key is set: status + change option -->
-      <div id="key-set-view" style="display:none;">
-        <div class="key-status-row">
-          <span class="key-icon">🔑</span>
-          <div class="key-info">
-            <strong>Secret key configured</strong>
-            <small id="key-hash-display"></small>
+        <div class="section-body">
+          <!-- Not set: setup form -->
+          <div id="key-setup-form">
+            <p style="font-size: 0.85em; color: #888; margin-bottom: 14px">
+              Set a secret key first. This is also your app login key — you'll
+              enter it every time you open the tracker. It authenticates all
+              Google Sheets operations. Store it somewhere safe.
+            </p>
+            <label>Secret Key</label>
+            <input
+              type="password"
+              id="new-key-1"
+              placeholder="Enter secret key (min 6 chars)"
+            />
+            <label>Confirm Secret Key</label>
+            <input
+              type="password"
+              id="new-key-2"
+              placeholder="Confirm secret key"
+            />
+            <div class="btn-row">
+              <button class="btn btn-primary" id="setKeyBtn">
+                Set Secret Key
+              </button>
+            </div>
+            <div class="msg" id="key-setup-msg"></div>
           </div>
-          <button class="btn btn-secondary" id="changeKeyBtn" style="padding:6px 14px;font-size:0.82em;">Change</button>
-        </div>
 
-        <!-- Change key form (hidden until Change clicked) -->
-        <div id="change-key-form" class="collapse-form">
-          <label>Current Secret Key</label>
-          <input type="password" id="cur-key" placeholder="Current secret key" />
-          <label>New Secret Key</label>
-          <input type="password" id="nw-key-1" placeholder="New secret key (min 6 chars)" />
-          <label>Confirm New Secret Key</label>
-          <input type="password" id="nw-key-2" placeholder="Confirm new secret key" />
-          <div class="btn-row">
-            <button class="btn btn-primary"   id="saveNewKeyBtn">Save New Key</button>
-            <button class="btn btn-secondary" id="cancelKeyChangeBtn">Cancel</button>
-          </div>
-          <div class="msg" id="key-change-msg"></div>
-        </div>
-      </div>
+          <!-- Key is set: status + change option -->
+          <div id="key-set-view" style="display: none">
+            <div class="key-status-row">
+              <span class="key-icon">🔑</span>
+              <div class="key-info">
+                <strong>Secret key configured</strong>
+                <small id="key-hash-display"></small>
+              </div>
+              <button
+                class="btn btn-secondary"
+                id="changeKeyBtn"
+                style="padding: 6px 14px; font-size: 0.82em"
+              >
+                Change
+              </button>
+            </div>
 
-    </div>
-  </div>
-
-  <!-- ── Everything below hidden until secret key is set ── -->
-  <div id="after-key">
-
-    <!-- ── 2. Apps Script Code ─────────────────────────────────────── -->
-    <div class="section">
-      <div class="section-header">
-        <h2>Apps Script Code</h2>
-        <button class="btn btn-primary" id="copyScriptBtn" style="margin-left:auto;padding:6px 14px;font-size:0.82em;">Copy Script</button>
-      </div>
-      <div class="section-body" style="padding-bottom:6px;">
-        <p style="font-size:0.82em;color:#888;margin-bottom:12px;">
-          Your secret key hash is already injected into the script below — no manual editing needed.
-          <strong style="color:#dc3545;">Re-copy and redeploy if you change your secret key.</strong>
-        </p>
-      </div>
-      <pre id="scriptCode" style="margin:0;padding:18px 20px;font-size:0.75em;font-family:monospace;background:#1e1e2e;color:#cdd6f4;overflow-x:auto;white-space:pre;border-radius:0 0 12px 12px;line-height:1.6;"></pre>
-    </div>
-
-    <!-- ── 3. Setup Guide ─────────────────────────────────────────── -->
-    <div class="section">
-      <div class="section-header">
-        <h2>Google Sheets Setup Guide</h2>
-        <span class="badge">One-time</span>
-      </div>
-      <div class="section-body">
-        <div class="steps">
-          <div class="step">
-            <div class="step-num">1</div>
-            <div class="step-content">
-              <strong>Create a new Google Sheet</strong>
-              <p>Go to <a href="https://sheets.google.com" target="_blank" style="color:#4a90e2;">sheets.google.com</a> and create a new spreadsheet.</p>
+            <!-- Change key form (hidden until Change clicked) -->
+            <div id="change-key-form" class="collapse-form">
+              <label>Current Secret Key</label>
+              <input
+                type="password"
+                id="cur-key"
+                placeholder="Current secret key"
+              />
+              <label>New Secret Key</label>
+              <input
+                type="password"
+                id="nw-key-1"
+                placeholder="New secret key (min 6 chars)"
+              />
+              <label>Confirm New Secret Key</label>
+              <input
+                type="password"
+                id="nw-key-2"
+                placeholder="Confirm new secret key"
+              />
+              <div class="btn-row">
+                <button class="btn btn-primary" id="saveNewKeyBtn">
+                  Save New Key
+                </button>
+                <button class="btn btn-secondary" id="cancelKeyChangeBtn">
+                  Cancel
+                </button>
+              </div>
+              <div class="msg" id="key-change-msg"></div>
             </div>
           </div>
-          <div class="step">
-            <div class="step-num">2</div>
-            <div class="step-content">
-              <strong>Open Apps Script</strong>
-              <p>In the spreadsheet go to <code>Extensions → Apps Script</code>. Delete all existing code.</p>
-            </div>
+        </div>
+      </div>
+
+      <!-- ── Everything below hidden until secret key is set ── -->
+      <div id="after-key">
+        <!-- ── 2. Apps Script Code ─────────────────────────────────────── -->
+        <div class="section">
+          <div class="section-header">
+            <h2>Apps Script Code</h2>
+            <button
+              class="btn btn-primary"
+              id="copyScriptBtn"
+              style="margin-left: auto; padding: 6px 14px; font-size: 0.82em"
+            >
+              Copy Script
+            </button>
           </div>
-          <div class="step">
-            <div class="step-num">3</div>
-            <div class="step-content">
-              <strong>Paste &amp; deploy the script</strong>
-              <p>Copy the script above and paste it in. Then click <code>Deploy → New deployment</code> → Type: <code>Web App</code> → Execute as: <code>Me</code> → Access: <code>Anyone</code>. Copy the deployment URL.</p>
-              <p style="margin-top:6px;color:#b02030;font-weight:600;">⚠ Already deployed before? Go to Deploy → Manage deployments → pencil icon → Version: New version → Deploy.</p>
-            </div>
+          <div class="section-body" style="padding-bottom: 6px">
+            <p style="font-size: 0.82em; color: #888; margin-bottom: 12px">
+              Your secret key hash is already injected into the script below —
+              no manual editing needed.
+              <strong style="color: #dc3545"
+                >Re-copy and redeploy if you change your secret key.</strong
+              >
+            </p>
           </div>
-          <div class="step">
-            <div class="step-num">4</div>
-            <div class="step-content">
-              <strong>Connect below</strong>
-              <p>Paste the deployment URL in the Connection section below, enter your secret key to verify, then click Connect.</p>
+          <pre
+            id="scriptCode"
+            style="
+              margin: 0;
+              padding: 18px 20px;
+              font-size: 0.75em;
+              font-family: monospace;
+              background: #1e1e2e;
+              color: #cdd6f4;
+              overflow-x: auto;
+              white-space: pre;
+              border-radius: 0 0 12px 12px;
+              line-height: 1.6;
+            "
+          ></pre>
+        </div>
+
+        <!-- ── 3. Setup Guide ─────────────────────────────────────────── -->
+        <div class="section">
+          <div class="section-header">
+            <h2>Google Sheets Setup Guide</h2>
+            <span class="badge">One-time</span>
+          </div>
+          <div class="section-body">
+            <div class="steps">
+              <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                  <strong>Create a new Google Sheet</strong>
+                  <p>
+                    Go to
+                    <a
+                      href="https://sheets.google.com"
+                      target="_blank"
+                      style="color: #4a90e2"
+                      >sheets.google.com</a
+                    >
+                    and create a new spreadsheet.
+                  </p>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                  <strong>Open Apps Script</strong>
+                  <p>
+                    In the spreadsheet go to
+                    <code>Extensions → Apps Script</code>. Delete all existing
+                    code.
+                  </p>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                  <strong>Paste &amp; deploy the script</strong>
+                  <p>
+                    Copy the script above and paste it in. Then click
+                    <code>Deploy → New deployment</code> → Type:
+                    <code>Web App</code> → Execute as: <code>Me</code> → Access:
+                    <code>Anyone</code>. Copy the deployment URL.
+                  </p>
+                  <p style="margin-top: 6px; color: #b02030; font-weight: 600">
+                    ⚠ Already deployed before? Go to Deploy → Manage deployments
+                    → pencil icon → Version: New version → Deploy.
+                  </p>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                  <strong>Connect below</strong>
+                  <p>
+                    Paste the deployment URL in the Connection section below,
+                    enter your secret key to verify, then click Connect.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- ── 4. Google Sheets Connection ───────────────────────────── -->
+        <div class="section">
+          <div class="section-header">
+            <h2>Google Sheets Connection</h2>
+            <span id="connection-status-badge"></span>
+          </div>
+          <div class="section-body">
+            <p style="font-size: 0.85em; color: #888; margin-bottom: 14px">
+              Every add, edit, and delete syncs automatically. Enter your secret
+              key to verify before connecting.
+            </p>
+
+            <!-- Not connected -->
+            <div id="connect-form">
+              <div class="current-val" id="current-url-display"></div>
+              <label>Apps Script Web App URL</label>
+              <input
+                type="url"
+                id="set-app-url"
+                placeholder="https://script.google.com/macros/s/..."
+              />
+              <label>Confirm Secret Key</label>
+              <input
+                type="password"
+                id="connect-key-input"
+                placeholder="Enter your secret key to verify"
+              />
+              <div class="btn-row">
+                <button class="btn btn-primary" id="connectBtn">Connect</button>
+                <button class="btn btn-secondary" id="testUrlBtn">
+                  Test Only
+                </button>
+              </div>
+              <div class="msg" id="url-msg"></div>
+            </div>
+
+            <!-- Connected -->
+            <div id="connected-view" style="display: none">
+              <div class="key-status-row" style="background: #e8f4fd">
+                <span class="key-icon">☁️</span>
+                <div class="key-info">
+                  <strong style="color: #1a5276"
+                    >Connected to Google Sheets</strong
+                  >
+                  <small id="connected-url-display"></small>
+                </div>
+                <button
+                  class="btn btn-danger"
+                  id="disconnectBtn"
+                  style="padding: 6px 14px; font-size: 0.82em"
+                >
+                  Disconnect
+                </button>
+              </div>
+              <div class="msg" id="url-msg2"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 5. Backup & Restore (shown only after URL connected) ───── -->
+        <div class="section" id="backup-section">
+          <div class="section-header">
+            <h2>Backup &amp; Restore</h2>
+          </div>
+          <div class="section-body">
+            <p style="font-size: 0.85em; color: #888; margin-bottom: 16px">
+              <strong>Backup Now</strong> pushes all local transactions to
+              Google Sheets (replaces Sheets data).<br />
+              <strong>Restore Now</strong> pulls all transactions from Google
+              Sheets (replaces local data).<br />
+              Your secret key is also your app login key.
+            </p>
+            <label>Confirm Secret Key</label>
+            <input
+              type="password"
+              id="backup-key-input"
+              placeholder="Enter secret key to authorise"
+            />
+            <div class="btn-row">
+              <button class="btn btn-success" id="backupNowBtn">
+                ⬆ Backup Now
+              </button>
+              <button class="btn btn-secondary" id="restoreNowBtn">
+                ⬇ Restore Now
+              </button>
+            </div>
+            <div class="msg" id="backup-msg"></div>
+          </div>
+        </div>
       </div>
+      <!-- /after-key -->
     </div>
 
-    <!-- ── 4. Google Sheets Connection ───────────────────────────── -->
-    <div class="section">
-      <div class="section-header">
-        <h2>Google Sheets Connection</h2>
-        <span id="connection-status-badge"></span>
-      </div>
-      <div class="section-body">
-        <p style="font-size:0.85em;color:#888;margin-bottom:14px;">
-          Every add, edit, and delete syncs automatically. Enter your secret key to verify before connecting.
-        </p>
+    <script>
+      // ── Storage keys ──────────────────────────────────────────────────────────
+      const FINANCE_HASH_KEY = "financeHashKey";
+      const URL_KEY = "personal-finance-tracker-sheet-token";
+      const SESSION_KEY = "personal-finance-tracker-session";
 
-        <!-- Not connected -->
-        <div id="connect-form">
-          <div class="current-val" id="current-url-display"></div>
-          <label>Apps Script Web App URL</label>
-          <input type="url" id="set-app-url" placeholder="https://script.google.com/macros/s/..." />
-          <label>Confirm Secret Key</label>
-          <input type="password" id="connect-key-input" placeholder="Enter your secret key to verify" />
-          <div class="btn-row">
-            <button class="btn btn-primary"   id="connectBtn">Connect</button>
-            <button class="btn btn-secondary" id="testUrlBtn">Test Only</button>
-          </div>
-          <div class="msg" id="url-msg"></div>
-        </div>
+      // ── Crypto helpers ────────────────────────────────────────────────────────
+      async function sha256hex(text) {
+        const buf = await crypto.subtle.digest(
+          "SHA-256",
+          new TextEncoder().encode(text),
+        );
+        return Array.from(new Uint8Array(buf))
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
+      }
 
-        <!-- Connected -->
-        <div id="connected-view" style="display:none;">
-          <div class="key-status-row" style="background:#e8f4fd;">
-            <span class="key-icon">☁️</span>
-            <div class="key-info">
-              <strong style="color:#1a5276;">Connected to Google Sheets</strong>
-              <small id="connected-url-display"></small>
-            </div>
-            <button class="btn btn-danger" id="disconnectBtn" style="padding:6px 14px;font-size:0.82em;">Disconnect</button>
-          </div>
-          <div class="msg" id="url-msg2"></div>
-        </div>
+      // ── Helpers ───────────────────────────────────────────────────────────────
+      function showMsg(id, text, type) {
+        const el = document.getElementById(id);
+        el.textContent = text;
+        el.className = `msg show ${type}`;
+        setTimeout(() => {
+          el.className = "msg";
+        }, 6000);
+      }
 
-      </div>
-    </div>
+      function maskHash(h) {
+        return h ? h.slice(0, 8) + "…" + h.slice(-4) : "";
+      }
 
-    <!-- ── 5. Backup & Restore (shown only after URL connected) ───── -->
-    <div class="section" id="backup-section">
-      <div class="section-header">
-        <h2>Backup &amp; Restore</h2>
-      </div>
-      <div class="section-body">
-        <p style="font-size:0.85em;color:#888;margin-bottom:16px;">
-          <strong>Backup Now</strong> pushes all local transactions to Google Sheets (replaces Sheets data).<br>
-          <strong>Restore Now</strong> pulls all transactions from Google Sheets (replaces local data).<br>
-          Your secret key is also your app login key.
-        </p>
-        <label>Confirm Secret Key</label>
-        <input type="password" id="backup-key-input" placeholder="Enter secret key to authorise" />
-        <div class="btn-row">
-          <button class="btn btn-success" id="backupNowBtn">⬆ Backup Now</button>
-          <button class="btn btn-secondary" id="restoreNowBtn">⬇ Restore Now</button>
-        </div>
-        <div class="msg" id="backup-msg"></div>
-      </div>
-    </div>
-
-  </div><!-- /after-key -->
-
-</div>
-
-<script>
-  // ── Storage keys ──────────────────────────────────────────────────────────
-  const FINANCE_HASH_KEY = "financeHashKey";
-  const URL_KEY          = "personal-finance-tracker-sheet-token";
-  const SESSION_KEY      = "personal-finance-tracker-session";
-
-  // ── Crypto helpers ────────────────────────────────────────────────────────
-  async function sha256hex(text) {
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-  }
-
-  // ── Helpers ───────────────────────────────────────────────────────────────
-  function showMsg(id, text, type) {
-    const el = document.getElementById(id);
-    el.textContent = text;
-    el.className = `msg show ${type}`;
-    setTimeout(() => { el.className = "msg"; }, 6000);
-  }
-
-  function maskHash(h) {
-    return h ? h.slice(0, 8) + "…" + h.slice(-4) : "";
-  }
-
-  // ── Generate Apps Script code with hash injected ──────────────────────────
-  function buildScript(hash) {
-    return `// ============================================================
+      // ── Generate Apps Script code with hash injected ──────────────────────────
+      function buildScript(hash) {
+        return `// ============================================================
 // Finance Tracker - Google Apps Script Backend
 // Secret key is already injected below — do not edit SECRET_TOKEN manually.
 // ============================================================
@@ -491,276 +806,414 @@ function bulkAdd(txList) {
   );
   return { success: true, count: txList.length };
 }`;
-  }
-
-  // ── Page state ────────────────────────────────────────────────────────────
-  function renderPage() {
-    const hash = localStorage.getItem(FINANCE_HASH_KEY);
-    const url  = localStorage.getItem(URL_KEY);
-
-    if (!hash) {
-      // No key set — show only setup form
-      document.getElementById("key-setup-form").style.display = "block";
-      document.getElementById("key-set-view").style.display   = "none";
-      document.getElementById("key-badge").textContent        = "";
-      document.getElementById("key-badge").className          = "";
-      document.getElementById("after-key").style.display      = "none";
-      return;
-    }
-
-    // Key is set
-    document.getElementById("key-setup-form").style.display = "none";
-    document.getElementById("key-set-view").style.display   = "block";
-    document.getElementById("key-hash-display").textContent = "Hash: " + maskHash(hash);
-    document.getElementById("key-badge").textContent        = "Configured";
-    document.getElementById("key-badge").className          = "badge-connected";
-
-    // Inject hash into script
-    document.getElementById("scriptCode").textContent = buildScript(hash);
-
-    // Show rest of page
-    document.getElementById("after-key").style.display = "block";
-
-    // Connection state
-    const badge = document.getElementById("connection-status-badge");
-    if (url) {
-      badge.textContent = "Connected"; badge.className = "badge-connected";
-      document.getElementById("connect-form").style.display    = "none";
-      document.getElementById("connected-view").style.display  = "block";
-      document.getElementById("connected-url-display").textContent =
-        url.length > 60 ? url.slice(0, 60) + "…" : url;
-      document.getElementById("backup-section").style.display  = "block";
-    } else {
-      badge.textContent = "Not Connected"; badge.className = "badge-disconnected";
-      document.getElementById("connect-form").style.display    = "block";
-      document.getElementById("connected-view").style.display  = "none";
-      document.getElementById("backup-section").style.display  = "none";
-    }
-  }
-
-  // ── IndexedDB helper (for backup/restore) ─────────────────────────────────
-  function openDB() {
-    return new Promise((res, rej) => {
-      const r = indexedDB.open("FinanceTrackerDB", 1);
-      r.onsuccess = e => res(e.target.result);
-      r.onerror   = e => rej(e.target.error);
-    });
-  }
-  function getAllTx(db) {
-    return new Promise((res, rej) => {
-      const tx    = db.transaction("transactions", "readonly");
-      const store = tx.objectStore("transactions");
-      const req   = store.getAll();
-      req.onsuccess = () => res(req.result);
-      req.onerror   = () => rej(req.error);
-    });
-  }
-  function replaceTx(db, txList) {
-    return new Promise((res, rej) => {
-      const tx    = db.transaction("transactions", "readwrite");
-      const store = tx.objectStore("transactions");
-      store.clear();
-      txList.forEach(item => store.add(item));
-      tx.oncomplete = () => res();
-      tx.onerror    = e => rej(e.target.error);
-    });
-  }
-
-  // ── POST helper ───────────────────────────────────────────────────────────
-  async function postToSheets(url, hash, body) {
-    const payload = JSON.stringify({ token: hash, ...body });
-    await fetch(url, {
-      method: "POST",
-      mode: "no-cors",
-      redirect: "follow",
-      headers: { "Content-Type": "text/plain" },
-      body: payload,
-    });
-  }
-
-  // ══ Secret Key handlers ════════════════════════════════════════════════════
-
-  document.getElementById("setKeyBtn").addEventListener("click", async () => {
-    const k1 = document.getElementById("new-key-1").value;
-    const k2 = document.getElementById("new-key-2").value;
-    if (!k1)           return showMsg("key-setup-msg", "Enter a secret key.", "err");
-    if (k1.length < 6) return showMsg("key-setup-msg", "Key must be at least 6 characters.", "err");
-    if (k1 !== k2)     return showMsg("key-setup-msg", "Keys do not match.", "err");
-    const hash = await sha256hex(k1);
-    localStorage.setItem(FINANCE_HASH_KEY, hash);
-    document.getElementById("new-key-1").value = "";
-    document.getElementById("new-key-2").value = "";
-    renderPage();
-  });
-
-  document.getElementById("changeKeyBtn").addEventListener("click", () => {
-    document.getElementById("change-key-form").classList.toggle("open");
-  });
-
-  document.getElementById("cancelKeyChangeBtn").addEventListener("click", () => {
-    document.getElementById("change-key-form").classList.remove("open");
-    ["cur-key","nw-key-1","nw-key-2"].forEach(id => document.getElementById(id).value = "");
-    document.getElementById("key-change-msg").className = "msg";
-  });
-
-  document.getElementById("saveNewKeyBtn").addEventListener("click", async () => {
-    const cur  = document.getElementById("cur-key").value;
-    const nw1  = document.getElementById("nw-key-1").value;
-    const nw2  = document.getElementById("nw-key-2").value;
-    if (!cur)           return showMsg("key-change-msg", "Enter current secret key.", "err");
-    if (!nw1)           return showMsg("key-change-msg", "Enter new secret key.", "err");
-    if (nw1.length < 6) return showMsg("key-change-msg", "New key must be at least 6 characters.", "err");
-    if (nw1 !== nw2)    return showMsg("key-change-msg", "New keys do not match.", "err");
-
-    const storedHash = localStorage.getItem(FINANCE_HASH_KEY);
-    const curHash    = await sha256hex(cur);
-    if (curHash !== storedHash) return showMsg("key-change-msg", "Current secret key is wrong.", "err");
-
-    const newHash = await sha256hex(nw1);
-    localStorage.setItem(FINANCE_HASH_KEY, newHash);
-    // If URL was connected, disconnect — script needs redeployment with new hash
-    if (localStorage.getItem(URL_KEY)) {
-      localStorage.removeItem(URL_KEY);
-      showMsg("key-change-msg", "Key changed. Google Sheets connection was reset — re-copy the script and redeploy, then reconnect.", "ok");
-    } else {
-      showMsg("key-change-msg", "Secret key changed. Re-copy the Apps Script and redeploy.", "ok");
-    }
-    ["cur-key","nw-key-1","nw-key-2"].forEach(id => document.getElementById(id).value = "");
-    document.getElementById("change-key-form").classList.remove("open");
-    renderPage();
-  });
-
-  // ══ Copy script ════════════════════════════════════════════════════════════
-
-  document.getElementById("copyScriptBtn").addEventListener("click", () => {
-    const code = document.getElementById("scriptCode").textContent;
-    navigator.clipboard.writeText(code).then(() => {
-      const btn = document.getElementById("copyScriptBtn");
-      btn.textContent = "Copied!";
-      setTimeout(() => { btn.textContent = "Copy Script"; }, 2000);
-    });
-  });
-
-  // ══ Connection handlers ════════════════════════════════════════════════════
-
-  document.getElementById("connectBtn").addEventListener("click", async () => {
-    const url    = document.getElementById("set-app-url").value.trim();
-    const keyIn  = document.getElementById("connect-key-input").value;
-    const stored = localStorage.getItem(FINANCE_HASH_KEY);
-    if (!url)   return showMsg("url-msg", "Enter the Apps Script URL.", "err");
-    if (!keyIn) return showMsg("url-msg", "Enter your secret key to verify.", "err");
-
-    // Verify locally first
-    const inputHash = await sha256hex(keyIn);
-    if (inputHash !== stored) return showMsg("url-msg", "Wrong secret key.", "err");
-
-    showMsg("url-msg", "Verifying with Google Sheets…", "loading");
-    try {
-      const res  = await fetch(`${url}?token=${encodeURIComponent(stored)}&action=getAll`, { method: "GET", redirect: "follow" });
-      const json = await res.json();
-      if (json.error) throw new Error(json.error);
-      const count = Array.isArray(json) ? json.length : 0;
-      localStorage.setItem(URL_KEY, url);
-      document.getElementById("connect-key-input").value = "";
-      renderPage();
-      // Show success briefly on connected view
-      showMsg("url-msg2", `✓ Connected. ${count} transaction(s) in Google Sheets.`, "ok");
-    } catch (e) {
-      showMsg("url-msg", "Connection failed: " + e.message, "err");
-    }
-  });
-
-  document.getElementById("testUrlBtn").addEventListener("click", async () => {
-    const url    = document.getElementById("set-app-url").value.trim();
-    const keyIn  = document.getElementById("connect-key-input").value;
-    const stored = localStorage.getItem(FINANCE_HASH_KEY);
-    if (!url || !keyIn) return showMsg("url-msg", "Enter URL and secret key.", "err");
-    const inputHash = await sha256hex(keyIn);
-    if (inputHash !== stored) return showMsg("url-msg", "Wrong secret key.", "err");
-    showMsg("url-msg", "Testing…", "loading");
-    try {
-      const res  = await fetch(`${url}?token=${encodeURIComponent(stored)}&action=getAll`, { method: "GET", redirect: "follow" });
-      const json = await res.json();
-      if (json.error) throw new Error(json.error);
-      showMsg("url-msg", `✓ Reachable. ${Array.isArray(json) ? json.length : 0} transaction(s) found.`, "ok");
-    } catch (e) {
-      showMsg("url-msg", "Failed: " + e.message, "err");
-    }
-  });
-
-  document.getElementById("disconnectBtn").addEventListener("click", () => {
-    if (!confirm("Disconnect Google Sheets? Auto-sync will stop. Your local data is kept.")) return;
-    localStorage.removeItem(URL_KEY);
-    renderPage();
-  });
-
-  // ══ Backup & Restore ══════════════════════════════════════════════════════
-
-  document.getElementById("backupNowBtn").addEventListener("click", async () => {
-    const keyIn  = document.getElementById("backup-key-input").value;
-    const stored = localStorage.getItem(FINANCE_HASH_KEY);
-    const url    = localStorage.getItem(URL_KEY);
-    if (!keyIn) return showMsg("backup-msg", "Enter your secret key.", "err");
-
-    const inputHash = await sha256hex(keyIn);
-    if (inputHash !== stored) return showMsg("backup-msg", "Wrong secret key.", "err");
-
-    showMsg("backup-msg", "Reading local data…", "loading");
-    try {
-      const db     = await openDB();
-      const txList = await getAllTx(db);
-      if (txList.length === 0) return showMsg("backup-msg", "No local transactions to back up.", "info");
-
-      showMsg("backup-msg", `Sending ${txList.length} transaction(s) to Google Sheets…`, "loading");
-      await postToSheets(url, stored, { action: "replaceAll", data: txList });
-
-      // Verify by fetching back from Sheets
-      showMsg("backup-msg", "Verifying…", "loading");
-      await new Promise(r => setTimeout(r, 1200));
-      const res  = await fetch(`${url}?token=${encodeURIComponent(stored)}&action=getAll`, { method: "GET", redirect: "follow" });
-      const json = await res.json();
-
-      document.getElementById("backup-key-input").value = "";
-      if (json.error) {
-        showMsg("backup-msg", `Backup sent but verification failed: ${json.error}`, "err");
-      } else if (Array.isArray(json)) {
-        showMsg("backup-msg", `✓ Backup verified — ${json.length} transaction(s) confirmed in Google Sheets.`, "ok");
-      } else {
-        showMsg("backup-msg", `Backup sent (${txList.length} transactions). Could not verify — check Google Sheets.`, "info");
       }
-    } catch (e) {
-      showMsg("backup-msg", "Backup failed: " + e.message, "err");
-    }
-  });
 
-  document.getElementById("restoreNowBtn").addEventListener("click", async () => {
-    const keyIn  = document.getElementById("backup-key-input").value;
-    const stored = localStorage.getItem(FINANCE_HASH_KEY);
-    const url    = localStorage.getItem(URL_KEY);
-    if (!keyIn) return showMsg("backup-msg", "Enter your secret key.", "err");
+      // ── Page state ────────────────────────────────────────────────────────────
+      function renderPage() {
+        const hash = localStorage.getItem(FINANCE_HASH_KEY);
+        const url = localStorage.getItem(URL_KEY);
 
-    const inputHash = await sha256hex(keyIn);
-    if (inputHash !== stored) return showMsg("backup-msg", "Wrong secret key.", "err");
+        if (!hash) {
+          // No key set — show only setup form
+          document.getElementById("key-setup-form").style.display = "block";
+          document.getElementById("key-set-view").style.display = "none";
+          document.getElementById("key-badge").textContent = "";
+          document.getElementById("key-badge").className = "";
+          document.getElementById("after-key").style.display = "none";
+          return;
+        }
 
-    if (!confirm("Restore from Google Sheets? This will REPLACE all local data.")) return;
-    showMsg("backup-msg", "Fetching from Google Sheets…", "loading");
-    try {
-      const res  = await fetch(`${url}?token=${encodeURIComponent(stored)}&action=getAll`, { method: "GET", redirect: "follow" });
-      const json = await res.json();
-      if (json.error) throw new Error(json.error);
-      if (!Array.isArray(json) || json.length === 0) return showMsg("backup-msg", "No data found in Google Sheets.", "info");
+        // Key is set
+        document.getElementById("key-setup-form").style.display = "none";
+        document.getElementById("key-set-view").style.display = "block";
+        document.getElementById("key-hash-display").textContent =
+          "Hash: " + maskHash(hash);
+        document.getElementById("key-badge").textContent = "Configured";
+        document.getElementById("key-badge").className = "badge-connected";
 
-      const db = await openDB();
-      await replaceTx(db, json);
-      document.getElementById("backup-key-input").value = "";
-      showMsg("backup-msg", `✓ Restored ${json.length} transaction(s) from Google Sheets. Refresh the tracker.`, "ok");
-    } catch (e) {
-      showMsg("backup-msg", "Restore failed: " + e.message, "err");
-    }
-  });
+        // Inject hash into script
+        document.getElementById("scriptCode").textContent = buildScript(hash);
 
-  // ── Init ──────────────────────────────────────────────────────────────────
-  renderPage();
-</script>
-</body>
+        // Show rest of page
+        document.getElementById("after-key").style.display = "block";
+
+        // Connection state
+        const badge = document.getElementById("connection-status-badge");
+        if (url) {
+          badge.textContent = "Connected";
+          badge.className = "badge-connected";
+          document.getElementById("connect-form").style.display = "none";
+          document.getElementById("connected-view").style.display = "block";
+          document.getElementById("connected-url-display").textContent =
+            url.length > 60 ? url.slice(0, 60) + "…" : url;
+          document.getElementById("backup-section").style.display = "block";
+        } else {
+          badge.textContent = "Not Connected";
+          badge.className = "badge-disconnected";
+          document.getElementById("connect-form").style.display = "block";
+          document.getElementById("connected-view").style.display = "none";
+          document.getElementById("backup-section").style.display = "none";
+        }
+      }
+
+      // ── IndexedDB helper (for backup/restore) ─────────────────────────────────
+      // ✅ FIXED
+      function openDB() {
+        return new Promise((res, rej) => {
+          const r = indexedDB.open("FinanceTrackerDB", 1);
+          r.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains("transactions")) {
+              db.createObjectStore("transactions", { keyPath: "id" });
+            }
+          };
+          r.onsuccess = (e) => res(e.target.result);
+          r.onerror = (e) => rej(e.target.error);
+        });
+      }
+      function getAllTx(db) {
+        return new Promise((res, rej) => {
+          const tx = db.transaction("transactions", "readonly");
+          const store = tx.objectStore("transactions");
+          const req = store.getAll();
+          req.onsuccess = () => res(req.result);
+          req.onerror = () => rej(req.error);
+        });
+      }
+      function replaceTx(db, txList) {
+        return new Promise((res, rej) => {
+          const tx = db.transaction("transactions", "readwrite");
+          const store = tx.objectStore("transactions");
+          store.clear();
+          txList.forEach((item) => store.add(item));
+          tx.oncomplete = () => res();
+          tx.onerror = (e) => rej(e.target.error);
+        });
+      }
+
+      // ── POST helper ───────────────────────────────────────────────────────────
+      async function postToSheets(url, hash, body) {
+        const payload = JSON.stringify({ token: hash, ...body });
+        await fetch(url, {
+          method: "POST",
+          mode: "no-cors",
+          redirect: "follow",
+          headers: { "Content-Type": "text/plain" },
+          body: payload,
+        });
+      }
+
+      // ══ Secret Key handlers ════════════════════════════════════════════════════
+
+      document
+        .getElementById("setKeyBtn")
+        .addEventListener("click", async () => {
+          const k1 = document.getElementById("new-key-1").value;
+          const k2 = document.getElementById("new-key-2").value;
+          if (!k1)
+            return showMsg("key-setup-msg", "Enter a secret key.", "err");
+          if (k1.length < 6)
+            return showMsg(
+              "key-setup-msg",
+              "Key must be at least 6 characters.",
+              "err",
+            );
+          if (k1 !== k2)
+            return showMsg("key-setup-msg", "Keys do not match.", "err");
+          const hash = await sha256hex(k1);
+          localStorage.setItem(FINANCE_HASH_KEY, hash);
+          document.getElementById("new-key-1").value = "";
+          document.getElementById("new-key-2").value = "";
+          renderPage();
+        });
+
+      document.getElementById("changeKeyBtn").addEventListener("click", () => {
+        document.getElementById("change-key-form").classList.toggle("open");
+      });
+
+      document
+        .getElementById("cancelKeyChangeBtn")
+        .addEventListener("click", () => {
+          document.getElementById("change-key-form").classList.remove("open");
+          ["cur-key", "nw-key-1", "nw-key-2"].forEach(
+            (id) => (document.getElementById(id).value = ""),
+          );
+          document.getElementById("key-change-msg").className = "msg";
+        });
+
+      document
+        .getElementById("saveNewKeyBtn")
+        .addEventListener("click", async () => {
+          const cur = document.getElementById("cur-key").value;
+          const nw1 = document.getElementById("nw-key-1").value;
+          const nw2 = document.getElementById("nw-key-2").value;
+          if (!cur)
+            return showMsg(
+              "key-change-msg",
+              "Enter current secret key.",
+              "err",
+            );
+          if (!nw1)
+            return showMsg("key-change-msg", "Enter new secret key.", "err");
+          if (nw1.length < 6)
+            return showMsg(
+              "key-change-msg",
+              "New key must be at least 6 characters.",
+              "err",
+            );
+          if (nw1 !== nw2)
+            return showMsg("key-change-msg", "New keys do not match.", "err");
+
+          const storedHash = localStorage.getItem(FINANCE_HASH_KEY);
+          const curHash = await sha256hex(cur);
+          if (curHash !== storedHash)
+            return showMsg(
+              "key-change-msg",
+              "Current secret key is wrong.",
+              "err",
+            );
+
+          const newHash = await sha256hex(nw1);
+          localStorage.setItem(FINANCE_HASH_KEY, newHash);
+          // If URL was connected, disconnect — script needs redeployment with new hash
+          if (localStorage.getItem(URL_KEY)) {
+            localStorage.removeItem(URL_KEY);
+            showMsg(
+              "key-change-msg",
+              "Key changed. Google Sheets connection was reset — re-copy the script and redeploy, then reconnect.",
+              "ok",
+            );
+          } else {
+            showMsg(
+              "key-change-msg",
+              "Secret key changed. Re-copy the Apps Script and redeploy.",
+              "ok",
+            );
+          }
+          ["cur-key", "nw-key-1", "nw-key-2"].forEach(
+            (id) => (document.getElementById(id).value = ""),
+          );
+          document.getElementById("change-key-form").classList.remove("open");
+          renderPage();
+        });
+
+      // ══ Copy script ════════════════════════════════════════════════════════════
+
+      document.getElementById("copyScriptBtn").addEventListener("click", () => {
+        const code = document.getElementById("scriptCode").textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          const btn = document.getElementById("copyScriptBtn");
+          btn.textContent = "Copied!";
+          setTimeout(() => {
+            btn.textContent = "Copy Script";
+          }, 2000);
+        });
+      });
+
+      // ══ Connection handlers ════════════════════════════════════════════════════
+
+      document
+        .getElementById("connectBtn")
+        .addEventListener("click", async () => {
+          const url = document.getElementById("set-app-url").value.trim();
+          const keyIn = document.getElementById("connect-key-input").value;
+          const stored = localStorage.getItem(FINANCE_HASH_KEY);
+          if (!url)
+            return showMsg("url-msg", "Enter the Apps Script URL.", "err");
+          if (!keyIn)
+            return showMsg(
+              "url-msg",
+              "Enter your secret key to verify.",
+              "err",
+            );
+
+          // Verify locally first
+          const inputHash = await sha256hex(keyIn);
+          if (inputHash !== stored)
+            return showMsg("url-msg", "Wrong secret key.", "err");
+
+          showMsg("url-msg", "Verifying with Google Sheets…", "loading");
+          try {
+            const res = await fetch(
+              `${url}?token=${encodeURIComponent(stored)}&action=getAll`,
+              { method: "GET", redirect: "follow" },
+            );
+            const json = await res.json();
+            if (json.error) throw new Error(json.error);
+            const count = Array.isArray(json) ? json.length : 0;
+            localStorage.setItem(URL_KEY, url);
+            document.getElementById("connect-key-input").value = "";
+            renderPage();
+            // Show success briefly on connected view
+            showMsg(
+              "url-msg2",
+              `✓ Connected. ${count} transaction(s) in Google Sheets.`,
+              "ok",
+            );
+          } catch (e) {
+            showMsg("url-msg", "Connection failed: " + e.message, "err");
+          }
+        });
+
+      document
+        .getElementById("testUrlBtn")
+        .addEventListener("click", async () => {
+          const url = document.getElementById("set-app-url").value.trim();
+          const keyIn = document.getElementById("connect-key-input").value;
+          const stored = localStorage.getItem(FINANCE_HASH_KEY);
+          if (!url || !keyIn)
+            return showMsg("url-msg", "Enter URL and secret key.", "err");
+          const inputHash = await sha256hex(keyIn);
+          if (inputHash !== stored)
+            return showMsg("url-msg", "Wrong secret key.", "err");
+          showMsg("url-msg", "Testing…", "loading");
+          try {
+            const res = await fetch(
+              `${url}?token=${encodeURIComponent(stored)}&action=getAll`,
+              { method: "GET", redirect: "follow" },
+            );
+            const json = await res.json();
+            if (json.error) throw new Error(json.error);
+            showMsg(
+              "url-msg",
+              `✓ Reachable. ${Array.isArray(json) ? json.length : 0} transaction(s) found.`,
+              "ok",
+            );
+          } catch (e) {
+            showMsg("url-msg", "Failed: " + e.message, "err");
+          }
+        });
+
+      document.getElementById("disconnectBtn").addEventListener("click", () => {
+        if (
+          !confirm(
+            "Disconnect Google Sheets? Auto-sync will stop. Your local data is kept.",
+          )
+        )
+          return;
+        localStorage.removeItem(URL_KEY);
+        renderPage();
+      });
+
+      // ══ Backup & Restore ══════════════════════════════════════════════════════
+
+      document
+        .getElementById("backupNowBtn")
+        .addEventListener("click", async () => {
+          const keyIn = document.getElementById("backup-key-input").value;
+          const stored = localStorage.getItem(FINANCE_HASH_KEY);
+          const url = localStorage.getItem(URL_KEY);
+          if (!keyIn)
+            return showMsg("backup-msg", "Enter your secret key.", "err");
+
+          const inputHash = await sha256hex(keyIn);
+          if (inputHash !== stored)
+            return showMsg("backup-msg", "Wrong secret key.", "err");
+
+          showMsg("backup-msg", "Reading local data…", "loading");
+          try {
+            const db = await openDB();
+            const txList = await getAllTx(db);
+            if (txList.length === 0)
+              return showMsg(
+                "backup-msg",
+                "No local transactions to back up.",
+                "info",
+              );
+
+            showMsg(
+              "backup-msg",
+              `Sending ${txList.length} transaction(s) to Google Sheets…`,
+              "loading",
+            );
+            await postToSheets(url, stored, {
+              action: "replaceAll",
+              data: txList,
+            });
+
+            // Verify by fetching back from Sheets
+            showMsg("backup-msg", "Verifying…", "loading");
+            await new Promise((r) => setTimeout(r, 1200));
+            const res = await fetch(
+              `${url}?token=${encodeURIComponent(stored)}&action=getAll`,
+              { method: "GET", redirect: "follow" },
+            );
+            const json = await res.json();
+
+            document.getElementById("backup-key-input").value = "";
+            if (json.error) {
+              showMsg(
+                "backup-msg",
+                `Backup sent but verification failed: ${json.error}`,
+                "err",
+              );
+            } else if (Array.isArray(json)) {
+              showMsg(
+                "backup-msg",
+                `✓ Backup verified — ${json.length} transaction(s) confirmed in Google Sheets.`,
+                "ok",
+              );
+            } else {
+              showMsg(
+                "backup-msg",
+                `Backup sent (${txList.length} transactions). Could not verify — check Google Sheets.`,
+                "info",
+              );
+            }
+          } catch (e) {
+            showMsg("backup-msg", "Backup failed: " + e.message, "err");
+          }
+        });
+
+      document
+        .getElementById("restoreNowBtn")
+        .addEventListener("click", async () => {
+          const keyIn = document.getElementById("backup-key-input").value;
+          const stored = localStorage.getItem(FINANCE_HASH_KEY);
+          const url = localStorage.getItem(URL_KEY);
+          if (!keyIn)
+            return showMsg("backup-msg", "Enter your secret key.", "err");
+
+          const inputHash = await sha256hex(keyIn);
+          if (inputHash !== stored)
+            return showMsg("backup-msg", "Wrong secret key.", "err");
+
+          if (
+            !confirm(
+              "Restore from Google Sheets? This will REPLACE all local data.",
+            )
+          )
+            return;
+          showMsg("backup-msg", "Fetching from Google Sheets…", "loading");
+          try {
+            const res = await fetch(
+              `${url}?token=${encodeURIComponent(stored)}&action=getAll`,
+              { method: "GET", redirect: "follow" },
+            );
+            const json = await res.json();
+            if (json.error) throw new Error(json.error);
+            if (!Array.isArray(json) || json.length === 0)
+              return showMsg(
+                "backup-msg",
+                "No data found in Google Sheets.",
+                "info",
+              );
+
+            const db = await openDB();
+            await replaceTx(db, json);
+            document.getElementById("backup-key-input").value = "";
+            showMsg(
+              "backup-msg",
+              `✓ Restored ${json.length} transaction(s) from Google Sheets. Refresh the tracker.`,
+              "ok",
+            );
+          } catch (e) {
+            showMsg("backup-msg", "Restore failed: " + e.message, "err");
+          }
+        });
+
+      // ── Init ──────────────────────────────────────────────────────────────────
+      renderPage();
+    </script>
+  </body>
 </html>
