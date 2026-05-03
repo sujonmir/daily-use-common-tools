@@ -283,12 +283,28 @@
         justify-content: center;
         align-items: center;
         width: 100vw !important;
-        height: 100vh !important;
+        height: auto !important;
+        min-height: 100vh;
+        overflow-y: auto;
         flex-basis: auto !important;
         padding: 2em;
         box-sizing: border-box;
         font-size: 16px;
         cursor: context-menu !important;
+      }
+      .in-fullscreen .card-delete-btn {
+        /* position: fixed;
+        top: 22px;
+        left: 15px;
+        right: auto;
+        opacity: 1;
+        color: #fff;
+        z-index: 10;
+        transform: scale(1.5); */
+        display: none;
+      }
+      .in-fullscreen .card-delete-btn:hover {
+        color: #ff6b6b;
       }
       .in-fullscreen h3 {
         font-family: "Bad Script", cursive;
@@ -867,9 +883,117 @@
         width: 100%;
         display: none;
       }
+
+      /* Card title area + delete button */
+      .card-title-area {
+        position: relative;
+      }
+      .card-delete-btn {
+        position: absolute;
+        top: -10px;
+        right: 0;
+        opacity: 0;
+        background: transparent;
+        border: none;
+        padding: 0 5px;
+        cursor: pointer;
+        color: #e53e3e;
+        z-index: 4;
+        transition: opacity 0.2s;
+        line-height: 0;
+      }
+      .card-title-area:hover .card-delete-btn {
+        opacity: 1;
+      }
+      .card-delete-btn:hover {
+        color: #c53030;
+      }
+
+      /* Delete confirmation popup */
+      .delete-confirm-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+      }
+      .delete-confirm-overlay.active {
+        display: flex;
+      }
+      .delete-confirm-box {
+        background: #fff;
+        border-radius: 14px;
+        padding: 28px 32px 22px;
+        max-width: 340px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+        font-family: "Baumans", system-ui;
+      }
+      .delete-confirm-box p {
+        font-size: 17px;
+        margin: 0 0 20px;
+        color: #222;
+        border: none;
+        display: block;
+        padding: 0;
+        justify-content: unset;
+      }
+      .delete-confirm-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+      }
+      .delete-confirm-actions button {
+        padding: 9px 28px;
+        border-radius: 8px;
+        border: none;
+        font-size: 15px;
+        font-family: "Baumans", system-ui;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.15s;
+      }
+      #deleteConfirmYes {
+        background: #e53e3e;
+        color: #fff;
+      }
+      #deleteConfirmYes:hover {
+        background: #c53030;
+      }
+      #deleteConfirmYes:disabled {
+        background: #f08080;
+        cursor: not-allowed;
+      }
+      #deleteConfirmNo {
+        background: #eee;
+        color: #333;
+      }
+      #deleteConfirmNo:hover {
+        background: #ddd;
+      }
+      #deleteConfirmStatus {
+        margin-top: 10px;
+        font-size: 13px;
+        min-height: 18px;
+      }
     </style>
   </head>
   <body>
+    <!-- ── Delete Confirmation Popup ─────────────────────────────────────────── -->
+    <div class="delete-confirm-overlay" id="deleteConfirmOverlay">
+      <div class="delete-confirm-box">
+        <p id="deleteConfirmMsg">Are you sure?</p>
+        <div class="delete-confirm-actions">
+          <button id="deleteConfirmYes">Delete</button>
+          <button id="deleteConfirmNo">Cancel</button>
+        </div>
+        <div id="deleteConfirmStatus" class="sync-status"></div>
+      </div>
+    </div>
+
     <!-- ── Floating Add Card Button ─────────────────────────────────────────── -->
     <button class="fab-add" id="fab-add-btn" title="Add New Card">+</button>
 

@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setupToolbar();
   setupAddCardModal();
+  setupDeleteConfirm();
   setupFabStickyShift();
   setupScrollToTop();
   setupMobileFilterToggle();
@@ -903,6 +904,73 @@ async function updateToSheets(id, cardData, statusEl) {
   }
 }
 
+/** POST delete action to Google Sheets — returns true on success */
+async function deleteFromSheets(id) {
+  if (!SHEETS_WEB_APP_URL || !id) return true; // no id = local-only card, still delete from DOM
+  try {
+    const res = await fetch(SHEETS_WEB_APP_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "deleteCard", id }),
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+    });
+    const json = await res.json();
+    return json.status === "success";
+  } catch {
+    return false;
+  }
+}
+
+/** Wire up the delete confirmation popup */
+function setupDeleteConfirm() {
+  const overlay = document.getElementById("deleteConfirmOverlay");
+  const msgEl = document.getElementById("deleteConfirmMsg");
+  const yesBtn = document.getElementById("deleteConfirmYes");
+  const noBtn = document.getElementById("deleteConfirmNo");
+  const statusEl = document.getElementById("deleteConfirmStatus");
+  if (!overlay) return;
+
+  let _targetBox = null;
+
+  window.showDeleteConfirm = (box) => {
+    _targetBox = box;
+    const title = box.querySelector("h3")?.textContent || "this card";
+    msgEl.textContent = `Delete "${title}"?`;
+    statusEl.textContent = "";
+    statusEl.className = "sync-status";
+    overlay.classList.add("active");
+  };
+
+  const close = () => {
+    overlay.classList.remove("active");
+    _targetBox = null;
+    yesBtn.disabled = false;
+  };
+
+  noBtn.addEventListener("click", close);
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) close();
+  });
+
+  yesBtn.addEventListener("click", async () => {
+    if (!_targetBox) return;
+    const sheetId = _targetBox.dataset.sheetId;
+    yesBtn.disabled = true;
+    statusEl.textContent = "Deleting…";
+    statusEl.className = "sync-status";
+
+    const ok = await deleteFromSheets(sheetId);
+    if (ok) {
+      _targetBox.remove();
+      if (_applyFilters) _applyFilters();
+      close();
+    } else {
+      statusEl.textContent = "✗ Could not delete from Google Sheets.";
+      statusEl.className = "sync-status error";
+      yesBtn.disabled = false;
+    }
+  });
+}
+
 // ─── CREATE CARD ELEMENT ──────────────────────────────────────────────────────
 function createCardElement(data) {
   const box = document.createElement("div");
@@ -916,9 +984,24 @@ function createCardElement(data) {
   box.dataset.bodyText = data.bodyText || "";
   box.dataset.tags = data.tags || "";
 
+  const titleArea = document.createElement("div");
+  titleArea.className = "card-title-area";
+
   const h3 = document.createElement("h3");
   h3.textContent = data.title || "";
-  box.appendChild(h3);
+  titleArea.appendChild(h3);
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "card-delete-btn";
+  deleteBtn.title = "Delete card";
+  deleteBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
+  deleteBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (window.showDeleteConfirm) window.showDeleteConfirm(box);
+  });
+  titleArea.appendChild(deleteBtn);
+
+  box.appendChild(titleArea);
 
   const hr = document.createElement("hr");
 

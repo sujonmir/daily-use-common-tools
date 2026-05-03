@@ -15,6 +15,7 @@
  *  POST {action:"saveTime",  seconds: N}    → saves accumulated seconds
  *  POST {action:"uploadFile", ...}          → (unused — GitHub upload used instead)
  *  POST {action:"updateCard", ...}          → updates an existing card row
+ *  POST {action:"deleteCard", id: N}        → deletes a card row by id
  *  POST {action:"addCard"}                  → appends a new card row
  */
 
@@ -93,10 +94,26 @@ function doPost(e) {
           return jsonResponse_({ status: 'success', id: data.id });
         }
       }
-      return jsonResponse_({ ok: false, error: 'Card not found' });
+      return jsonResponse_({ status: 'error', error: 'Card not found' });
     }
 
-    // ── Action: addCard ────────────────────────────────────────────────────────
+    // ── Action: deleteCard ─────────────────────────────────────────────────────
+    if (data.action === 'deleteCard') {
+      const sheet = getOrCreateSheet_();
+      const rows  = sheet.getDataRange().getValues();
+      for (let i = 1; i < rows.length; i++) {
+        if (String(rows[i][COL.id]) === String(data.id)) {
+          sheet.deleteRow(i + 1);
+          return jsonResponse_({ status: 'success', id: data.id });
+        }
+      }
+      return jsonResponse_({ status: 'error', error: 'Card not found' });
+    }
+
+    // ── Action: addCard (default — no action, or action === 'addCard') ─────────
+    if (data.action && data.action !== 'addCard') {
+      return jsonResponse_({ status: 'error', error: 'Unknown action: ' + data.action });
+    }
     const sheet = getOrCreateSheet_();
     const newId = sheet.getLastRow();
     sheet.appendRow([

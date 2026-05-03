@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Freelancer Workspace</title>
+    <link rel="icon" href="img/workplace.webp" />
+    <link rel="stylesheet" href="css/freelancer-workspace.css" />
+  </head>
+  <body>
+    <!-- ── Header ─────────────────────────────────────────────────────────── -->
+    <header class="app-header">
+      <a href="index.html" class="back-btn" title="Back to home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        <span>Back</span>
+      </a>
+      <h1>Freelancer Workspace</h1>
+      <div class="header-actions">
+        <button id="btn-payment-history" title="Payment History">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+          <span class="label">Payments</span>
+        </button>
+        <button id="btn-invoices" title="All Invoices">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span class="label">Invoices</span>
+        </button>
+        <a href="freelancer-workspace-settings.html" style="display:contents">
+          <button title="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span class="label">Settings</span>
+          </button>
+        </a>
+      </div>
+    </header>
+
+    <!-- ── Connect prompt (shown when no Apps Script URL is set) ───────── -->
+    <div class="connect-prompt" id="connect-prompt" style="display:none">
+      <h2>🔗 Connect Google Sheet First</h2>
+      <p>This workspace requires a Google Sheet for storage so your data is never lost. Set up the connection in Settings before adding any projects.</p>
+      <a href="freelancer-workspace-settings.html" class="cta">Open Settings →</a>
+    </div>
+
+    <!-- ── Loading state ──────────────────────────────────────────────── -->
+    <div class="loading-state" id="loading-state" style="display:none">
+      <div class="spinner"></div>
+      <div>Loading your workspace…</div>
+    </div>
+
+    <!-- ── Main workspace ─────────────────────────────────────────────── -->
+    <main class="workspace" id="workspace" style="display:none">
+      <!-- Dashboard summary -->
+      <div class="dashboard" id="dashboard"></div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <select id="filter-status">
+          <option value="all">All Status</option>
+          <option value="active">Active</option>
+          <option value="completed">Completed</option>
+          <option value="on-hold">On Hold</option>
+        </select>
+        <select id="filter-type">
+          <option value="all">All Types</option>
+          <option value="fixed">Fixed Price</option>
+          <option value="hourly">Hourly</option>
+        </select>
+        <select id="filter-currency">
+          <option value="all">All Currencies</option>
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="BDT">BDT (৳)</option>
+        </select>
+        <input type="text" id="filter-search" placeholder="Search projects, clients…" />
+        <span class="count" id="project-count">0 projects</span>
+      </div>
+
+      <!-- Projects grid -->
+      <div class="projects-grid" id="projects-grid"></div>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="empty-state" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="4" width="16" height="16" rx="2"/>
+          <line x1="9" y1="10" x2="15" y2="10"/>
+          <line x1="9" y1="14" x2="15" y2="14"/>
+        </svg>
+        <p>No projects yet — click the <strong>+</strong> button to create your first project.</p>
+      </div>
+    </main>
+
+    <!-- ── FAB add project button ─────────────────────────────────────── -->
+    <button class="fab" id="fab-add-project" title="Add Project" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+    </button>
+
+    <!-- ── Modal: Add / Edit Project ──────────────────────────────────── -->
+    <div class="modal-overlay" id="modal-project">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="modal-project-title">New Project</h2>
+          <button class="modal-close" data-close="modal-project">×</button>
+        </div>
+        <div class="modal-body">
+          <form id="form-project" autocomplete="off">
+            <input type="hidden" id="proj-id" />
+            <div class="field">
+              <label>Project Name *</label>
+              <input type="text" id="proj-name" required />
+            </div>
+            <div class="field">
+              <label>Client Name</label>
+              <input type="text" id="proj-client" />
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Type *</label>
+                <select id="proj-type" required>
+                  <option value="fixed">Fixed Price</option>
+                  <option value="hourly">Hourly</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Currency *</label>
+                <select id="proj-currency" required>
+                  <option value="USD">USD ($)</option>
+                  <option value="EUR">EUR (€)</option>
+                  <option value="BDT">BDT (৳)</option>
+                </select>
+              </div>
+            </div>
+            <div class="field" id="field-fixed">
+              <label>Fixed Price *</label>
+              <input type="number" id="proj-fixed" min="0" step="0.01" />
+            </div>
+            <div class="field" id="field-hourly" style="display:none">
+              <label>Hourly Rate *</label>
+              <input type="number" id="proj-hourly" min="0" step="0.01" />
+            </div>
+            <div class="field">
+              <label>Status</label>
+              <select id="proj-status">
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
+                <option value="on-hold">On Hold</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Description / Notes</label>
+              <textarea id="proj-description" rows="3"></textarea>
+            </div>
+            <div class="sync-status" id="proj-sync-status"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" data-close="modal-project">Cancel</button>
+          <button class="btn-primary" id="btn-save-project">Save Project</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Modal: Time Entries ────────────────────────────────────────── -->
+    <div class="modal-overlay" id="modal-time">
+      <div class="modal wide">
+        <div class="modal-header">
+          <h2 id="modal-time-title">Time Entries</h2>
+          <button class="modal-close" data-close="modal-time">×</button>
+        </div>
+        <div class="modal-body">
+          <form id="form-time" autocomplete="off">
+            <div class="field-row">
+              <div class="field">
+                <label>Date *</label>
+                <input type="date" id="te-date" required />
+              </div>
+              <div class="field">
+                <label>Duration (HH:MM:SS) *</label>
+                <input type="text" id="te-dur" placeholder="01:30:00" required />
+              </div>
+            </div>
+            <div class="field">
+              <label>Description</label>
+              <input type="text" id="te-desc" placeholder="What did you work on?" />
+            </div>
+            <button type="button" class="btn-primary" id="btn-add-time-entry" style="width:100%">+ Add Time Entry</button>
+            <div class="sync-status" id="te-sync-status"></div>
+          </form>
+          <div class="time-entries-list" id="time-entries-list"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" data-close="modal-time">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Modal: Add Payment ─────────────────────────────────────────── -->
+    <div class="modal-overlay" id="modal-payment">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="modal-payment-title">Record Payment</h2>
+          <button class="modal-close" data-close="modal-payment">×</button>
+        </div>
+        <div class="modal-body">
+          <form id="form-payment" autocomplete="off">
+            <input type="hidden" id="pay-project-id" />
+            <div class="field">
+              <label>Project</label>
+              <input type="text" id="pay-project-name" disabled />
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Amount *</label>
+                <input type="number" id="pay-amount" min="0" step="0.01" required />
+              </div>
+              <div class="field">
+                <label>Date *</label>
+                <input type="date" id="pay-date" required />
+              </div>
+            </div>
+            <div class="field">
+              <label>Note</label>
+              <input type="text" id="pay-note" placeholder="e.g. Bank transfer, Wise, PayPal…" />
+            </div>
+            <div class="sync-status" id="pay-sync-status"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" data-close="modal-payment">Cancel</button>
+          <button class="btn-primary" id="btn-save-payment">Save Payment</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Modal: Generate Invoice ────────────────────────────────────── -->
+    <div class="modal-overlay" id="modal-invoice">
+      <div class="modal wide">
+        <div class="modal-header">
+          <h2 id="modal-invoice-title">Generate Invoice</h2>
+          <button class="modal-close" data-close="modal-invoice">×</button>
+        </div>
+        <div class="modal-body">
+          <form id="form-invoice" autocomplete="off">
+            <input type="hidden" id="inv-project-id" />
+            <input type="hidden" id="inv-id" />
+            <div class="field">
+              <label>Project</label>
+              <input type="text" id="inv-project-name" disabled />
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Invoice Number *</label>
+                <input type="text" id="inv-number" required />
+              </div>
+              <div class="field">
+                <label>Amount Type *</label>
+                <select id="inv-amount-type">
+                  <option value="auto">Auto (current due amount)</option>
+                  <option value="manual">Manual</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Amount *</label>
+              <input type="number" id="inv-amount" min="0" step="0.01" required />
+              <div class="field-hint" id="inv-amount-hint"></div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Issue Date *</label>
+                <input type="date" id="inv-issue-date" required />
+              </div>
+              <div class="field">
+                <label>Due Date</label>
+                <input type="date" id="inv-due-date" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Status</label>
+              <select id="inv-status">
+                <option value="draft">Draft</option>
+                <option value="sent">Sent</option>
+                <option value="paid">Paid</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Notes</label>
+              <textarea id="inv-notes" rows="2" placeholder="Payment terms, instructions…"></textarea>
+            </div>
+            <div class="field">
+              <label>"Generated by" footer</label>
+              <div class="gen-by-row" id="inv-genby-row">
+                <label data-genby="me"><input type="radio" name="inv-genby" value="me" checked /><span>Me</span></label>
+                <label data-genby="default"><input type="radio" name="inv-genby" value="default" /><span>Default</span></label>
+                <label data-genby="manual"><input type="radio" name="inv-genby" value="manual" /><span>Manual</span></label>
+              </div>
+              <input type="text" id="inv-genby-manual" placeholder="Enter custom name…" style="margin-top:8px;display:none" />
+              <div class="field-hint" id="inv-genby-hint"></div>
+            </div>
+            <div class="sync-status" id="inv-sync-status"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" data-close="modal-invoice">Cancel</button>
+          <button class="btn-primary" id="btn-preview-invoice">Preview / Print</button>
+          <button class="btn-primary" id="btn-save-invoice">Save Invoice</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Modal: Payment History ─────────────────────────────────────── -->
+    <div class="modal-overlay" id="modal-history">
+      <div class="modal wide">
+        <div class="modal-header">
+          <h2>Payment History</h2>
+          <button class="modal-close" data-close="modal-history">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="toolbar" style="margin-bottom:12px;padding:8px 0;background:transparent;box-shadow:none">
+            <select id="hist-filter-project">
+              <option value="all">All Projects</option>
+            </select>
+            <select id="hist-filter-currency">
+              <option value="all">All Currencies</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="BDT">BDT</option>
+            </select>
+            <input type="text" id="hist-search" placeholder="Search notes…" />
+            <span class="count" id="history-total"></span>
+          </div>
+          <div id="history-table-wrap"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" data-close="modal-history">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Modal: All Invoices ────────────────────────────────────────── -->
+    <div class="modal-overlay" id="modal-all-invoices">
+      <div class="modal wide">
+        <div class="modal-header">
+          <h2>All Invoices</h2>
+          <button class="modal-close" data-close="modal-all-invoices">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="toolbar" style="margin-bottom:12px;padding:8px 0;background:transparent;box-shadow:none">
+            <select id="invs-filter-project">
+              <option value="all">All Projects</option>
+            </select>
+            <select id="invs-filter-status">
+              <option value="all">All Status</option>
+              <option value="draft">Draft</option>
+              <option value="sent">Sent</option>
+              <option value="paid">Paid</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <input type="text" id="invs-search" placeholder="Search invoice number…" />
+            <span class="count" id="invs-total"></span>
+          </div>
+          <div id="invs-table-wrap"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" data-close="modal-all-invoices">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Modal: Invoice Print Preview ───────────────────────────────── -->
+    <div class="modal-overlay" id="modal-invoice-preview">
+      <div class="modal wide">
+        <div class="modal-header">
+          <h2>Invoice Preview</h2>
+          <button class="modal-close" data-close="modal-invoice-preview">×</button>
+        </div>
+        <div class="modal-body" id="invoice-preview-body"></div>
+        <div class="modal-footer">
+          <button class="btn-secondary" data-close="modal-invoice-preview">Close</button>
+          <button class="btn-primary" id="btn-print-invoice">Print / Save as PDF</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Confirmation popup ─────────────────────────────────────────── -->
+    <div class="confirm-overlay" id="confirm-overlay">
+      <div class="confirm-box">
+        <h3 id="confirm-title">Are you sure?</h3>
+        <p id="confirm-msg"></p>
+        <div class="confirm-actions">
+          <button class="btn-danger" id="confirm-yes">Delete</button>
+          <button class="btn-secondary" id="confirm-no">Cancel</button>
+        </div>
+        <div class="sync-status" id="confirm-status"></div>
+      </div>
+    </div>
+
+    <script src="js/freelancer-workspace.js"></script>
+  </body>
+</html>
