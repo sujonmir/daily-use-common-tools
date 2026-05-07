@@ -11,7 +11,7 @@ console.clear();
 // Fill : The trailing color that you see when you drag the slider.
 // background : Default Range Slider Background
 let myPass = "";
-let qr;
+const qrContainer = document.getElementById("qrCode");
 let customText = document.getElementById("customText");
 const sliderProps = {
   fill: "#0B1EDF",
@@ -55,6 +55,19 @@ function secureMathRandom() {
   return (
     window.crypto.getRandomValues(new Uint32Array(1))[0] / (Math.pow(2, 32) - 1)
   );
+}
+
+function renderQRCode(text) {
+  // qrcode-generator's Byte mode reads single-byte chars via charCodeAt, which
+  // truncates non-Latin code points (e.g. Bangla). Pre-encoding to a UTF-8
+  // byte string preserves the original characters for any UTF-8 scanner.
+  const payload = unescape(encodeURIComponent(text || " "));
+  const qr = qrcode(0, "M");
+  qr.addData(payload, "Byte");
+  qr.make();
+  // SVG output stays crisp at any display size, unlike a canvas bitmap that
+  // gets blurred when CSS-scales it to a non-integer multiple of the module count.
+  qrContainer.innerHTML = qr.createSvgTag({ cellSize: 1, margin: 0, scalable: true });
 }
 
 // Generator Functions
@@ -170,21 +183,7 @@ generateBtn.addEventListener("click", () => {
     customText.value = "";
   }
   resultEl.innerText = myPass;
-  (function () {
-    qr = new QRious({
-      element: document.querySelector("#qrCode"),
-      size: 200,
-      value: "sujonmir",
-    });
-  })();
-
-  const generateQRCode = () => {
-    const qrText = myPass;
-    qr.set({
-      value: qrText,
-    });
-  };
-  generateQRCode();
+  renderQRCode(myPass);
 });
 
 // Function responsible to generate password and then returning it.
@@ -230,22 +229,8 @@ function disableOnlyCheckbox() {
   });
 });
 
-// qr start
 window.addEventListener("load", function () {
-  (function () {
-    qr = new QRious({
-      element: document.querySelector("#qrCode"),
-      size: 200,
-      value: "sujonmir",
-    });
-  })();
-  const generateQRCode = () => {
-    const qrText = myPass;
-    qr.set({
-      value: qrText,
-    });
-  };
-  generateQRCode();
+  renderQRCode("sujonmir");
 });
 
 // generateBtn.addEventListener('click', function() {
